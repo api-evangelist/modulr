@@ -1,0 +1,217 @@
+aid: modulr
+url: https://raw.githubusercontent.com/api-evangelist/modulr/refs/heads/main/apis.yml
+name: Modulr
+kind: company
+description: >-
+  Modulr is a United Kingdom-based embedded payments and Banking-as-a-Service
+  platform that lets businesses and software platforms open programmable eMoney
+  accounts and move money automatically via a single API. As a licensed
+  e-money institution and direct participant in the UK Faster Payments and Bacs
+  schemes (with SEPA reach in the EU through its Dutch entity), Modulr provides
+  the underlying accounts, payment rails, card issuing, and Open Banking
+  connectivity that fintechs, payroll providers, lenders, marketplaces, and
+  travel and accounting platforms embed into their own products. Its REST API
+  covers account creation, inbound and outbound payments (including bulk,
+  batch, future-dated and SWIFT international), virtual and physical card
+  issuing, Bacs Direct Debit collection, KYC/KYB customer onboarding,
+  Confirmation of Payee and Verification of Payee, Payment Initiation Services
+  and Variable Recurring Payments under Open Banking, plus a rich webhook
+  notification layer. Modulr is API-native: it publishes a genuine public
+  developer portal on ReadMe with reference docs and a downloadable OpenAPI 3.1
+  definition, and offers a self-serve sandbox.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Payments
+- United Kingdom
+- Banking-as-a-Service
+- Embedded Finance
+- Payment Processing
+- Account-to-Account
+- Open Banking
+- Faster Payments
+- Card Issuing
+- Direct Debit
+- Confirmation of Payee
+- Variable Recurring Payments
+created: '2026-07-24'
+modified: '2026-07-24'
+specificationVersion: '0.19'
+apis:
+- aid: modulr:modulr-accounts-api
+  name: Modulr Accounts API
+  description: Create, retrieve, edit, block/unblock and close programmable eMoney
+    accounts, manage access groups and account rules, and read balances — the core
+    account fabric of the Modulr platform.
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Accounts
+  - eMoney
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-api.json
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+- aid: modulr:modulr-payments-api
+  name: Modulr Payments API
+  description: Initiate outbound, inbound, bulk, batch and future-dated payments over
+    UK Faster Payments and Bacs, plus international SWIFT payments, with transaction
+    retrieval and reconciliation.
+  humanURL: https://modulr.readme.io/docs/payments-2
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Payments
+  - Faster Payments
+  - SWIFT
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-api.json
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+- aid: modulr:modulr-cards-api
+  name: Modulr Cards API
+  description: Issue and manage virtual and physical cards, including tokenization,
+    PIN management, card controls, transactions, secure card-detail retrieval and
+    bulk card operations.
+  humanURL: https://modulr.readme.io/reference
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Cards
+  - Card Issuing
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-api.json
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+- aid: modulr:modulr-direct-debits-api
+  name: Modulr Direct Debits API
+  description: Set up and manage UK Bacs Direct Debit mandates and collections, outbound
+    mandate operations and indemnity claims for recurring collection use cases.
+  humanURL: https://modulr.readme.io/reference
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Direct Debits
+  - Bacs
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-api.json
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+- aid: modulr:modulr-customers-api
+  name: Modulr Customers API
+  description: Create and verify customers, run KYC/KYB onboarding, manage associates
+    and tax identifiers, and upload supporting documents for compliance.
+  humanURL: https://modulr.readme.io/docs/customer
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Customers
+  - KYC
+  - Onboarding
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-api.json
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+- aid: modulr:modulr-verification-api
+  name: Modulr Payee Verification API
+  description: Confirmation of Payee (CoP) and Verification of Payee (VoP) account
+    name checking to reduce misdirected-payment and APP fraud risk before payments
+    are sent.
+  humanURL: https://modulr.readme.io/reference
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Confirmation of Payee
+  - Verification of Payee
+  - Fraud
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-api.json
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+- aid: modulr:modulr-payment-initiation-api
+  name: Modulr Payment Initiation API
+  description: Open Banking Payment Initiation Services (PIS) — initiate immediate
+    account-to-account payments and standing orders from a payer's bank account through
+    connected ASPSPs.
+  humanURL: https://modulr.readme.io/reference
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Payment Initiations
+  - Open Banking
+  - Account-to-Account
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-api.json
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+- aid: modulr:modulr-variable-recurring-payments-api
+  name: Modulr Variable Recurring Payments API
+  description: Consumer and commercial Variable Recurring Payments (VRP) — manage
+    consents and execute recurring account-to-account payments under Open Banking.
+  humanURL: https://modulr.readme.io/reference
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Variable Recurring Payments
+  - Open Banking
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-api.json
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+- aid: modulr:modulr-notifications-api
+  name: Modulr Notifications API
+  description: Configure partner- and customer-level webhook subscriptions for account,
+    payment, customer, compliance and Direct Debit events, and retrieve failed webhook
+    deliveries.
+  humanURL: https://modulr.readme.io/docs/notifications-1
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Notification
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-api.json
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+common:
+- type: Website
+  url: https://www.modulrfinance.com/
+- type: DeveloperPortal
+  url: https://modulr.readme.io/
+- type: Documentation
+  url: https://modulr.readme.io/docs/intro
+- type: APIReference
+  url: https://modulr.readme.io/reference
+- type: GettingStarted
+  url: https://modulr.readme.io/docs/getting-started
+- type: Authentication
+  url: https://modulr.readme.io/docs/authentication
+- type: OpenAPI
+  url: openapi/modulr-api.json
+- type: GitHubOrganization
+  url: https://github.com/Modulr-finance
+- type: LinkedIn
+  url: https://www.linkedin.com/company/modulr-finance
+- type: StatusPage
+  url: https://status.modulrfinance.com/
+- type: HelpCenter
+  url: https://knowledge.modulrfinance.com/knowledge-hub
+- type: ChangeLog
+  url: https://modulr.readme.io/changelog
+- type: Pricing
+  url: https://www.modulrfinance.com/pricing
+- type: Blog
+  url: https://www.modulrfinance.com/blog
+- type: PrivacyPolicy
+  url: https://www.modulrfinance.com/privacy-policy
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

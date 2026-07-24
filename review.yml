@@ -1,0 +1,136 @@
+aid: modulr
+name: Modulr
+review:
+  question: Does Modulr publish a genuine public developer portal with a downloadable OpenAPI definition?
+  answer: true
+  date: '2026-07-24'
+  reviewer: API Evangelist
+findings:
+  summary: |
+    Modulr is an API-native United Kingdom embedded-payments / Banking-as-a-Service
+    provider with a real, self-serve developer surface. The public developer portal
+    is hosted on ReadMe at https://modulr.readme.io/ (HTTP 200), with a getting-started
+    hub, guides, an API reference at https://modulr.readme.io/reference (HTTP 200), a
+    changelog and an AI/LLM index at https://modulr.readme.io/llms.txt. A secondary
+    marketing developer landing exists at https://www.modulrfinance.com/developer/api
+    (HTTP 200).
+
+    A single, downloadable OpenAPI 3.1.0 definition ("Modulr API", version 1.0) was
+    harvested verbatim from the ReadMe API registry that powers the reference pages.
+    The reference page HTML exposes oasPublicUrl "@modulr/v2.2#m9cqsmrz0g7ar"; the raw
+    spec was retrieved from https://dash.readme.com/api/v1/api-registry/m9cqsmrz0g7ar
+    (HTTP 200, 605,924 bytes) and saved to openapi/modulr-api.json. It contains 171
+    paths / 207 operations across 26 tags: Accounts, Payments, Inbound Payments, Cards,
+    Cards Bulk Operations, Card Simulator, Direct Debits, Direct Debit Outbound Mandate
+    Operations, Customers, Beneficiaries, Confirmation of Payee, Verification of Payee,
+    Payment Initiations, Variable Recurring Payments, Notification, Integration
+    Notification, Channel Manager Card, Channel Manager Webhook Notifications, Rules,
+    Access Group, Transactions, Document, File Upload, Share secure card details, Async,
+    and Restricted.
+
+    Auth model: API-key based. The spec declares two apiKey security schemes, both in
+    the Authorization header — "modulo_security" (the primary/default scheme) and
+    "TOKEN" (short-lived bearer token, e.g. 60-second validity for secure PCI card-detail
+    retrieval). In practice Modulr signs requests with HMAC (documented under
+    https://modulr.readme.io/docs/authentication and the HMAC recipe); no OAuth2
+    /.well-known metadata is served anonymously (api host returns HTTP 403 without auth).
+
+    Base URLs: the harvested spec ships a single sandbox server,
+    https://api-sandbox.modulrfinance.com/api-sandbox-token; the production host
+    https://api.modulrfinance.com is live and returns HTTP 403 (authentication required)
+    without credentials, consistent with a documented production base URL.
+
+    Webhooks/events: extensive. Modulr exposes partner- and customer-level webhook
+    subscriptions (Notification + Integration Notification tags) covering application
+    status, customer creation/status, account changes, payment approvals, compliance
+    status and Direct Debit events, plus retrieval of failed webhook deliveries (max 50
+    per request). No AsyncAPI document is published by the provider; webhooks are
+    documented as REST configuration + delivered event callbacks.
+
+    Home market: United Kingdom. Modulr is a licensed e-money institution and a direct
+    participant in the UK Faster Payments and Bacs schemes (Pay.UK rails), with SEPA
+    reach in the EU via its Netherlands entity. The API is a first-party embedded-payments
+    /BaaS surface rather than a scheme/ISO 20022 rail gateway; no public ISO 20022
+    message specs are published.
+
+    No public Postman collection, GraphQL endpoint, or gRPC/.proto surface was found; the
+    documented transport is REST/HTTPS only.
+  transports:
+  - protocol: REST
+    scheme: https
+    baseURL: https://api.modulrfinance.com
+    documented: true
+    note: Production host; live and returns HTTP 403 without credentials.
+  - protocol: REST
+    scheme: https
+    baseURL: https://api-sandbox.modulrfinance.com/api-sandbox-token
+    documented: true
+    note: Sandbox server as declared verbatim in the harvested OpenAPI 3.1 definition.
+  - protocol: Webhooks
+    scheme: https
+    documented: true
+    note: Partner/customer webhook subscriptions with failed-delivery retrieval; no AsyncAPI published.
+  - protocol: GraphQL
+    documented: false
+  - protocol: gRPC
+    documented: false
+  developerPortal:
+    url: https://modulr.readme.io/
+    status: 200
+    confirmed: true
+  authModel:
+    type: apiKey
+    schemes:
+    - name: modulo_security
+      in: header
+      header: Authorization
+      note: Primary scheme; requests signed with HMAC per the authentication guide.
+    - name: TOKEN
+      in: header
+      header: Authorization
+      note: Short-lived bearer token for secure PCI card-detail retrieval.
+    oidcDiscovery: false
+    homeMarket: United Kingdom
+specs:
+- file: openapi/modulr-api.json
+  format: OpenAPI
+  version: 3.1.0
+  title: Modulr API
+  apiVersion: '1.0'
+  paths: 171
+  operations: 207
+  source: https://dash.readme.com/api/v1/api-registry/m9cqsmrz0g7ar
+  oasPublicUrl: '@modulr/v2.2#m9cqsmrz0g7ar'
+  httpStatus: 200
+  fetched: '2026-07-24'
+sources:
+- url: https://modulr.readme.io/
+  type: DeveloperPortal
+  status: 200
+- url: https://modulr.readme.io/reference
+  type: APIReference
+  status: 200
+- url: https://modulr.readme.io/docs/intro
+  type: Documentation
+  status: 200
+- url: https://modulr.readme.io/llms.txt
+  type: Documentation
+  status: 200
+- url: https://www.modulrfinance.com/developer/api
+  type: DeveloperPortal
+  status: 200
+- url: https://dash.readme.com/api/v1/api-registry/m9cqsmrz0g7ar
+  type: OpenAPI
+  status: 200
+- url: https://www.modulrfinance.com/
+  type: Website
+  status: 200
+- url: https://status.modulrfinance.com/
+  type: StatusPage
+  status: 200
+- url: https://github.com/Modulr-finance
+  type: GitHubOrganization
+  status: 200
+- url: https://api.modulrfinance.com/
+  type: APIBaseURL
+  status: 403
