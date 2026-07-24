@@ -1,0 +1,57 @@
+generated: '2026-07-24'
+method: derived
+source: openapi/modulr-api.json
+docs: https://modulr.readme.io/docs/limits-and-errors
+format: custom-json
+envelope:
+  description: >-
+    Modulr does not use RFC 9457 application/problem+json. Errors return a 4xx/5xx
+    status with a JSON body carrying field, code and message.
+  fields:
+  - field    # the offending field, e.g. "id"
+  - code     # machine code, e.g. "NOTFOUND"
+  - message  # human-readable detail, e.g. "Customer not found for id: C0200002"
+  example: '{"field": "id", "code": "NOTFOUND", "message": "Customer not found for id: C0200002"}'
+problems:
+- status: 400
+  title: Bad Request
+  description: Validation errors / bad data in the request; response body details the failing field.
+  example_operations: [reverseCreditAuthorisation, createSettlement, submitBatchPayments]
+- status: 401
+  title: Unauthorized
+  description: Invalid credentials (HMAC signature/token failure).
+  example_operations: [getSrdAccounts]
+- status: 403
+  title: Forbidden
+  description: >-
+    Permission/access denied, IP not allowlisted, quota exceeded ("Quota exceeded"),
+    or a reused nonce Modulr cannot resolve to an original response.
+  example_operations: [getShareSecureCardDetailsById, updateShareSecureDetails]
+- status: 404
+  title: Not Found
+  description: The requested resource does not exist.
+  example_operations: [reverseCreditAuthorisation, getCustomer]
+- status: 405
+  title: Method Not Allowed
+  description: HTTP method used to access the resource is incorrect.
+- status: 409
+  title: Conflict
+  description: Resource state conflict (e.g. address already exists for the given type).
+  example_operations: [createBusinessAddress]
+- status: 429
+  title: Too Many Requests
+  description: Rate limit exceeded ("Rate limit exceeded"). Safe to retry after backoff with the same nonce + x-mod-retry=true.
+  example_operations: [createOutboundCop, createOutboundCheckForPnv]
+- status: 500
+  title: Internal Server Error
+  description: >-
+    Unexpected server error. Also returned as "Content type not supported" when a
+    non-JSON MIME type is sent. Retry with the same nonce + x-mod-retry=true.
+  example_operations: [upload-payment-file, createOutboundCop]
+- status: 503
+  title: Service Unavailable
+  description: Service outage / temporary unavailability.
+  example_operations: [createOutboundCop, getSrdAccounts]
+related:
+  decline_codes: errors/modulr-decline-codes.yml
+  error_handling_guide: https://modulr.readme.io/docs/error-handling

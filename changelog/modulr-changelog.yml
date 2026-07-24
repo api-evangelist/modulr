@@ -1,0 +1,37 @@
+generated: '2026-07-24'
+method: searched
+source: https://modulr.readme.io/changelog
+scheme: dated monthly product updates ("Your Modulr Product Update <Month Year>") plus scheme-specific notes (ModConnect)
+current_version: '1'
+url: https://modulr.readme.io/changelog
+entries:
+- title: Your Modulr Product Update June 2026
+  date: '2026-06'
+  url: https://modulr.readme.io/changelog/your-modulr-product-update-june-2026
+  breaking: false
+  highlights:
+  - >-
+    New RemitterInfo field added to the Faster Payments (FPS) inbound payment
+    (PAYIN) webhook, surfacing free-text remittance narrative (RmtInf/Ustrd) such
+    as invoice numbers or payment reasons as a standalone field. Additive only;
+    field omitted when absent. Live 10 July 2026.
+- title: Your Modulr Product Update May 2026
+  date: '2026-05'
+  url: https://modulr.readme.io/changelog/your-modulr-product-update-may-2026
+  breaking: false
+- title: Your Modulr Product Update January 2026
+  date: '2026-01'
+  url: https://modulr.readme.io/changelog/your-modulr-product-update-january-2026
+  breaking: false
+- title: Your Modulr Product Update October 2025
+  date: '2025-10'
+  url: https://modulr.readme.io/changelog/your-modulr-product-update-october-2025
+  breaking: false
+- title: Your Modulr Product Update September 2025
+  date: '2025-09'
+  url: https://modulr.readme.io/changelog/your-modulr-product-update-september-2025
+  breaking: false
+- title: ModConnect July 2025
+  date: '2025-07'
+  url: https://modulr.readme.io/changelog/modconnect-july-2025
+  breaking: false

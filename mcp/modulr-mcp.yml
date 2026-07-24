@@ -1,0 +1,44 @@
+generated: '2026-07-24'
+method: searched
+status: published
+source: https://modulr.readme.io/docs/build-with-ai-mcp
+notes: >-
+  Official Modulr MCP server (early access), hosted by Modulr's ReadMe developer
+  portal. It is a documentation/reference-search MCP: the tools search and reason
+  over Modulr's published OpenAPI reference and guides, and can execute sandbox API
+  calls with credentials configured in the caller's own AI tool. Anonymous
+  tools/list succeeds (200); no credentials are needed to discover the reference.
+server:
+  name: modulr
+  transport: http
+  url: https://modulr.readme.io/mcp
+  auth: none (discovery); sandbox calls use the caller's own Modulr HMAC/token credentials
+  install:
+    claude_code: claude mcp add --transport http modulr https://modulr.readme.io/mcp
+    cursor: '{"mcpServers":{"modulr":{"url":"https://modulr.readme.io/mcp"}}}'
+    vscode: '{"servers":{"modulr":{"type":"http","url":"https://modulr.readme.io/mcp"}}}'
+tools:
+- name: list-endpoints
+  description: Lists all API paths and their HTTP methods with summaries, organized by path.
+  read_only: true
+- name: get-endpoint
+  description: Gets detailed information about a specific API endpoint, including security schemes and servers.
+  read_only: true
+  inputs: [path, method]
+- name: search-endpoints
+  description: Deep search through paths, operations and parameters to discover relevant API endpoints.
+  read_only: true
+  inputs: [pattern]
+- name: execute-request
+  description: Executes an API request from a given HAR request object (sandbox calls; destructive).
+  read_only: false
+  destructive: true
+  inputs: [harRequest]
+- name: search
+  description: Searches Modulr documentation, returning results with ID, title and URL.
+  read_only: true
+  inputs: [query]
+- name: fetch
+  description: Gets detailed documentation content by ID returned from the search tool.
+  read_only: true
+  inputs: [id]

@@ -1,0 +1,24 @@
+generated: '2026-07-24'
+method: generated
+source: openapi/modulr-api.json + Modulr developer docs
+skills:
+- file: modulr-onboard-and-pay.md
+  name: Onboard a customer and make a payment
+  api: openapi/modulr-api.json
+  operations: [createCustomer, createAccount, createBeneficiary, createOutboundCop, sendPayment, getPayments]
+- file: modulr-issue-card.md
+  name: Issue and manage a card
+  api: openapi/modulr-api.json
+  operations: [createCard, createPhysicalCard, activateCard, createShareSecureDetails, generateCardHolderToken, blockCard]
+- file: modulr-direct-debit-collection.md
+  name: Collect via Bacs Direct Debit
+  api: openapi/modulr-api.json
+  operations: [createMandate, createCollectionSchedule, getCollections, getMandates, cancelCollection]
+- file: modulr-verify-payee.md
+  name: Verify a payee (CoP / VoP)
+  api: openapi/modulr-api.json
+  operations: [createOutboundCop, createOutboundVop]
+- file: modulr-vrp-payment.md
+  name: Set up and execute a Variable Recurring Payment
+  api: openapi/modulr-api.json
+  operations: [initiateConsentCreation, confirmFunds, initiateVrpPayment, getVrpPayment, getVrpConsent, revokeVrpConsent]

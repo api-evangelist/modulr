@@ -1,0 +1,25 @@
+generated: '2026-07-24'
+method: searched
+source: https://github.com/Modulr-finance
+notes: >-
+  Modulr does not publish full generated SDKs to the language registries (npm/PyPI/
+  Maven Central/NuGet). Its first-party client tooling is on the Modulr-finance
+  GitHub org and centres on HMAC request-signing helpers plus a Java API client.
+packages:
+- language: java
+  registry: github
+  name: java-hmac-api-client
+  url: https://github.com/Modulr-finance/java-hmac-api-client
+  install: git clone https://github.com/Modulr-finance/java-hmac-api-client
+  description: First-party Java client that handles HMAC auth to the Modulr API (Gradle + Swagger-generated client).
+  official: true
+- language: multi
+  registry: github
+  name: modulr-hmac
+  url: https://github.com/Modulr-finance/modulr-hmac
+  install: git clone https://github.com/Modulr-finance/modulr-hmac
+  description: >-
+    Official HMAC header calculation utility with worked examples in Java, Kotlin,
+    JavaScript/Node.js, Python, Ruby, C, C++, C#, Go, PowerShell and a Postman
+    pre-request script.
+  official: true

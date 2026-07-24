@@ -1,0 +1,51 @@
+generated: '2026-07-24'
+method: searched
+source: openapi/modulr-api.json
+docs: https://modulr.readme.io/docs/authentication
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+  model: HMAC request signing (draft HTTP Signatures) over an API Key + HMAC secret
+schemes:
+- name: modulo_security
+  type: apiKey
+  in: header
+  parameter: Authorization
+  sources:
+  - openapi/modulr-api.json
+- name: TOKEN
+  type: apiKey
+  in: header
+  parameter: Authorization
+  note: >-
+    Sandbox-only bearer token shortcut. Uses the base URL
+    https://api-sandbox.modulrfinance.com/api-sandbox-token/ and the raw API Key
+    as the Authorization value. Not accepted in production.
+  sources:
+  - openapi/modulr-api.json
+details:
+  production_auth: HMAC
+  hmac:
+    standard: HMAC HTTP request signing (latest draft of the HMAC request-signing standard)
+    algorithm: hmac-sha1
+    signed_headers:
+    - date
+    - x-mod-nonce
+    authorization_format: >-
+      Signature keyId="<API_KEY>",algorithm="hmac-sha1",headers="date x-mod-nonce",signature="<url-encoded-base64>"
+    credentials:
+    - API Key (aka token)
+    - API HMAC Secret (aka hmac/secret)
+    required_headers:
+    - name: Date
+      note: RFC 7231 HTTP-date, GMT (e.g. "Mon, 25 Jul 2016 16:36:07 GMT")
+    - name: x-mod-nonce
+      note: unique value per request; reused only for idempotent retries
+    - name: Authorization
+      note: the Signature header
+    clock_skew: enforced (recommended NTP sync) to prevent replay attacks
+  ip_allowlisting: Production API access is restricted by IP address (allowlist requested at onboarding)
+  transport: HTTPS required in all environments
+  sample_code: https://github.com/Modulr-finance/modulr-hmac

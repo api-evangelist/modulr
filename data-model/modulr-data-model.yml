@@ -1,0 +1,171 @@
+generated: '2026-07-24'
+method: derived
+source: openapi/modulr-api.json
+notes: Entity graph derived from the Modulr OpenAPI (430 schemas). Core entities identified from top-level
+  resource paths; relationships inferred from id-reference property names. A structural map, not an authoritative
+  ERD.
+entities:
+- name: Account
+  id_prefix: A
+  description: Programmable eMoney account
+- name: Customer
+  id_prefix: C
+  description: Onboarded business/individual customer (KYC/KYB)
+- name: Payment
+  description: Outbound/inbound payment over FPS/Bacs/SWIFT
+- name: BatchPayment
+  description: Batch/bulk payment submission
+- name: Card
+  description: Issued virtual/physical card
+- name: Beneficiary
+  description: Saved payee
+- name: Transaction
+  description: Account transaction record
+- name: Mandate
+  description: Bacs Direct Debit mandate
+- name: Rule
+  description: Account rule (sweeping/allocation)
+- name: AccessGroup
+  description: Account access grouping
+- name: Notification
+  description: Webhook subscription
+- name: Consent
+  description: Open Banking VRP/PIS consent
+primary_relationships:
+- from: Customer
+  to: Account
+  type: has_many
+  via: customerId
+- from: Account
+  to: Transaction
+  type: has_many
+  via: accountId
+- from: Account
+  to: Rule
+  type: has_many
+  via: accountId
+- from: Customer
+  to: Beneficiary
+  type: has_many
+  via: customerId
+- from: Payment
+  to: Account
+  type: belongs_to
+  via: sourceAccountId
+- from: BatchPayment
+  to: Payment
+  type: has_many
+  via: batchPaymentId
+- from: Card
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: Mandate
+  to: Account
+  type: belongs_to
+  via: accountId
+derived_id_references:
+- from: pispgateway.MerchantDetails
+  to: Customer
+  type: belongs_to
+  via: customerId
+- from: account.BeneficiaryResponse
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: account.BeneficiaryResponse
+  to: Customer
+  type: belongs_to
+  via: customerId
+- from: pispgateway.VrpPaymentRequest
+  to: Consent
+  type: belongs_to
+  via: consentId
+- from: pispgateway.VrpPaymentRequest
+  to: Payment
+  type: belongs_to
+  via: payment
+- from: directdebit.Collection
+  to: Mandate
+  type: belongs_to
+  via: mandateId
+- from: directdebit.BulkCancelMandateRequest
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: directdebit.BulkCreateResponse
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: pispgateway.VrpPaymentDetailsResponse
+  to: Consent
+  type: belongs_to
+  via: consentId
+- from: pispgateway.VrpPaymentDetailsResponse
+  to: Payment
+  type: belongs_to
+  via: payment
+- from: channelmanager.CardActivityResponse
+  to: Card
+  type: belongs_to
+  via: cardId
+- from: directdebit.BulkCreateMandateRequest
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: card.BulkCardsOperation
+  to: Card
+  type: belongs_to
+  via: cardId
+- from: card.BulkCardsOperation
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: notification.NotificationResponse
+  to: Customer
+  type: belongs_to
+  via: customerId
+- from: directdebit.BulkCancelMandateResponse
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: card.CardActivityResponse
+  to: Card
+  type: belongs_to
+  via: cardId
+- from: rule.RuleResponse
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: account.AccountResponse
+  to: Customer
+  type: belongs_to
+  via: customerId
+- from: verificationofpayee.OutboundVopRequest
+  to: Customer
+  type: belongs_to
+  via: customerId
+- from: rule.CreateRuleRequest
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: directdebit.Mandate
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: inboundpayment.InboundPaymentRequest
+  to: Account
+  type: belongs_to
+  via: accountId
+- from: account.TransactionResponse
+  to: Account
+  type: belongs_to
+  via: account
+- from: cardsimulator.CardAuthorisationResponse
+  to: Card
+  type: belongs_to
+  via: cardId
+- from: directdebit.ReconciliationResponse
+  to: Account
+  type: belongs_to
+  via: accountId

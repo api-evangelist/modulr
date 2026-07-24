@@ -1,0 +1,37 @@
+generated: '2026-07-24'
+method: searched
+source: https://modulr.readme.io/docs/api-base-urls
+docs:
+  base_urls: https://modulr.readme.io/docs/api-base-urls
+  getting_sandbox_access: https://modulr.readme.io/docs/gaining-use-of-the-api
+  portal_guide: https://modulr.readme.io/docs/using-the-customer-portal-sandbox-and-production
+environments:
+  sandbox:
+    base_urls:
+    - url: https://api-sandbox.modulrfinance.com/api-sandbox/
+      auth: HMAC (required for production-equivalent testing)
+    - url: https://api-sandbox.modulrfinance.com/api-sandbox-token/
+      auth: raw API Key token (sandbox-only shortcut; not accepted in production)
+    keys:
+      note: Sandbox keys and HMAC secret are provided when you create your Sandbox account.
+      expiry: Sandbox keys may be time-limited to 1 month for evaluation (extension on request).
+  production:
+    base_url: provided during onboarding to the production service
+    auth: HMAC only; API access restricted by IP allowlist
+test_tooling:
+- name: Mock inbound payment (credit an account)
+  operationId: createPayments
+  path: POST /payments (sandbox only)
+  description: >-
+    Sandbox-only endpoint to simulate/mock the credit (inbound payment) of an
+    account so downstream flows can be tested without a real bank credit.
+  docs: https://modulr.readme.io/reference/createpayments
+- name: Card Simulator
+  description: >-
+    Sandbox card-simulator operations (authorisations, settlements, reversals,
+    chargebacks) under the "Card Simulator" OpenAPI tag let you drive card lifecycle
+    and decline scenarios without a physical terminal.
+notes: >-
+  Modulr publishes no fixed magic test card numbers or test bank accounts in the
+  public docs; sandbox test data is provisioned per sandbox account. No values are
+  fabricated here.

@@ -1,0 +1,27 @@
+generated: '2026-07-24'
+method: searched
+source: live probes of Modulr API + website hosts
+notes: >-
+  No /.well-known/ discovery documents are published. The API host
+  (api.modulrfinance.com) fronts an API gateway that returns 403 for
+  /.well-known/* paths, and the website/docs hosts return 404. Recorded as valid
+  negative results — nothing fabricated.
+probes:
+- host: https://api.modulrfinance.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+  - path: /.well-known/openid-configuration
+    status: 403
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+  - path: /.well-known/api-catalog
+    status: 403
+- host: https://www.modulrfinance.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+- host: https://modulrfinance.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404

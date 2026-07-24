@@ -1,0 +1,68 @@
+generated: '2026-07-24'
+method: searched
+source: https://modulr.readme.io/docs/limits-and-errors
+docs:
+  limits_and_errors: https://modulr.readme.io/docs/limits-and-errors
+  error_handling: https://modulr.readme.io/docs/error-handling
+  authentication: https://modulr.readme.io/docs/authentication
+  versioning: https://modulr.readme.io/docs/versioning
+authentication:
+  style: HMAC request signing (API Key + HMAC secret) in the Authorization header
+  see: authentication/modulr-authentication.yml
+idempotency:
+  supported: true
+  mechanism: nonce-based idempotent retries
+  key_header: x-mod-nonce
+  retry_header: x-mod-retry
+  how: >-
+    Reuse the original x-mod-nonce and set x-mod-retry=true to safely retry a
+    POST. Modulr returns the original response for a previously-seen nonce; if the
+    nonce is new the request is processed as new. The same nonce must be sent with
+    identical request content and must not be reused across GET requests.
+  retention: 48 hours from first submission of a unique nonce
+  scope: POST (object-creating) operations, particularly payments
+  see: errors/modulr-problem-types.yml
+pagination:
+  style: page-number (cursor-paginated list endpoints)
+  request_params:
+  - page   # 0-indexed
+  - size   # max 500
+  response_fields:
+  - size
+  - totalSize
+  - page
+  - totalPages
+  applies_to: [Accounts, Transactions, Beneficiaries, and other list endpoints]
+versioning:
+  style: request header
+  header: x-mod-version
+  format: single major integer (e.g. 1)
+  see: lifecycle/modulr-lifecycle.yml
+request_tracing:
+  external_reference: >-
+    Optional externalReference field in the request body, recommended for
+    matching/reconciliation to the caller's own system.
+error_envelope:
+  shape: JSON object
+  fields:
+  - field    # e.g. "id"
+  - code     # e.g. "NOTFOUND"
+  - message  # human-readable detail
+  problem_json: false
+  see: errors/modulr-problem-types.yml
+rate_limit_signaling:
+  headers:
+  - x-ratelimit-limit
+  - x-ratelimit-remaining
+  - x-ratelimit-reset   # Unix time when quota resets
+  exceeded:
+  - '429 {"error": "Rate limit exceeded"}'
+  - '403 {"error": "Quota exceeded"}'
+  see: rate-limits/modulr-rate-limits.yml
+content_types:
+  request: application/json
+  response: application/json
+  note: Other content types return 500 "Content type not supported"
+timestamps:
+  format: ISO 8601 with timezone (e.g. 2016-06-01T12:00:00.111Z), UTC
+  dates: YYYY-MM-DD

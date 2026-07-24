@@ -1,0 +1,26 @@
+generated: '2026-07-24'
+method: searched
+source: https://modulr.readme.io/docs/limits-and-errors
+docs: https://modulr.readme.io/docs/limits-and-errors
+model: >-
+  All endpoints are rate limited (short-window rate limit) and each API key has a
+  longer-window quota. Limits and quotas apply across all of a caller's requests.
+limits:
+- limit_count: 8000
+  window: 10 minutes
+  type: rate-limit
+- limit_count: 4000000
+  window: 1 week
+  type: quota
+signaling_headers:
+- x-ratelimit-limit
+- x-ratelimit-remaining
+- x-ratelimit-reset   # Unix time when quota resets
+exceeded:
+- code: 429
+  body: '{"error": "Rate limit exceeded"}'
+- code: 403
+  body: '{"error": "Quota exceeded"}'
+notes: >-
+  Callers expecting to exceed ~6000 requests / 10 min or ~2.4M / week should agree
+  the use case with Modulr in advance.

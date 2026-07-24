@@ -1,0 +1,28 @@
+generated: '2026-07-24'
+method: searched
+source: https://modulr.readme.io/docs/versioning
+versioning:
+  scheme: request-header
+  header: x-mod-version
+  format: single major integer (send 1, not 1.0.1)
+  current: '1'
+  docs: https://modulr.readme.io/docs/versioning
+backwards_compatibility:
+  docs: https://modulr.readme.io/docs/limits-and-errors
+  non_breaking_changes:
+  - Adding new API endpoints
+  - Adding new properties to existing responses
+  - Reordering response properties
+  - Adding optional request parameters
+  - Altering the format or length of IDs
+  - Altering validation/error message attributes
+  - Sending webhooks for new event types
+  note: >-
+    Modulr manages compatibility via the x-mod-version header when breaking changes
+    are introduced (described as rare). No dated formal deprecation/Sunset-header
+    policy is published; breaking changes are handled through version negotiation
+    and onboarding communication.
+status_page: https://status.modulrfinance.com/
+changelog: https://modulr.readme.io/changelog
+support: https://knowledge.modulrfinance.com/knowledge-hub
+deprecated_operations: []

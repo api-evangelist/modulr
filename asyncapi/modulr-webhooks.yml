@@ -1,0 +1,41 @@
+generated: '2026-07-24'
+method: searched
+source: https://modulr.readme.io/docs/webhooks
+spec_type: Webhooks
+notes: >-
+  Modulr documents a rich webhook (notification) surface but does not publish a
+  machine-readable AsyncAPI document. Subscriptions are managed at partner and
+  customer level via the Notifications API (addPartnerNotification /
+  addCustomerNotification), and failed deliveries are retrievable
+  (getFailedWebHooks). Delivery is HTTPS POST to a subscriber-configured endpoint.
+docs:
+  overview: https://modulr.readme.io/docs/webhooks
+  notifications: https://modulr.readme.io/docs/notifications-1
+management_operations:
+  create_partner: addPartnerNotification
+  create_customer: addCustomerNotification
+  list_partner: getAllPartnerNotifications
+  list_customer: getAllCustomerNotifications
+  failed_deliveries: getFailedWebHooks
+events:
+- name: Application Status Change
+  docs: https://modulr.readme.io/docs/webhook-application-status-change
+- name: Customer Created
+  docs: https://modulr.readme.io/docs/webhook-customer-created
+- name: Customer Status
+  docs: https://modulr.readme.io/docs/customer-status
+- name: Customer Verification Status
+  docs: https://modulr.readme.io/docs/custvstat-webhook
+- name: Account Status Change
+- name: Inbound Payments (PAYIN)
+- name: Outbound Payments
+- name: Payment Approval Status Change
+- name: Batch Payment Approval Status Change
+- name: Payment Compliance Status
+- name: Direct Debit Mandate Status
+- name: Direct Debit Upcoming Collection Credit
+- name: Direct Debit Collection Status
+- name: Direct Debit Incoming Collection
+- name: Direct Debit Unpaid Collection
+- name: Direct Debit Return Funds
+- name: Direct Debit Collections Indemnity Claim (DDIC)

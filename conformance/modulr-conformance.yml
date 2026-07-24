@@ -1,0 +1,48 @@
+generated: '2026-07-24'
+method: derived
+source: openapi/modulr-api.json + Modulr developer docs
+standards:
+- id: hmac-http-signatures
+  conforms: true
+  evidence: Authorization uses HMAC request signing (draft HTTP Signatures) with keyId/algorithm/headers/signature.
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 security schemes; auth is apiKey + HMAC signing.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors use a custom {field, code, message} JSON envelope, not application/problem+json.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No published Sunset/Deprecation header policy; compatibility managed via x-mod-version.
+- id: idempotency
+  conforms: true
+  evidence: Nonce-based idempotent retries (x-mod-nonce + x-mod-retry), 48h retention. See conventions/.
+- id: pagination
+  conforms: true
+  evidence: Page-number pagination (page/size, size max 500) with size/totalSize/page/totalPages metadata.
+- id: open-banking-uk
+  conforms: true
+  evidence: Payment Initiation Services (PIS) and Variable Recurring Payments (VRP) under UK Open Banking.
+- id: confirmation-of-payee
+  conforms: true
+  evidence: Confirmation of Payee (CoP) and Verification of Payee (VoP) account name checking endpoints.
+- id: uk-faster-payments
+  conforms: true
+  evidence: Direct participant in UK Faster Payments; outbound/inbound FPS payment operations.
+- id: uk-bacs
+  conforms: true
+  evidence: Bacs Direct Debit collection and Bacs credit payment operations.
+- id: sepa
+  conforms: true
+  evidence: SEPA reach in the EU via Modulr's Dutch entity (documented payment rails).
+- id: pci-dss
+  conforms: true
+  evidence: PCI-compliant secure card-detail retrieval flow ("PCI - Retrieve secure card details" documentation).
+- id: iso8601-datetime
+  conforms: true
+  evidence: All timestamps ISO 8601 with timezone, UTC.
+notes: >-
+  Regulatory/scheme conformance is derived from Modulr's documented capabilities as
+  a licensed UK e-money institution and direct payment-scheme participant. PCI DSS
+  is evidenced by the documented secure card-detail flow; Modulr does not publish a
+  named certifications page, so no Compliance pointer is asserted here.

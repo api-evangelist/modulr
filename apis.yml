@@ -182,6 +182,12 @@ apis:
   - type: APIReference
     url: https://modulr.readme.io/reference
 common:
+- type: AgenticAccess
+  url: agentic-access/modulr-agentic-access.yml
+- type: DomainSecurity
+  url: security/modulr-domain-security.yml
+- type: Authentication
+  url: authentication/modulr-authentication.yml
 - type: Website
   url: https://www.modulrfinance.com/
 - type: DeveloperPortal
@@ -212,6 +218,42 @@ common:
   url: https://www.modulrfinance.com/blog
 - type: PrivacyPolicy
   url: https://www.modulrfinance.com/privacy-policy
+- type: LLMsTxt
+  url: llms/modulr-llms.txt
+- type: MCPServer
+  url: mcp/modulr-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/modulr-tool-crosswalk.yml
+- type: Packages
+  url: packages/modulr-packages.yml
+- type: SDKs
+  url: packages/modulr-packages.yml
+- type: Conventions
+  url: conventions/modulr-conventions.yml
+- type: Idempotency
+  url: conventions/modulr-conventions.yml
+- type: ErrorCatalog
+  url: errors/modulr-problem-types.yml
+- type: DeclineCodes
+  url: errors/modulr-decline-codes.yml
+- type: Lifecycle
+  url: lifecycle/modulr-lifecycle.yml
+- type: Sandbox
+  url: sandbox/modulr-sandbox.yml
+- type: ChangeLog
+  url: changelog/modulr-changelog.yml
+- type: Conformance
+  url: conformance/modulr-conformance.yml
+- type: Webhooks
+  url: asyncapi/modulr-webhooks.yml
+- type: RateLimits
+  url: rate-limits/modulr-rate-limits.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Overlay
+  url: overlays/modulr-api-overlay.yaml
+- type: DataModel
+  url: data-model/modulr-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

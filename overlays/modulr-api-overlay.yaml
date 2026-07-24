@@ -1,0 +1,29 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Modulr API
+  version: 1.0.0
+extends: openapi/modulr-api.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: modulr
+    x-apievangelist-category: embedded-payments-baas
+    x-apievangelist-auth: HMAC request signing (API Key + HMAC secret)
+    x-apievangelist-idempotency:
+      key_header: x-mod-nonce
+      retry_header: x-mod-retry
+      retention_hours: 48
+    x-apievangelist-versioning:
+      header: x-mod-version
+      format: major-integer
+    x-apievangelist-rate-limit:
+      short: 8000 / 10 minutes
+      quota: 4000000 / 1 week
+      headers: [x-ratelimit-limit, x-ratelimit-remaining, x-ratelimit-reset]
+    x-apievangelist-mcp: https://modulr.readme.io/mcp
+    x-apievangelist-status-page: https://status.modulrfinance.com/
+- target: $.info
+  update:
+    x-apievangelist-error-envelope:
+      fields: [field, code, message]
+      problem_json: false
