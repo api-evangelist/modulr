@@ -2,12 +2,10 @@ generated: '2026-07-24'
 method: searched
 status: published
 source: https://modulr.readme.io/docs/build-with-ai-mcp
-notes: >-
-  Official Modulr MCP server (early access), hosted by Modulr's ReadMe developer
-  portal. It is a documentation/reference-search MCP: the tools search and reason
-  over Modulr's published OpenAPI reference and guides, and can execute sandbox API
-  calls with credentials configured in the caller's own AI tool. Anonymous
-  tools/list succeeds (200); no credentials are needed to discover the reference.
+notes: 'Official Modulr MCP server (early access), hosted by Modulr''s ReadMe developer portal. It is
+  a documentation/reference-search MCP: the tools search and reason over Modulr''s published OpenAPI reference
+  and guides, and can execute sandbox API calls with credentials configured in the caller''s own AI tool.
+  Anonymous tools/list succeeds (200); no credentials are needed to discover the reference.'
 server:
   name: modulr
   transport: http
@@ -22,23 +20,38 @@ tools:
   description: Lists all API paths and their HTTP methods with summaries, organized by path.
   read_only: true
 - name: get-endpoint
-  description: Gets detailed information about a specific API endpoint, including security schemes and servers.
+  description: Gets detailed information about a specific API endpoint, including security schemes and
+    servers.
   read_only: true
-  inputs: [path, method]
+  inputs:
+  - path
+  - method
 - name: search-endpoints
   description: Deep search through paths, operations and parameters to discover relevant API endpoints.
   read_only: true
-  inputs: [pattern]
+  inputs:
+  - pattern
 - name: execute-request
   description: Executes an API request from a given HAR request object (sandbox calls; destructive).
   read_only: false
   destructive: true
-  inputs: [harRequest]
+  inputs:
+  - harRequest
 - name: search
   description: Searches Modulr documentation, returning results with ID, title and URL.
   read_only: true
-  inputs: [query]
+  inputs:
+  - query
 - name: fetch
   description: Gets detailed documentation content by ID returned from the search tool.
   read_only: true
-  inputs: [id]
+  inputs:
+  - id
+deployment:
+  mode: remote
+  endpoint: https://modulr.readme.io/mcp
+  verified: probed
+  probe: live
+  tools: 9
+  checked: '2026-08-12'
+  source: catalog MCP census
