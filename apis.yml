@@ -23,6 +23,19 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.j
 tags:
 - Payments
 - United Kingdom
+- Banking as a Service
+- Embedded Finance
+- Payment Processing
+- Account-to-Account
+- Open Banking
+- Faster Payments
+- Card Issuing
+- Direct Debit
+- Confirmation of Payee
+- Variable Recurring Payments
+tags_raw:
+- Payments
+- United Kingdom
 - Banking-as-a-Service
 - Embedded Finance
 - Payment Processing
@@ -45,6 +58,9 @@ apis:
   humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
+  - Account
+  - E-Money
+  tags_raw:
   - Accounts
   - eMoney
   properties:
@@ -62,6 +78,10 @@ apis:
   humanURL: https://modulr.readme.io/docs/payments-2
   baseURL: https://api.modulrfinance.com
   tags:
+  - Payments
+  - Faster Payments
+  - Swift
+  tags_raw:
   - Payments
   - Faster Payments
   - SWIFT
@@ -172,6 +192,9 @@ apis:
   humanURL: https://modulr.readme.io/docs/notifications-1
   baseURL: https://api.modulrfinance.com
   tags:
+  - Notification
+  - Webhook
+  tags_raw:
   - Notification
   - Webhooks
   properties:
