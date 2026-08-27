@@ -50,160 +50,532 @@ created: '2026-07-24'
 modified: '2026-07-24'
 specificationVersion: '0.23'
 apis:
-- aid: modulr:modulr-accounts-api
-  name: Modulr Accounts API
-  description: Create, retrieve, edit, block/unblock and close programmable eMoney
-    accounts, manage access groups and account rules, and read balances — the core
-    account fabric of the Modulr platform.
+- aid: modulr:modulr-access-group-api
+  name: Modulr Access Group API
+  description: Operations on Access Group
   humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
-  - Account
-  - E-Money
-  tags_raw:
-  - Accounts
-  - eMoney
+  - Access Group
   properties:
   - type: OpenAPI
-    url: openapi/modulr-api.json
+    url: openapi/modulr-access-group-api-openapi.yml
   - type: Documentation
     url: https://modulr.readme.io/docs/account
   - type: APIReference
     url: https://modulr.readme.io/reference
-- aid: modulr:modulr-payments-api
-  name: Modulr Payments API
-  description: Initiate outbound, inbound, bulk, batch and future-dated payments over
-    UK Faster Payments and Bacs, plus international SWIFT payments, with transaction
-    retrieval and reconciliation.
-  humanURL: https://modulr.readme.io/docs/payments-2
-  baseURL: https://api.modulrfinance.com
-  tags:
-  - Payments
-  - Faster Payments
-  - Swift
-  tags_raw:
-  - Payments
-  - Faster Payments
-  - SWIFT
-  properties:
-  - type: OpenAPI
-    url: openapi/modulr-api.json
   - type: Documentation
     url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-accounts-api
+  name: Modulr Accounts API
+  description: Operations on Accounts
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
   - type: APIReference
     url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-async-api
+  name: Modulr Async API
+  description: Asynchronous card task operations
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Async
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-async-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-beneficiaries-api
+  name: Modulr Beneficiaries API
+  description: Operations on Beneficiaries
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Beneficiaries
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-beneficiaries-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-card-simulator-api
+  name: Modulr Card Simulator API
+  description: Cards Simulator API
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Card Simulator
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-card-simulator-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
 - aid: modulr:modulr-cards-api
   name: Modulr Cards API
-  description: Issue and manage virtual and physical cards, including tokenization,
-    PIN management, card controls, transactions, secure card-detail retrieval and
-    bulk card operations.
-  humanURL: https://modulr.readme.io/reference
+  description: Cards API
+  humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
   - Cards
-  - Card Issuing
   properties:
   - type: OpenAPI
-    url: openapi/modulr-api.json
+    url: openapi/modulr-cards-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
   - type: APIReference
     url: https://modulr.readme.io/reference
-- aid: modulr:modulr-direct-debits-api
-  name: Modulr Direct Debits API
-  description: Set up and manage UK Bacs Direct Debit mandates and collections, outbound
-    mandate operations and indemnity claims for recurring collection use cases.
-  humanURL: https://modulr.readme.io/reference
-  baseURL: https://api.modulrfinance.com
-  tags:
-  - Direct Debits
-  - Bacs
-  properties:
-  - type: OpenAPI
-    url: openapi/modulr-api.json
-  - type: APIReference
-    url: https://modulr.readme.io/reference
-- aid: modulr:modulr-customers-api
-  name: Modulr Customers API
-  description: Create and verify customers, run KYC/KYB onboarding, manage associates
-    and tax identifiers, and upload supporting documents for compliance.
-  humanURL: https://modulr.readme.io/docs/customer
-  baseURL: https://api.modulrfinance.com
-  tags:
-  - Customers
-  - KYC
-  - Onboarding
-  properties:
-  - type: OpenAPI
-    url: openapi/modulr-api.json
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
   - type: Documentation
     url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-cards-bulk-operations-api
+  name: Modulr Cards Bulk Operations API
+  description: The Cards Bulk Operations API from Modulr — 3 operation(s) for cards bulk operations.
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Cards Bulk Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-cards-bulk-operations-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
   - type: APIReference
     url: https://modulr.readme.io/reference
-- aid: modulr:modulr-verification-api
-  name: Modulr Payee Verification API
-  description: Confirmation of Payee (CoP) and Verification of Payee (VoP) account
-    name checking to reduce misdirected-payment and APP fraud risk before payments
-    are sent.
-  humanURL: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-channel-manager-card-api
+  name: Modulr Channel Manager Card API
+  description: The Channel Manager Card API from Modulr — 9 operation(s) for channel manager card.
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Channel Manager Card
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-channel-manager-card-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-channel-manager-webhook-notifications-api
+  name: Modulr Channel Manager Webhook Notifications API
+  description: >-
+    The Channel Manager Webhook Notifications API from Modulr — 3 operation(s) for channel manager webhook
+    notifications.
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Channel Manager Webhook Notifications
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-channel-manager-webhook-notifications-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-confirmation-of-payee-api
+  name: Modulr Confirmation of Payee API
+  description: Account Name Checks
+  humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
   - Confirmation of Payee
-  - Verification of Payee
-  - Fraud
   properties:
   - type: OpenAPI
-    url: openapi/modulr-api.json
+    url: openapi/modulr-confirmation-of-payee-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
   - type: APIReference
     url: https://modulr.readme.io/reference
-- aid: modulr:modulr-payment-initiation-api
-  name: Modulr Payment Initiation API
-  description: Open Banking Payment Initiation Services (PIS) — initiate immediate
-    account-to-account payments and standing orders from a payer's bank account through
-    connected ASPSPs.
-  humanURL: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-customers-api
+  name: Modulr Customers API
+  description: Operations on Customers
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Customers
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-customers-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-direct-debit-outbound-mandate-operations-api
+  name: Modulr Direct Debit Outbound Mandate Operations API
+  description: >-
+    The Direct Debit Outbound Mandate Operations API from Modulr — 3 operation(s) for direct debit outbound
+    mandate operations.
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Direct Debit Outbound Mandate Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-direct-debit-outbound-mandate-operations-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-direct-debits-api
+  name: Modulr Direct Debits API
+  description: Direct Debit operations
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Direct Debits
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-direct-debits-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-document-api
+  name: Modulr Document API
+  description: Operations on Documents
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Document
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-document-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-file-upload-api
+  name: Modulr File Upload API
+  description: Upload payment files
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - File Upload
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-file-upload-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-inbound-payments-api
+  name: Modulr Inbound Payments API
+  description: Inbound payments
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Inbound Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-inbound-payments-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-integration-notification-api
+  name: Modulr Integration Notification API
+  description: >-
+    The Integration Notification API from Modulr — 3 operation(s) for integration notification.
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Integration Notification
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-integration-notification-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-notification-api
+  name: Modulr Notification API
+  description: Operations on Notifications
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Notification
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-notification-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-payment-initiations-api
+  name: Modulr Payment Initiations API
+  description: The Payment Initiations API from Modulr — 5 operation(s) for payment initiations.
+  humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
   - Payment Initiations
-  - Open Banking
-  - Account-to-Account
   properties:
   - type: OpenAPI
-    url: openapi/modulr-api.json
+    url: openapi/modulr-payment-initiations-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
   - type: APIReference
     url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-payments-api
+  name: Modulr Payments API
+  description: Operations on Payments
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-payments-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-restricted-api
+  name: Modulr Restricted API
+  description: Restricted access API calls
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Restricted
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-restricted-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-rules-api
+  name: Modulr Rules API
+  description: Rules
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Rules
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-rules-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-share-secure-card-details-api
+  name: Modulr Share secure card details API
+  description: Share secure card details operations
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Share secure card details
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-share-secure-card-details-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-transactions-api
+  name: Modulr Transactions API
+  description: Operations on Transactions
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-transactions-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
+  - type: APIReference
+    url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
 - aid: modulr:modulr-variable-recurring-payments-api
   name: Modulr Variable Recurring Payments API
-  description: Consumer and commercial Variable Recurring Payments (VRP) — manage
-    consents and execute recurring account-to-account payments under Open Banking.
-  humanURL: https://modulr.readme.io/reference
+  description: >-
+    The Variable Recurring Payments API from Modulr — 5 operation(s) for variable recurring payments.
+  humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
   - Variable Recurring Payments
-  - Open Banking
   properties:
   - type: OpenAPI
-    url: openapi/modulr-api.json
+    url: openapi/modulr-variable-recurring-payments-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
   - type: APIReference
     url: https://modulr.readme.io/reference
-- aid: modulr:modulr-notifications-api
-  name: Modulr Notifications API
-  description: Configure partner- and customer-level webhook subscriptions for account,
-    payment, customer, compliance and Direct Debit events, and retrieve failed webhook
-    deliveries.
-  humanURL: https://modulr.readme.io/docs/notifications-1
-  baseURL: https://api.modulrfinance.com
-  tags:
-  - Notification
-  - Webhook
-  tags_raw:
-  - Notification
-  - Webhooks
-  properties:
-  - type: OpenAPI
-    url: openapi/modulr-api.json
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
   - type: Documentation
     url: https://modulr.readme.io/docs/notifications-1
+- aid: modulr:modulr-verification-of-payee-api
+  name: Modulr Verification of Payee API
+  description: The Verification of Payee API from Modulr — 1 operation(s) for verification of payee.
+  humanURL: https://modulr.readme.io/docs/account
+  baseURL: https://api.modulrfinance.com
+  tags:
+  - Verification of Payee
+  properties:
+  - type: OpenAPI
+    url: openapi/modulr-verification-of-payee-api-openapi.yml
+  - type: Documentation
+    url: https://modulr.readme.io/docs/account
   - type: APIReference
     url: https://modulr.readme.io/reference
+  - type: Documentation
+    url: https://modulr.readme.io/docs/payments-2
+  - type: Documentation
+    url: https://modulr.readme.io/docs/customer
+  - type: Documentation
+    url: https://modulr.readme.io/docs/notifications-1
 common:
 - type: AgenticAccess
   url: agentic-access/modulr-agentic-access.yml
