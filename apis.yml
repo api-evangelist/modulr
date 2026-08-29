@@ -19,6 +19,17 @@ description: >-
   notification layer. Modulr is API-native: it publishes a genuine public
   developer portal on ReadMe with reference docs and a downloadable OpenAPI 3.1
   definition, and offers a self-serve sandbox.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
 - Payments
