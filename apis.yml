@@ -588,6 +588,9 @@ apis:
   - type: Documentation
     url: https://modulr.readme.io/docs/notifications-1
 common:
+- type: CapabilityMap
+  url: capabilities/modulr-capability-edges.yml
+  name: Modulr Business Capability Map
 - type: AgenticAccess
   url: agentic-access/modulr-agentic-access.yml
 - type: DomainSecurity

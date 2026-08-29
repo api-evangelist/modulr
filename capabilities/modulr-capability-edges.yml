@@ -1,0 +1,147 @@
+slug: modulr
+provider: Modulr
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Banking & Capital Markets
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 13
+edges:
+- tag: Payment Initiations
+  spec_file: modulr-payment-initiations-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.9
+  evidence: POST /payment-initiations createPaymentInitiation "Initiate payment from ASPSP"; "Initiate
+    standing order from ASPSP"; schema pispgateway.CreatePaymentInitiationRequest
+  reason: Open Banking PISP gateway that captures and initiates payment and standing-order instructions
+    against ASPSPs — payment instruction capture and authorisation.
+- tag: Payments
+  spec_file: modulr-payments-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.88
+  evidence: POST /payments  sendPayment  Create a payment; POST /batchpayments  submitBatchPayments  Make
+    a batch payment; schema payment.PaymentApproval
+  reason: Operations capture, submit and approve payment instructions (single and batch) on a licensed
+    payments platform — payment initiation.
+- tag: Variable Recurring Payments
+  spec_file: modulr-variable-recurring-payments-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.85
+  evidence: POST /vrp  initiateVrpPayment  Initiate a Variable Recurring Payment; POST /vrp-consents  initiateConsentCreation  Create
+    a VRP consent
+  reason: Open-banking VRP consent and payment initiation via a PISP gateway — capture, authorisation
+    and validation of payment instructions.
+- tag: Direct Debits
+  spec_file: modulr-direct-debits-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.8
+  evidence: '"Create a Direct Debit mandate for the given account-id."; "Create the collection schedule
+    for the given mandate-id."; schema directdebit.IndemnityClaimResponse'
+  reason: Direct Debit mandate, collection schedule, collection and indemnity-claim handling on a Bacs
+    scheme participant — squarely payments management; sub-capability spans initiation and clearing so
+    left at L1.
+- tag: Channel Manager Card
+  spec_file: modulr-channel-manager-card-api-openapi.yml
+  capability_id: BC-1340.60
+  capability_id_l1: BC-1340
+  capability_name: Card Issuance Management
+  confidence: 0.78
+  evidence: POST /channel-managers/accounts/{accountId}/cards channelManagerCreateCard "Channel Manager
+    Create card"; "Channel Manager Replace card"; schema channelmanager.UpdateCardHolder
+  reason: Operations create, update, replace cards and manage cardholder details for accounts — card issuance
+    lifecycle on an e-money/BaaS platform. Card activities/reports touch transaction processing, so issuance
+    is the dominant but not exclusive reading.
+- tag: Direct Debit Outbound Mandate Operations
+  spec_file: modulr-direct-debit-outbound-mandate-operations-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.78
+  evidence: '"Cancel a specific Mandate"; "Reject Collection"; "Retrieve all Mandates for an account"'
+  reason: Direct Debit mandate and collection operations on a Bacs-participant payments platform — payment/collection
+    instruction management. Evidence does not clearly single out a sub-capability between initiation and
+    clearing.
+- tag: Cards
+  spec_file: modulr-cards-api-openapi.yml
+  capability_id: BC-1340.60
+  capability_id_l1: BC-1340
+  capability_name: Card Issuance Management
+  confidence: 0.75
+  evidence: GET /cards/{cardId}  getCard  View the details of an existing card; card.CreateCardRequest,
+    card.CancelCardRequest, card.UpdateCardHolder, PUT /cards/{cardId}/authentication  Update card authentication
+  reason: Issuance and lifecycle management of payment cards (create, view, cancel, cardholder and authentication
+    management) on an issuing platform; some operations are report-notification configuration, hence not
+    0.9.
+- tag: Customers
+  spec_file: modulr-customers-api-openapi.yml
+  capability_id: BC-1300.10
+  capability_id_l1: BC-1300
+  capability_name: Customer Onboarding Management
+  confidence: 0.75
+  evidence: '"Create a New Onboarding Application"; "Submit an application for verification"; "Create
+    a secure Customer Verification SDK Session"; schema customercompliance.KnowYourCustomer'
+  reason: Creates customers and drives onboarding applications with identity/business verification and
+    compliance data (KYC, tax identifiers, source of wealth) for banking accounts. Onboarding is the primary
+    flow; KYC/CDD (BC-1300.20) is the adjacent alternative.
+- tag: File Upload
+  spec_file: modulr-file-upload-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.75
+  evidence: POST /payment-files "Upload payment file and store valid payments"; "Create payments from
+    an uploaded file"
+  reason: Despite the generic tag, the operations ingest payment files and instantiate payments from them
+    — bulk payment instruction capture and validation, i.e. payment initiation.
+- tag: Restricted
+  spec_file: modulr-restricted-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.75
+  evidence: POST /cards/{cardId}/suspend  suspendCard  [Restricted] Suspend an existing card; POST /authorisations/{authId}/expire  expireAuthorisation
+  reason: A privileged-scope tag whose operations are card status control and authorisation expiry — clearly
+    card management, but split between card lifecycle and authorisation handling, so only the L1 is asserted.
+- tag: Accounts
+  spec_file: modulr-accounts-api-openapi.yml
+  capability_id: BC-1330.40
+  capability_id_l1: BC-1330
+  capability_name: Account Lifecycle Operations Management
+  confidence: 0.72
+  evidence: POST /customers/{customerId}/accounts  createAccount  Create account by customer; POST /accounts/{accountId}/close  closeAccount  Close
+    an account; POST /accounts/{accountId}/block  blockAccount
+  reason: Lifecycle operations (open, block/unblock, close) on programmable eMoney deposit accounts —
+    Account Lifecycle Operations Management within Deposits & Savings.
+- tag: Confirmation of Payee
+  spec_file: modulr-confirmation-of-payee-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.7
+  evidence: POST /account-name-check createOutboundCop "Create an account name check"
+  reason: UK Confirmation of Payee — verifying payee account name before a payment instruction is executed,
+    i.e. validation within payment initiation. Some chance the intended reading is fraud prevention, hence
+    moderate confidence.
+- tag: Share secure card details
+  spec_file: modulr-share-secure-card-details-api-openapi.yml
+  capability_id: BC-1340.60
+  capability_id_l1: BC-1340
+  capability_name: Card Issuance Management
+  confidence: 0.7
+  evidence: POST /cards/{cardId}/share-secure-details  Share secure card details via EMAIL or RETURN methods
+  reason: Secure delivery of issued card credentials to the cardholder is part of card issuance/personalisation
+    and dispatch rather than transaction processing.
