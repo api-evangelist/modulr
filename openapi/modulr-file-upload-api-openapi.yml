@@ -1,0 +1,564 @@
+openapi: 3.2.0
+info:
+  title: Modulr File Upload API
+  description: Modulr API
+  license:
+    name: © Modulr Finance
+    url: https://www.modulrfinance.com
+  version: '1.0'
+servers:
+- url: https://api-sandbox.modulrfinance.com/api-sandbox-token
+security:
+- modulo_security: []
+tags:
+- name: File Upload
+  description: Upload payment files
+paths:
+  /payment-files:
+    post:
+      tags:
+      - File Upload
+      summary: Upload payment file and store valid payments
+      description: Uploads the payment file and store the valid files extracted payments for later creating payments
+      operationId: upload-payment-file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/paymentfileupload.FileUploadRequest'
+        required: true
+      responses:
+        '200':
+          description: File upload response with the file bid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/paymentfileupload.FileUploadResponse'
+        '400':
+          description: Invalid upload content or file size exceeded
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/paymentfileupload.MessageResponse'
+        '500':
+          description: 500 error code is issued when problem occurred during decoding and decompressing file content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/paymentfileupload.FileUploadResponse'
+      security:
+      - HMAC: []
+      - TOKEN: []
+  /payment-files/{fileId}/proceed:
+    post:
+      tags:
+      - File Upload
+      summary: Create payments from an uploaded file
+      description: Create a batch payment request from a valid upload file and send for processing to the payment service
+      operationId: proceed
+      parameters:
+      - name: fileId
+        in: path
+        description: Payment File ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/paymentfileupload.FileCreateRequest'
+        required: true
+      responses:
+        '201':
+          description: File created response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/paymentfileupload.FileCreatePaymentsResponse'
+        '400':
+          description: Invalid payment file
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/paymentfileupload.MessageResponse'
+      security:
+      - HMAC: []
+      - TOKEN: []
+  /payment-files/proceed:
+    post:
+      tags:
+      - File Upload
+      summary: Create payments from one or more uploaded files
+      description: Create batch payment requests from valid upload files with a single applicable MFA challenge and send for processing to the payment service
+      operationId: proceed_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/paymentfileupload.FilesCreatePaymentsRequest'
+        required: true
+      responses:
+        '201':
+          description: File created response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/paymentfileupload.FilesCreatePaymentsResponse'
+        '400':
+          description: Invalid payment file
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/paymentfileupload.MessageResponse'
+      security:
+      - HMAC: []
+      - TOKEN: []
+  /payment-files/{fileId}:
+    get:
+      tags:
+      - File Upload
+      summary: Get an upload file latest status
+      description: Get latest status of an uploaded payment file
+      operationId: status
+      parameters:
+      - name: fileId
+        in: path
+        description: Payment File ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: File upload status response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/paymentfileupload.FileUploadStatusResponse'
+        '400':
+          description: Invalid Payment file
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/paymentfileupload.MessageResponse'
+      security:
+      - HMAC: []
+      - TOKEN: []
+  /payment-files/{fileId}/summaries:
+    get:
+      tags:
+      - File Upload
+      summary: Get paginated summaries of child file uploads
+      description: Returns a paginated list of child file upload summaries for a delegate payment file. For delegate users the fileId is the parent bid; for regular users it is the file bid.
+      operationId: summaries
+      parameters:
+      - name: fileId
+        in: path
+        description: Payment File ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Page to fetch (0 indexed)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          default: 0
+          minimum: 0
+      - name: size
+        in: query
+        description: Page size (max 500)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+          default: 20
+          exclusiveMinimum: 0
+          maximum: 500
+      responses:
+        '200':
+          description: Paginated file upload summaries response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/paymentfileupload.FileUploadSummariesResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/paymentfileupload.MessageResponse'
+        '404':
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/paymentfileupload.FileUploadSummariesResponse'
+      security:
+      - HMAC: []
+      - TOKEN: []
+components:
+  schemas:
+    paymentfileupload.FileUploadResponse:
+      type: object
+      properties:
+        fileId:
+          type: string
+          description: Unique id of the uploaded file
+          example: F1100001
+          minLength: 1
+      required:
+      - fileId
+    paymentfileupload.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    paymentfileupload.FileCreateRequest:
+      type: object
+      description: File create payments request body
+      properties:
+        useDuplicate:
+          type: boolean
+          description: User confirms to proceed with creating payments on a duplicate file
+    paymentfileupload.FileCreatePaymentsResponse:
+      type: object
+      description: File create payments response
+      properties:
+        fileId:
+          type: string
+          description: Unique id of the uploaded file
+          example: F1100001
+          minLength: 1
+        status:
+          type: string
+          description: Status of the uploaded file
+          enum:
+          - NEW
+          - SUBMITTED
+          - PROCESSING
+          - INVALID
+          - VALID
+          - DUPLICATE
+          - REJECTED
+          - ERROR_RETRYABLE
+          - ACCEPTED
+          - PROCESSED
+          - SENDING
+          - PAYMENT_PROCESSING
+          - SPLIT_FILE
+          - PARTIALLY_ACCEPTED
+          example: INVALID
+        fileName:
+          type: string
+          description: File name of the uploaded file
+          example: file1
+        batchPaymentId:
+          type: string
+          description: Unique id for the Batch Payment
+          example: B1100001
+          minLength: 1
+      required:
+      - batchPaymentId
+      - fileId
+      - status
+    paymentfileupload.FileUploadSummaryContent:
+      type: object
+      description: Summary of a single child file upload
+      properties:
+        status:
+          type: string
+          description: Status of the child file upload
+          enum:
+          - NEW
+          - SUBMITTED
+          - PROCESSING
+          - INVALID
+          - VALID
+          - DUPLICATE
+          - REJECTED
+          - ERROR_RETRYABLE
+          - ACCEPTED
+          - PROCESSED
+          - SENDING
+          - PAYMENT_PROCESSING
+          - SPLIT_FILE
+          - PARTIALLY_ACCEPTED
+          example: ACCEPTED
+        customerName:
+          type: string
+          description: Customer name associated with the child file
+          example: TestCustomer
+        batchPaymentId:
+          type: string
+          description: Batch payment ID, null if not yet processed
+          example: D0000001
+        payments:
+          type: array
+          description: Aggregated payments grouped by destination account
+          items:
+            $ref: '#/components/schemas/paymentfileupload.PaymentSummary'
+    paymentfileupload.FileUploadRequest:
+      type: object
+      description: File upload request body
+      properties:
+        fileName:
+          type: string
+          description: Original file name
+          minLength: 1
+        content:
+          type: string
+          description: The file content must be zipped using gzip format and then Base64 encoded
+          minLength: 1
+        submissionType:
+          type: string
+          description: BATCH restricts operations to batch level.  BULK (default) allows payment level operations such as approval
+          enum:
+          - BATCH
+          - BULK
+        processingDate:
+          type: string
+          description: Allows overriding the file processing date
+      required:
+      - content
+      - fileName
+    paymentfileupload.FilesCreatePaymentsRequest:
+      type: object
+      description: Request body containing file IDs to process for payment creation
+      properties:
+        fileIds:
+          type: array
+          description: List of fileIds to create payments from
+          items:
+            type: string
+          maxItems: 10
+          minItems: 0
+        useDuplicate:
+          type: boolean
+          description: When true, duplicate files will be processed - Applies to all fileIds in this request
+      required:
+      - fileIds
+    paymentfileupload.FileUploadStatusResponse:
+      type: object
+      description: File upload Status Response
+      properties:
+        status:
+          type: string
+          description: Status of the uploaded file
+          enum:
+          - NEW
+          - SUBMITTED
+          - PROCESSING
+          - INVALID
+          - VALID
+          - DUPLICATE
+          - REJECTED
+          - ERROR_RETRYABLE
+          - ACCEPTED
+          - PROCESSED
+          - SENDING
+          - PAYMENT_PROCESSING
+          - SPLIT_FILE
+          - PARTIALLY_ACCEPTED
+          example: INVALID
+        fileName:
+          type: string
+          description: File name of the uploaded file
+          example: file1
+        numTransactions:
+          type: integer
+          format: int32
+          deprecated: true
+          description: Total number of transactions within file
+          example: 1000
+        numberOfTransactions:
+          type: integer
+          format: int32
+          description: Total number of transactions within file
+          example: 1000
+        totalAmount:
+          type: number
+          description: Sum of all transaction's amount within file
+          example: '1539.81'
+        errors:
+          type: string
+          description: If invalid holds the validation errors
+          example:
+          - Failed parsing
+        validationResults:
+          type: string
+          description: If invalid, holds the validation results
+          example:
+          - type: HEADER
+            lineNumber: 4
+            errors:
+            - type: INVALID_CURRENCY_CODE
+              field: currencyCode
+              invalidValue: '01'
+      required:
+      - status
+    paymentfileupload.PaymentSummary:
+      type: object
+      description: Aggregated payment count per destination account
+      properties:
+        sortCode:
+          type: string
+          description: Destination account sort code
+          example: '111111'
+        accountNumber:
+          type: string
+          description: Destination account number
+          example: '11111111'
+        numberOfPayments:
+          type: integer
+          format: int32
+          description: Number of payments to this account
+          example: 3
+    paymentfileupload.FilesCreatePaymentsResponse:
+      type: object
+      description: Response containing payment creation results for multiple files
+      properties:
+        results:
+          type: array
+          description: Results for each file processed
+          items:
+            $ref: '#/components/schemas/paymentfileupload.FileCreatePaymentsResult'
+    paymentfileupload.FileUploadSummariesResponse:
+      type: object
+      description: Paginated summaries of child file uploads for a delegate payment file
+      properties:
+        fileId:
+          type: string
+          description: File ID of the parent upload
+          example: F1100001
+        fileName:
+          type: string
+          description: File name of the parent upload
+          example: file
+        content:
+          type: array
+          description: Page content — one entry per child file upload
+          items:
+            $ref: '#/components/schemas/paymentfileupload.FileUploadSummaryContent'
+        size:
+          type: integer
+          format: int32
+          description: Number of items in this page
+          example: 3
+        totalSize:
+          type: integer
+          format: int64
+          description: Total number of child file uploads
+          example: 3
+        page:
+          type: integer
+          format: int32
+          description: Current page number (0 indexed)
+          example: 0
+        totalPages:
+          type: integer
+          format: int32
+          description: Total number of pages
+          example: 1
+    paymentfileupload.FileCreatePaymentsResult:
+      type: object
+      description: Payment creation result for an individual file in a multi-file request
+      properties:
+        fileId:
+          type: string
+          description: Unique ID of the uploaded file
+          example: F1100001
+          minLength: 1
+        status:
+          type: string
+          description: Status of the uploaded file
+          enum:
+          - NEW
+          - SUBMITTED
+          - PROCESSING
+          - INVALID
+          - VALID
+          - DUPLICATE
+          - REJECTED
+          - ERROR_RETRYABLE
+          - ACCEPTED
+          - PROCESSED
+          - SENDING
+          - PAYMENT_PROCESSING
+          - SPLIT_FILE
+          - PARTIALLY_ACCEPTED
+          example: INVALID
+        fileName:
+          type: string
+          description: File name of the uploaded file
+          example: file1
+        batchPaymentId:
+          type: string
+          description: Optional batch payment ID for successful files
+          example: B1100001
+        reason:
+          type: string
+          description: Reason, if any, for invalid status
+          example: Issue sending Batch payments
+      required:
+      - fileId
+      - status
+  securitySchemes:
+    modulo_security:
+      type: apiKey
+      name: Authorization
+      in: header
+    TOKEN:
+      type: apiKey
+      name: Authorization
+      in: header
+x-readme:
+  proxy-enabled: false
