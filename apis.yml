@@ -2,23 +2,18 @@ aid: modulr
 url: https://raw.githubusercontent.com/api-evangelist/modulr/refs/heads/main/apis.yml
 name: Modulr
 kind: company
-description: >-
-  Modulr is a United Kingdom-based embedded payments and Banking-as-a-Service
-  platform that lets businesses and software platforms open programmable eMoney
-  accounts and move money automatically via a single API. As a licensed
-  e-money institution and direct participant in the UK Faster Payments and Bacs
-  schemes (with SEPA reach in the EU through its Dutch entity), Modulr provides
-  the underlying accounts, payment rails, card issuing, and Open Banking
-  connectivity that fintechs, payroll providers, lenders, marketplaces, and
-  travel and accounting platforms embed into their own products. Its REST API
-  covers account creation, inbound and outbound payments (including bulk,
-  batch, future-dated and SWIFT international), virtual and physical card
-  issuing, Bacs Direct Debit collection, KYC/KYB customer onboarding,
-  Confirmation of Payee and Verification of Payee, Payment Initiation Services
-  and Variable Recurring Payments under Open Banking, plus a rich webhook
-  notification layer. Modulr is API-native: it publishes a genuine public
-  developer portal on ReadMe with reference docs and a downloadable OpenAPI 3.1
-  definition, and offers a self-serve sandbox.
+description: 'Modulr is a United Kingdom-based embedded payments and Banking-as-a-Service platform that
+  lets businesses and software platforms open programmable eMoney accounts and move money automatically
+  via a single API. As a licensed e-money institution and direct participant in the UK Faster Payments
+  and Bacs schemes (with SEPA reach in the EU through its Dutch entity), Modulr provides the underlying
+  accounts, payment rails, card issuing, and Open Banking connectivity that fintechs, payroll providers,
+  lenders, marketplaces, and travel and accounting platforms embed into their own products. Its REST API
+  covers account creation, inbound and outbound payments (including bulk, batch, future-dated and SWIFT
+  international), virtual and physical card issuing, Bacs Direct Debit collection, KYC/KYB customer onboarding,
+  Confirmation of Payee and Verification of Payee, Payment Initiation Services and Variable Recurring
+  Payments under Open Banking, plus a rich webhook notification layer. Modulr is API-native: it publishes
+  a genuine public developer portal on ReadMe with reference docs and a downloadable OpenAPI 3.1 definition,
+  and offers a self-serve sandbox.'
 deliveryModel:
   model: saas
   open_source: false
@@ -73,7 +68,7 @@ tags_raw:
 - Confirmation of Payee
 - Variable Recurring Payments
 created: '2026-07-24'
-modified: '2026-07-24'
+modified: '2026-09-16'
 specificationVersion: '0.23'
 apis:
 - aid: modulr:modulr-access-group-api
@@ -240,9 +235,8 @@ apis:
     url: https://modulr.readme.io/docs/notifications-1
 - aid: modulr:modulr-channel-manager-webhook-notifications-api
   name: Modulr Channel Manager Webhook Notifications API
-  description: >-
-    The Channel Manager Webhook Notifications API from Modulr — 3 operation(s) for channel manager webhook
-    notifications.
+  description: The Channel Manager Webhook Notifications API from Modulr — 3 operation(s) for channel
+    manager webhook notifications.
   humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
@@ -302,9 +296,8 @@ apis:
     url: https://modulr.readme.io/docs/notifications-1
 - aid: modulr:modulr-direct-debit-outbound-mandate-operations-api
   name: Modulr Direct Debit Outbound Mandate Operations API
-  description: >-
-    The Direct Debit Outbound Mandate Operations API from Modulr — 3 operation(s) for direct debit outbound
-    mandate operations.
+  description: The Direct Debit Outbound Mandate Operations API from Modulr — 3 operation(s) for direct
+    debit outbound mandate operations.
   humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
@@ -404,8 +397,7 @@ apis:
     url: https://modulr.readme.io/docs/notifications-1
 - aid: modulr:modulr-integration-notification-api
   name: Modulr Integration Notification API
-  description: >-
-    The Integration Notification API from Modulr — 3 operation(s) for integration notification.
+  description: The Integration Notification API from Modulr — 3 operation(s) for integration notification.
   humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
@@ -567,8 +559,8 @@ apis:
     url: https://modulr.readme.io/docs/notifications-1
 - aid: modulr:modulr-variable-recurring-payments-api
   name: Modulr Variable Recurring Payments API
-  description: >-
-    The Variable Recurring Payments API from Modulr — 5 operation(s) for variable recurring payments.
+  description: The Variable Recurring Payments API from Modulr — 5 operation(s) for variable recurring
+    payments.
   humanURL: https://modulr.readme.io/docs/account
   baseURL: https://api.modulrfinance.com
   tags:
@@ -629,7 +621,7 @@ common:
 - type: Authentication
   url: https://modulr.readme.io/docs/authentication
 - type: OpenAPI
-  url: openapi/modulr-api.json
+  url: openapi/_original/modulr-api.json
 - type: GitHubOrganization
   url: https://github.com/Modulr-finance
 - type: LinkedIn
