@@ -601,6 +601,8 @@ apis:
   - type: Documentation
     url: https://modulr.readme.io/docs/notifications-1
 common:
+- type: Plans
+  url: plans/modulr-plans-pricing.yml
 - type: CapabilityMap
   url: capabilities/modulr-capability-edges.yml
   name: Modulr Business Capability Map
