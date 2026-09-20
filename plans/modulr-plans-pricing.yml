@@ -11,6 +11,10 @@ provenance:
   grounding: every price_text was found verbatim in the fetched page text
 audience: business-product
 pricing_basis: tiered-subscription
+delivery:
+  delivery: managed
+  method: keyword-prefilter
+  read: '2026-09-20'
 published: true
 note: Business payment plans in three product families (bundle, AP+spend, payroll), each with Bronze/Silver/Platinum
   monthly tiers plus per-payment overage; FX and international payment fees also listed. Larger/enterprise
