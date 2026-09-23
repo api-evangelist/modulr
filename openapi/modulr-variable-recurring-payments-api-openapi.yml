@@ -17,7 +17,7 @@ paths:
     post:
       tags:
       - Variable Recurring Payments
-      summary: Initiate a Variable Recurring Payment.
+      summary: Initiate a Variable Recurring Payment
       description: Initiates a new Variable Recurring Payment using an existing authorised consent.
       operationId: initiateVrpPayment
       requestBody:
@@ -79,7 +79,7 @@ paths:
     post:
       tags:
       - Variable Recurring Payments
-      summary: Confirm the availability of funds in an account.
+      summary: Confirm the availability of funds in an account
       description: Confirm the availability of funds in account, prior to initiating a Variable Recurring Payment, using an authorised consent.
       operationId: confirmFunds
       parameters:
@@ -155,7 +155,7 @@ paths:
     get:
       tags:
       - Variable Recurring Payments
-      summary: Get VRP consent.
+      summary: Get VRP consent
       description: Returns information about a given Variable Recurring Payment consent.
       operationId: getVrpConsent
       parameters:
@@ -189,7 +189,7 @@ paths:
     delete:
       tags:
       - Variable Recurring Payments
-      summary: Revoke a VRP consent.
+      summary: Revoke a VRP consent
       description: Cancels a VRP consent and stops further variable recurring payments being made using it.
       operationId: revokeVrpConsent
       parameters:
@@ -218,90 +218,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    pispgateway.CreateVrpConsentInitiationResponse:
-      type: object
-      description: Response object to Initiate Vrp Consent
-      properties:
-        vrpConsentInitiationId:
-          type: string
-          description: The unique identifier of the VRP consent initiation request at Modulr
-          example: E210000004
-        redirectUrl:
-          type: string
-          description: A redirect URL for the user to authorise the payment initiation request at the ASPSP
-          example: https://www.bankofmoney.com/authorize
-    pispgateway.VrpConfirmationOfFundsResponse:
-      type: object
-      properties:
-        fundsAvailable:
-          type: boolean
-          description: The result of funds availability check, can be one of 'true' or 'false'
-        fundsAvailabilityCheckDateTime:
-          type: string
-          format: date-time
-          description: The time that the funds availability check occurred
-    pispgateway.Destination:
-      type: object
-      description: The destination account for the payment
-      properties:
-        type:
-          type: string
-          description: Indicates the type of destination. Can be one of ACCOUNT, SCAN
-          enum:
-          - ACCOUNT
-          - SCAN
-        id:
-          type: string
-          description: Identifier of the destination account if using ACCOUNT type
-          example: A1100001
-        accountNumber:
-          type: string
-          description: Account Number of destination account if using SCAN type
-          example: '12345678'
-          pattern: ^[0-9]{8}$
-        sortCode:
-          type: string
-          description: Sort Code of destination account if using SCAN type
-          example: '000000'
-          pattern: ^[0-9]{6}$
-        name:
-          type: string
-          description: Name of destination account if using SCAN type (this may be truncated)
-          example: Test
-          maxLength: 70
-          minLength: 0
-      required:
-      - type
-    pispgateway.Payment:
-      type: object
-      properties:
-        currency:
-          type: string
-          description: Currency of the payment amount. Must be specified in ISO 4217 format.
-        amount:
-          type: number
-          description: Payment amount
-          example: '100.00'
-        reference:
-          type: string
-          description: A reference used to unambiguously refer to the payment transaction. Min 6 to max 18 characters. Can contain alphanumeric, '-', '.', '&', '/' and space.
-      required:
-      - currency
-      - reference
-    pispgateway.PaymentConstraints:
-      type: object
-      description: 'Limits that will apply to payments initiated using this consent. '
-      properties:
-        maximumIndividualAmount:
-          $ref: '#/components/schemas/pispgateway.MaximumIndividualVrPayment'
-          description: Maximum amount of any single payment initiated using this consent.
-        periodicLimits:
-          type: array
-          description: Maximum amount of all payments that can be initiated using this consent in a given period. If the periodAlignment is “Calendar”, the limit is pro-rated in the first period to the remaining number of days.
-          items:
-            $ref: '#/components/schemas/pispgateway.PeriodicLimit'
-      required:
-      - maximumIndividualAmount
     pispgateway.VrpPaymentDetailsResponse:
       type: object
       properties:
@@ -352,19 +268,6 @@ components:
       - consentId
       - payment
       - status
-    pispgateway.VrpConfirmationOfFundsRequest:
-      type: object
-      description: Request object to confirm the availability of funds in account
-      properties:
-        currency:
-          type: string
-          description: Currency of the maximum individual amount. Must be specified in ISO 4217 format.
-        amount:
-          type: number
-          description: amount that will be confirmed for availability of funds - '1' = 1.00 GBP
-          example: '100.00'
-      required:
-      - currency
     pispgateway.VrpConsentResponse:
       type: object
       description: Response object of VRP Consent
@@ -490,52 +393,186 @@ components:
       - paymentConstraints
       - reference
       - type
-    pispgateway.OBRisk:
+    pispgateway.MaximumIndividualVrPayment:
+      type: object
+      description: Maximum amount of any single payment initiated using this consent.
+      properties:
+        currency:
+          type: string
+          description: Currency of the maximum individual amount. Must be specified in ISO 4217 format.
+        amount:
+          type: number
+          description: Maximum amount of any single payment initiated using this consent - '1' = 1.00 GBP
+          example: '100.00'
+      required:
+      - currency
+    pispgateway.Payment:
       type: object
       properties:
-        merchantCategoryCode:
+        currency:
           type: string
-          description: Category code conforming to ISO 18245, related to the type of services or goods the merchant provides.
-          maxLength: 4
-          minLength: 3
-        merchantCustomerIdentification:
+          description: Currency of the payment amount. Must be specified in ISO 4217 format.
+        amount:
+          type: number
+          description: Payment amount
+          example: '100.00'
+        reference:
           type: string
-          description: The unique customer identifier of the PSU with the merchant.
-          maxLength: 70
-          minLength: 1
-        contractPresentIndicator:
-          type: boolean
-          description: Indicates if Payee has a contractual relationship with the PISP.
-        beneficiaryPrepopulatedIndicator:
-          type: boolean
-          description: Indicates if PISP has immutably prepopulated payment details for the PSU.
-        beneficiaryAccountType:
-          type: string
-          description: Specifies the extended type of beneficiary account if known.
-          enum:
-          - Business
-          - BusinessSavingsAccount
-          - Charity
-          - Collection
-          - Corporate
-          - Ewallet
-          - Government
-          - Investment
-          - ISA
-          - JointPersonal
-          - Pension
-          - Personal
-          - PersonalSavingsAccount
-          - Premier
-          - Wealth
-        deliveryAddress:
-          $ref: '#/components/schemas/pispgateway.PostalAddress'
-          description: Information that locates and identifies a delivery address.
+          description: A reference used to unambiguously refer to the payment transaction. Min 6 to max 18 characters. Can contain alphanumeric, '-', '.', '&', '/' and space.
       required:
-      - beneficiaryPrepopulatedIndicator
-      - contractPresentIndicator
-      - merchantCategoryCode
-      - merchantCustomerIdentification
+      - currency
+      - reference
+    pispgateway.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    pispgateway.UltimateParty:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name by which a party is known and which is usually used to identify that party.
+          maxLength: 140
+          minLength: 1
+        identification:
+          type: string
+          description: Identification assigned by an institution.
+          maxLength: 256
+          minLength: 1
+        lei:
+          type: string
+          description: Legal entity identification as an alternate identification for a party. Legal Entity Identifier is a code allocated to a party as described in ISO 17442 Financial Services - Legal Entity Identifier (LEI).
+          maxLength: 20
+          minLength: 1
+        postalAddress:
+          $ref: '#/components/schemas/pispgateway.PostalAddress'
+          description: Information that locates and identifies a specific address, as defined by postal services.
+    pispgateway.VrpPaymentRequest:
+      type: object
+      properties:
+        consentId:
+          type: string
+          description: The unique identifier of the VRP consent initiation request at Modulr.
+          example: E210000004
+        payment:
+          $ref: '#/components/schemas/pispgateway.Payment'
+          description: Payment details for the VRP payment initiation request.
+        interactionType:
+          type: string
+          description: 'PSU interaction type permitted under this consent. Must be one of: IN_SESSION (customer is present), OFF_SESSION (customer is not present).'
+          enum:
+          - IN_SESSION
+          - OFF_SESSION
+      required:
+      - consentId
+      - payment
+    pispgateway.VrpConfirmationOfFundsResponse:
+      type: object
+      properties:
+        fundsAvailable:
+          type: boolean
+          description: The result of funds availability check, can be one of 'true' or 'false'
+        fundsAvailabilityCheckDateTime:
+          type: string
+          format: date-time
+          description: The time that the funds availability check occurred
+    pispgateway.VrpConfirmationOfFundsRequest:
+      type: object
+      description: Request object to confirm the availability of funds in account
+      properties:
+        currency:
+          type: string
+          description: Currency of the maximum individual amount. Must be specified in ISO 4217 format.
+        amount:
+          type: number
+          description: amount that will be confirmed for availability of funds - '1' = 1.00 GBP
+          example: '100.00'
+      required:
+      - currency
+    pispgateway.PaymentConstraints:
+      type: object
+      description: 'Limits that will apply to payments initiated using this consent. '
+      properties:
+        maximumIndividualAmount:
+          $ref: '#/components/schemas/pispgateway.MaximumIndividualVrPayment'
+          description: Maximum amount of any single payment initiated using this consent.
+        periodicLimits:
+          type: array
+          description: Maximum amount of all payments that can be initiated using this consent in a given period. If the periodAlignment is “Calendar”, the limit is pro-rated in the first period to the remaining number of days.
+          items:
+            $ref: '#/components/schemas/pispgateway.PeriodicLimit'
+      required:
+      - maximumIndividualAmount
+    pispgateway.VrpPaymentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the VRP payment initiation request at Modulr
+          example: V21000001E
+        status:
+          type: string
+          description: The current status of vrp payment. Must be one of “SUBMITTED”, “ACCEPTEDWITHOUTPOSTING”, “ACCEPTEDSETTLEMENTINPROCESS”, “PENDING”, “REJECTED”, “ACCEPTEDCREDITSETTLEMENTCOMPLETED”, “ACCEPTEDSETTLEMENTCOMPLETED”, “RECEIVED”, “CANCELLED”, “BLOCKED”, “ACCEPTEDTECHNICALVALIDATION”, “ACCEPTEDCUSTOMERPROFILE”, “ACCEPTEDFUNDSCHECKED”, “ACCEPTEDWITHCHANGE”, “ACCEPTEDSETTLEMENTCOMPLETEDCREDITORACCOUNT”, “ACCEPTEDSETTLEMENTCOMPLETEDDEBITORACCOUNT”, “ER_GENERAL”, “ER_EXTSYS”
+          enum:
+          - SUBMITTED
+          - ACCEPTEDWITHOUTPOSTING
+          - ACCEPTEDSETTLEMENTINPROCESS
+          - PENDING
+          - REJECTED
+          - ACCEPTEDCREDITSETTLEMENTCOMPLETED
+          - ACCEPTEDSETTLEMENTCOMPLETED
+          - RECEIVED
+          - CANCELLED
+          - BLOCKED
+          - ACCEPTEDTECHNICALVALIDATION
+          - ACCEPTEDCUSTOMERPROFILE
+          - ACCEPTEDFUNDSCHECKED
+          - ACCEPTEDWITHCHANGE
+          - ACCEPTEDSETTLEMENTCOMPLETEDCREDITORACCOUNT
+          - ACCEPTEDSETTLEMENTCOMPLETEDDEBITORACCOUNT
+          - ER_GENERAL
+          - ER_EXTSYS
+      required:
+      - status
+    pispgateway.CreateVrpConsentInitiationResponse:
+      type: object
+      description: Response object to Initiate Vrp Consent
+      properties:
+        vrpConsentInitiationId:
+          type: string
+          description: The unique identifier of the VRP consent initiation request at Modulr
+          example: E210000004
+        redirectUrl:
+          type: string
+          description: A redirect URL for the user to authorise the payment initiation request at the ASPSP
+          example: https://www.bankofmoney.com/authorize
     pispgateway.PostalAddress:
       type: object
       properties:
@@ -636,121 +673,6 @@ components:
           description: Information that locates and identifies a specific address, as defined by postal services, presented in free format text. Maximum 7 lines, each up to 70 characters.
           items:
             type: string
-    pispgateway.UltimateParty:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name by which a party is known and which is usually used to identify that party.
-          maxLength: 140
-          minLength: 1
-        identification:
-          type: string
-          description: Identification assigned by an institution.
-          maxLength: 256
-          minLength: 1
-        lei:
-          type: string
-          description: Legal entity identification as an alternate identification for a party. Legal Entity Identifier is a code allocated to a party as described in ISO 17442 Financial Services - Legal Entity Identifier (LEI).
-          maxLength: 20
-          minLength: 1
-        postalAddress:
-          $ref: '#/components/schemas/pispgateway.PostalAddress'
-          description: Information that locates and identifies a specific address, as defined by postal services.
-    pispgateway.VrpPaymentRequest:
-      type: object
-      properties:
-        consentId:
-          type: string
-          description: The unique identifier of the VRP consent initiation request at Modulr.
-          example: E210000004
-        payment:
-          $ref: '#/components/schemas/pispgateway.Payment'
-          description: Payment details for the VRP payment initiation request.
-        interactionType:
-          type: string
-          description: 'PSU interaction type permitted under this consent. Must be one of: IN_SESSION (customer is present), OFF_SESSION (customer is not present).'
-          enum:
-          - IN_SESSION
-          - OFF_SESSION
-      required:
-      - consentId
-      - payment
-    pispgateway.MaximumIndividualVrPayment:
-      type: object
-      description: Maximum amount of any single payment initiated using this consent.
-      properties:
-        currency:
-          type: string
-          description: Currency of the maximum individual amount. Must be specified in ISO 4217 format.
-        amount:
-          type: number
-          description: Maximum amount of any single payment initiated using this consent - '1' = 1.00 GBP
-          example: '100.00'
-      required:
-      - currency
-    pispgateway.VrpPaymentResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the VRP payment initiation request at Modulr
-          example: V21000001E
-        status:
-          type: string
-          description: The current status of vrp payment. Must be one of “SUBMITTED”, “ACCEPTEDWITHOUTPOSTING”, “ACCEPTEDSETTLEMENTINPROCESS”, “PENDING”, “REJECTED”, “ACCEPTEDCREDITSETTLEMENTCOMPLETED”, “ACCEPTEDSETTLEMENTCOMPLETED”, “RECEIVED”, “CANCELLED”, “BLOCKED”, “ACCEPTEDTECHNICALVALIDATION”, “ACCEPTEDCUSTOMERPROFILE”, “ACCEPTEDFUNDSCHECKED”, “ACCEPTEDWITHCHANGE”, “ACCEPTEDSETTLEMENTCOMPLETEDCREDITORACCOUNT”, “ACCEPTEDSETTLEMENTCOMPLETEDDEBITORACCOUNT”, “ER_GENERAL”, “ER_EXTSYS”
-          enum:
-          - SUBMITTED
-          - ACCEPTEDWITHOUTPOSTING
-          - ACCEPTEDSETTLEMENTINPROCESS
-          - PENDING
-          - REJECTED
-          - ACCEPTEDCREDITSETTLEMENTCOMPLETED
-          - ACCEPTEDSETTLEMENTCOMPLETED
-          - RECEIVED
-          - CANCELLED
-          - BLOCKED
-          - ACCEPTEDTECHNICALVALIDATION
-          - ACCEPTEDCUSTOMERPROFILE
-          - ACCEPTEDFUNDSCHECKED
-          - ACCEPTEDWITHCHANGE
-          - ACCEPTEDSETTLEMENTCOMPLETEDCREDITORACCOUNT
-          - ACCEPTEDSETTLEMENTCOMPLETEDDEBITORACCOUNT
-          - ER_GENERAL
-          - ER_EXTSYS
-      required:
-      - status
-    pispgateway.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
     pispgateway.PeriodicLimit:
       type: object
       description: Maximum amount of all payments that can be initiated using this consent in a given period. If the periodAlignment is “Calendar”, the limit is pro-rated in the first period to the remaining number of days.
@@ -772,6 +694,84 @@ components:
       - currency
       - periodAlignment
       - periodType
+    pispgateway.Destination:
+      type: object
+      description: The destination account for the payment
+      properties:
+        type:
+          type: string
+          description: Indicates the type of destination. Can be one of ACCOUNT, SCAN
+          enum:
+          - ACCOUNT
+          - SCAN
+        id:
+          type: string
+          description: Identifier of the destination account if using ACCOUNT type
+          example: A1100001
+        accountNumber:
+          type: string
+          description: Account Number of destination account if using SCAN type
+          example: '12345678'
+          pattern: ^[0-9]{8}$
+        sortCode:
+          type: string
+          description: Sort Code of destination account if using SCAN type
+          example: '000000'
+          pattern: ^[0-9]{6}$
+        name:
+          type: string
+          description: Name of destination account if using SCAN type (this may be truncated)
+          example: Test
+          maxLength: 70
+          minLength: 0
+      required:
+      - type
+    pispgateway.OBRisk:
+      type: object
+      properties:
+        merchantCategoryCode:
+          type: string
+          description: Category code conforming to ISO 18245, related to the type of services or goods the merchant provides.
+          maxLength: 4
+          minLength: 3
+        merchantCustomerIdentification:
+          type: string
+          description: The unique customer identifier of the PSU with the merchant.
+          maxLength: 70
+          minLength: 1
+        contractPresentIndicator:
+          type: boolean
+          description: Indicates if Payee has a contractual relationship with the PISP.
+        beneficiaryPrepopulatedIndicator:
+          type: boolean
+          description: Indicates if PISP has immutably prepopulated payment details for the PSU.
+        beneficiaryAccountType:
+          type: string
+          description: Specifies the extended type of beneficiary account if known.
+          enum:
+          - Business
+          - BusinessSavingsAccount
+          - Charity
+          - Collection
+          - Corporate
+          - Ewallet
+          - Government
+          - Investment
+          - ISA
+          - JointPersonal
+          - Pension
+          - Personal
+          - PersonalSavingsAccount
+          - Premier
+          - Wealth
+        deliveryAddress:
+          $ref: '#/components/schemas/pispgateway.PostalAddress'
+          description: Information that locates and identifies a delivery address.
+      required:
+      - beneficiaryPrepopulatedIndicator
+      - contractPresentIndicator
+      - merchantCategoryCode
+      - merchantCustomerIdentification
   securitySchemes:
     modulo_security:
       type: apiKey

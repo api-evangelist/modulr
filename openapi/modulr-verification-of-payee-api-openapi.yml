@@ -70,6 +70,56 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    verificationofpayee.OutboundVopResponse:
+      type: object
+      description: Verify Payee Response
+      properties:
+        id:
+          type: string
+          description: Unique id of verify payee request.
+          example: PAV0000001
+        result:
+          $ref: '#/components/schemas/verificationofpayee.OutboundVopResponseResult'
+          description: The result of verify payee.
+      required:
+      - id
+      - result
+    verificationofpayee.OutboundVopResponseResult:
+      type: object
+      description: Verify Payee Result
+      properties:
+        code:
+          type: string
+          description: The result of verify payee.
+          enum:
+          - MATCH
+          - NO_MATCH
+          - CLOSE_MATCH
+          - CHECK_NOT_POSSIBLE
+          example: MATCH
+        matchedName:
+          type: string
+          description: The actual name of the payee
+          example: Joseph Bloggs
+      required:
+      - code
+    verificationofpayee.OutboundVopErrorResponse:
+      type: object
+      description: Verify Payee Error Response
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+        errorCode:
+          type: string
+      required:
+      - code
+      - message
     verificationofpayee.OutboundVopRequest:
       type: object
       description: Verify Payee Request
@@ -96,56 +146,6 @@ components:
       - iban
       - name
       - paymentAccountId
-    verificationofpayee.OutboundVopResponse:
-      type: object
-      description: Verify Payee Response
-      properties:
-        id:
-          type: string
-          description: Unique id of verify payee request.
-          example: PAV0000001
-        result:
-          $ref: '#/components/schemas/verificationofpayee.OutboundVopResponseResult'
-          description: The result of verify payee.
-      required:
-      - id
-      - result
-    verificationofpayee.OutboundVopErrorResponse:
-      type: object
-      description: Verify Payee Error Response
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-        errorCode:
-          type: string
-      required:
-      - code
-      - message
-    verificationofpayee.OutboundVopResponseResult:
-      type: object
-      description: Verify Payee Result
-      properties:
-        code:
-          type: string
-          description: The result of verify payee.
-          enum:
-          - MATCH
-          - NO_MATCH
-          - CLOSE_MATCH
-          - CHECK_NOT_POSSIBLE
-          example: MATCH
-        matchedName:
-          type: string
-          description: The actual name of the payee
-          example: Joseph Bloggs
-      required:
-      - code
   securitySchemes:
     modulo_security:
       type: apiKey

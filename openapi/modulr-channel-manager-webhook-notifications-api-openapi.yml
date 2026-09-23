@@ -215,53 +215,37 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    channelmanager.Replace:
-      allOf:
-      - $ref: '#/components/schemas/channelmanager.PatchOperation'
-      - type: object
-        properties:
-          value:
-            $ref: '#/components/schemas/channelmanager.JsonNode'
-      description: Replace field
-      required:
-      - op
-      - path
-      - value
-    channelmanager.CreateWebhookNotificationRequest:
+    channelmanager.MessageResponse:
       type: object
       properties:
-        type:
+        field:
           type: string
-          description: Webhook type
-        destination:
+        code:
           type: string
-          description: URL destination
-          example: https://example.com/webhook
-          maxLength: 250
-          minLength: 12
-          pattern: ^(?i)(https://)([\w\.-]+)\.([a-z\.]{2,10})([\w\./-])*
-        retry:
-          type: boolean
-          description: Flag indicating whether failed webhooks should be retried
-        secret:
-          type: string
-          description: Webhook secret, must be 32 chars
-          maxLength: 32
-          minLength: 32
-        hmacAlgorithm:
-          type: string
-          description: Signing algorithm that is used in Webhook HMAC calculation
           enum:
-          - hmac-sha1
-          - hmac-sha256
-          - hmac-sha384
-          - hmac-sha512
-      required:
-      - destination
-      - hmacAlgorithm
-      - retry
-      - secret
-      - type
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
     channelmanager.WebhookNotificationResponse:
       type: object
       properties:
@@ -299,7 +283,6 @@ components:
           - hmac-sha256
           - hmac-sha384
           - hmac-sha512
-    channelmanager.JsonNode: {}
     channelmanager.PatchOperation:
       type: object
       discriminator:
@@ -320,37 +303,6 @@ components:
       required:
       - op
       - path
-    channelmanager.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
     channelmanager.WebhookNotificationPageResponse:
       type: object
       properties:
@@ -381,6 +333,54 @@ components:
       - size
       - totalPages
       - totalSize
+    channelmanager.CreateWebhookNotificationRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Webhook type
+        destination:
+          type: string
+          description: URL destination
+          example: https://example.com/webhook
+          maxLength: 250
+          minLength: 12
+          pattern: ^(?i)(https://)([\w\.-]+)\.([a-z\.]{2,10})([\w\./-])*
+        retry:
+          type: boolean
+          description: Flag indicating whether failed webhooks should be retried
+        secret:
+          type: string
+          description: Webhook secret, must be 32 chars
+          maxLength: 32
+          minLength: 32
+        hmacAlgorithm:
+          type: string
+          description: Signing algorithm that is used in Webhook HMAC calculation
+          enum:
+          - hmac-sha1
+          - hmac-sha256
+          - hmac-sha384
+          - hmac-sha512
+      required:
+      - destination
+      - hmacAlgorithm
+      - retry
+      - secret
+      - type
+    channelmanager.Replace:
+      allOf:
+      - $ref: '#/components/schemas/channelmanager.PatchOperation'
+      - type: object
+        properties:
+          value:
+            $ref: '#/components/schemas/channelmanager.JsonNode'
+      description: Replace field
+      required:
+      - op
+      - path
+      - value
+    channelmanager.JsonNode: {}
   securitySchemes:
     modulo_security:
       type: apiKey

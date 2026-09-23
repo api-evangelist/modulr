@@ -84,6 +84,27 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    document.DocumentUploadRequest:
+      type: object
+      properties:
+        fileName:
+          type: string
+          maxLength: 100
+          minLength: 0
+          pattern: ^[\w,\s-.]+\.(\w){3,4}$
+        content:
+          type: string
+          description: Needs to be Base64 encoded
+          minLength: 1
+        group:
+          type: string
+          description: Use to group documents together. Combination of group+filename should be unique else the files will be overwritten
+          maxLength: 100
+          minLength: 0
+      required:
+      - content
+      - fileName
+      - group
     document.CustomerDocumentUploadRequest:
       type: object
       properties:
@@ -107,34 +128,6 @@ components:
       - content
       - fileName
       - type
-    document.DocumentResponse:
-      type: object
-      properties:
-        path:
-          type: string
-        fileName:
-          type: string
-    document.DocumentUploadRequest:
-      type: object
-      properties:
-        fileName:
-          type: string
-          maxLength: 100
-          minLength: 0
-          pattern: ^[\w,\s-.]+\.(\w){3,4}$
-        content:
-          type: string
-          description: Needs to be Base64 encoded
-          minLength: 1
-        group:
-          type: string
-          description: Use to group documents together. Combination of group+filename should be unique else the files will be overwritten
-          maxLength: 100
-          minLength: 0
-      required:
-      - content
-      - fileName
-      - group
     document.MessageResponse:
       type: object
       properties:
@@ -165,6 +158,13 @@ components:
         message:
           type: string
         sourceService:
+          type: string
+    document.DocumentResponse:
+      type: object
+      properties:
+        path:
+          type: string
+        fileName:
           type: string
   securitySchemes:
     modulo_security:

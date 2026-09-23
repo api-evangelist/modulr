@@ -17,7 +17,7 @@ paths:
     get:
       tags:
       - Integration Notification
-      summary: Retrieve a specific Webhook Notification Subscription for a Customer using the Notification ID.
+      summary: Retrieve a specific Webhook Notification Subscription for a Customer using the…
       operationId: getCustomerWebhookNotificationSubscription
       parameters:
       - name: customerId
@@ -61,7 +61,7 @@ paths:
     put:
       tags:
       - Integration Notification
-      summary: Update a specific Webhook Notification Subscription for a Customer.
+      summary: Update a specific Webhook Notification Subscription for a Customer
       operationId: editCustomerWebhookNotificationSubscription
       parameters:
       - name: customerId
@@ -111,7 +111,7 @@ paths:
     delete:
       tags:
       - Integration Notification
-      summary: Delete a Webhook Notification Subscription for a Customer using the Notification ID.
+      summary: Delete a Webhook Notification Subscription for a Customer using the…
       operationId: deleteCustomerWebhookNotificationSubscription
       parameters:
       - name: customerId
@@ -148,7 +148,7 @@ paths:
     get:
       tags:
       - Integration Notification
-      summary: Retrieve all Webhook Notification Subscriptions for a Customer.
+      summary: Retrieve all Webhook Notification Subscriptions for a Customer
       operationId: getAllCustomerWebhookNotificationSubscriptions
       parameters:
       - name: customerId
@@ -206,7 +206,7 @@ paths:
     post:
       tags:
       - Integration Notification
-      summary: Set up a new Webhook Notification Subscription for a Customer.
+      summary: Set up a new Webhook Notification Subscription for a Customer
       operationId: addCustomerWebhookNotificationSubscription
       parameters:
       - name: customerId
@@ -250,7 +250,7 @@ paths:
     get:
       tags:
       - Integration Notification
-      summary: Retrieve failed Webhook Notifications for a Webhook using the Notification ID.
+      summary: Retrieve failed Webhook Notifications for a Webhook using the Notification ID
       operationId: getFailedWebhookNotifications
       parameters:
       - name: notificationId
@@ -316,49 +316,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    integrationnotification.WebhookNotificationRequest:
-      type: object
-      description: Request object used to create/update a new integration notification.
-      properties:
-        url:
-          type: string
-          description: The URL used for sending the notification.
-          minLength: 1
-        retry:
-          type: boolean
-          description: Flag indicating whether failed webhooks should be retried.
-        secret:
-          type: string
-          description: Secret that is used in HMAC calculation for webhooks.
-          maxLength: 32
-          minLength: 32
-        hmacAlgorithm:
-          type: string
-          description: HMAC signing algorithm used to calculate the webhook signature.
-          enum:
-          - hmac-sha1
-          - hmac-sha256
-          - hmac-sha384
-          - hmac-sha512
-        type:
-          type: string
-          description: Type of the notification.
-          enum:
-          - PAYOUT
-          - PAYIN
-          - CARD_AUTH
-          - CARD_AUTH_OFFLINE
-          - CARD_STATUS_UPDATE
-          - PAYMENT_COMPLIANCE_STATUS
-        webhookTypeConfiguration:
-          $ref: '#/components/schemas/integrationnotification.WebhookTypeConfiguration'
-          description: Value used to determine whether payin webhooks should be sent or not.
-      required:
-      - hmacAlgorithm
-      - retry
-      - secret
-      - type
-      - url
     integrationnotification.PaginatedWebhookFailureResponse:
       type: object
       properties:
@@ -383,38 +340,6 @@ components:
           type: integer
           format: int32
           description: Total number of pages available
-    integrationnotification.PaginatedWebhookNotificationResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of Webhook Notification records
-          items:
-            $ref: '#/components/schemas/integrationnotification.WebhookNotificationResponse'
-        size:
-          type: integer
-          format: int32
-          description: Number of records returned in the current page
-        totalSize:
-          type: integer
-          format: int64
-          description: Total number of matching failure records
-        page:
-          type: integer
-          format: int32
-          description: Current page number (0-based)
-        totalPages:
-          type: integer
-          format: int32
-          description: Total number of pages available
-    integrationnotification.WebhookTypeConfiguration:
-      type: object
-      description: Optional webhook type specific configuration
-      properties:
-        amountThreshold:
-          type: number
-          description: Amount threshold used to determine whether PAYIN webhooks should be sent.
-          minimum: 0
     integrationnotification.MessageResponse:
       type: object
       properties:
@@ -493,6 +418,49 @@ components:
       - secret
       - type
       - url
+    integrationnotification.WebhookNotificationRequest:
+      type: object
+      description: Request object used to create/update a new integration notification.
+      properties:
+        url:
+          type: string
+          description: The URL used for sending the notification.
+          minLength: 1
+        retry:
+          type: boolean
+          description: Flag indicating whether failed webhooks should be retried.
+        secret:
+          type: string
+          description: Secret that is used in HMAC calculation for webhooks.
+          maxLength: 32
+          minLength: 32
+        hmacAlgorithm:
+          type: string
+          description: HMAC signing algorithm used to calculate the webhook signature.
+          enum:
+          - hmac-sha1
+          - hmac-sha256
+          - hmac-sha384
+          - hmac-sha512
+        type:
+          type: string
+          description: Type of the notification.
+          enum:
+          - PAYOUT
+          - PAYIN
+          - CARD_AUTH
+          - CARD_AUTH_OFFLINE
+          - CARD_STATUS_UPDATE
+          - PAYMENT_COMPLIANCE_STATUS
+        webhookTypeConfiguration:
+          $ref: '#/components/schemas/integrationnotification.WebhookTypeConfiguration'
+          description: Value used to determine whether payin webhooks should be sent or not.
+      required:
+      - hmacAlgorithm
+      - retry
+      - secret
+      - type
+      - url
     integrationnotification.WebhookFailureResponse:
       type: object
       properties:
@@ -509,6 +477,38 @@ components:
       - data
       - failureDateTime
       - id
+    integrationnotification.PaginatedWebhookNotificationResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of Webhook Notification records
+          items:
+            $ref: '#/components/schemas/integrationnotification.WebhookNotificationResponse'
+        size:
+          type: integer
+          format: int32
+          description: Number of records returned in the current page
+        totalSize:
+          type: integer
+          format: int64
+          description: Total number of matching failure records
+        page:
+          type: integer
+          format: int32
+          description: Current page number (0-based)
+        totalPages:
+          type: integer
+          format: int32
+          description: Total number of pages available
+    integrationnotification.WebhookTypeConfiguration:
+      type: object
+      description: Optional webhook type specific configuration
+      properties:
+        amountThreshold:
+          type: number
+          description: Amount threshold used to determine whether PAYIN webhooks should be sent.
+          minimum: 0
   securitySchemes:
     modulo_security:
       type: apiKey

@@ -274,7 +274,6 @@ paths:
       tags:
       - Cards
       summary: Bulk create partner custom field keys
-      description: Bulk create partner custom field keys
       operationId: bulkCreatePartnerCustomFieldKeys
       parameters:
       - name: partnerId
@@ -529,7 +528,6 @@ paths:
       tags:
       - Cards
       summary: Bulk create customer custom field keys
-      description: Bulk create customer custom field keys
       operationId: bulkCreateCustomerCustomFieldKeys
       parameters:
       - name: customerId
@@ -1916,7 +1914,7 @@ paths:
       tags:
       - Cards
       summary: Get tasks
-      description: View the details of card tasks.  Ordered by createdDate, with the newest entries appearing first
+      description: View the details of card tasks. Ordered by createdDate, with the newest entries appearing first
       operationId: getAsyncTasks
       parameters:
       - name: id
@@ -2004,7 +2002,6 @@ paths:
       tags:
       - Cards
       summary: Retrieve card reports
-      description: Retrieve card reports
       operationId: searchReports
       parameters:
       - name: fromReportDate
@@ -2116,7 +2113,6 @@ paths:
       tags:
       - Cards
       summary: Download a specific card report
-      description: Download a specific card report
       operationId: retrieveReport
       parameters:
       - name: reportId
@@ -2165,7 +2161,6 @@ paths:
       tags:
       - Cards
       summary: Download a specific card report
-      description: Download a specific card report
       operationId: retrievePreSignedReportUrl
       parameters:
       - name: reportId
@@ -2378,7 +2373,7 @@ paths:
       tags:
       - Cards
       summary: Get physical card create tasks by account
-      description: View the details of create physical card tasks by account.  Ordered by createdDate, with the newest entries appearing first
+      description: View the details of create physical card tasks by account. Ordered by createdDate, with the newest entries appearing first
       operationId: getCreatePhysicalCardAsyncTasksByAccount
       parameters:
       - name: accountId
@@ -2446,7 +2441,6 @@ paths:
       tags:
       - Cards
       summary: Delete partner custom field key
-      description: Delete partner custom field key
       operationId: deletePartnerCustomFieldKey
       parameters:
       - name: partnerId
@@ -2484,7 +2478,6 @@ paths:
       tags:
       - Cards
       summary: Delete customer custom field key
-      description: Delete customer custom field key
       operationId: deleteCustomerCustomFieldKey
       parameters:
       - name: customerId
@@ -2522,7 +2515,6 @@ paths:
       tags:
       - Cards
       summary: Delete card custom field
-      description: Delete card custom field
       operationId: deleteCardCustomField
       parameters:
       - name: cardId
@@ -2557,11 +2549,163 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    card.NotificationRequest:
+      type: object
+      description: Notification request containing the emails to send the report to
+      properties:
+        emails:
+          type: array
+          items:
+            type: string
+    card.Add:
+      allOf:
+      - $ref: '#/components/schemas/card.PatchOperation'
+      - type: object
+        properties:
+          value:
+            $ref: '#/components/schemas/card.JsonNode'
+      description: Add field
+      required:
+      - op
+      - path
+      - value
+    card.ReportPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/card.ReportResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
     card.ReportTypeNotificationResponse:
       type: object
       properties:
         email:
           type: string
+    card.Copy:
+      allOf:
+      - $ref: '#/components/schemas/card.PatchOperation'
+      - type: object
+        properties:
+          from:
+            type: string
+            example: /path/to/originating/field
+      description: Copy field
+      required:
+      - from
+      - op
+      - path
+    card.CardHolder:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Cardholder title is optional for all card types. Maximum of 4 alphanumeric characters.
+          example: Mr
+          pattern: ^[0-9a-zA-Z]{1,4}$
+        firstName:
+          type: string
+          description: Cardholder first name. Maximum of 20 alphanumeric characters including space, hyphen and apostrophe. Optional for individual customers whose partner has verification type EXTERNAL and for Virtual Business customers.
+          example: Joe
+          pattern: ^[A-Za-z0-9ÄÖÜäöü/.'^ -]{1,20}$
+        lastName:
+          type: string
+          description: Cardholder last name. Maximum of 20 alphanumeric characters including space, hyphen and apostrophe. Optional for individual customers whose partner has verification type EXTERNAL and for Virtual Business customers.
+          example: Bloggs
+          pattern: ^[A-Za-z0-9ÄÖÜäöü/.'^ -]{1,20}$
+        billingAddress:
+          $ref: '#/components/schemas/card.AddressDetail'
+          description: Billing address for the cardholder. Optional for individual customers whose partner has verification type EXTERNAL.
+        dateOfBirth:
+          type: string
+          format: date
+          description: Cardholder date of birth. Must match date format of yyyy-mm-dd. Required for virtual consumer and physical cards. Optional for individual customers.
+          example: '2001-01-01'
+        mobileNumber:
+          type: string
+          description: Cardholder mobile number. Must start with a '+', followed by the country code and then the mobile number. Required for virtual consumer and physical cards.
+          example: '+447123456000'
+        email:
+          type: string
+          format: email
+          description: Cardholder email
+          example: cardholder@example.com
+          maxLength: 50
+          minLength: 0
+      required:
+      - firstName
+      - lastName
+    card.CardEnquiryRequest:
+      type: object
+      description: Enquiry
+      properties:
+        pan:
+          type: string
+          description: pan
+        providerSuppliedId:
+          type: string
+          description: providerSuppliedId
+    card.AuthorisationConstraints:
+      type: object
+      description: Authorisation constraints
+      properties:
+        spend:
+          type: array
+          description: Spending constraints
+          items:
+            $ref: '#/components/schemas/card.SpendConstraintDetail'
+    card.ReportTypeNotificationPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/card.ReportTypeNotificationResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
     card.CreateCardRequest:
       type: object
       description: Card
@@ -2619,111 +2763,264 @@ components:
       - externalRef
       - limit
       - productCode
-    card.CardKnowledgeBasedAuthentication:
+    card.Move:
+      allOf:
+      - $ref: '#/components/schemas/card.PatchOperation'
+      - type: object
+        properties:
+          from:
+            type: string
+            example: /path/to/originating/field
+      description: Move field
+      required:
+      - from
+      - op
+      - path
+    card.AppleInAppProvisioningRequest:
       type: object
+      description: Apple in app provisioning request
       properties:
-        type:
+        leafCertificate:
           type: string
-          description: 3DS knowledge-based authentication answer type
-          enum:
-          - FIRST_PET_NAME
-          - MATERNAL_GRANDMOTHER_MAIDEN_NAME
-          - FAVOURITE_CHILDHOOD_FRIEND
-          - FIRST_CAR
-          - CITY_PARENTS_MET
-        answer:
-          type: string
-          description: 3DS knowledge-based authentication answer
-          maxLength: 45
+          description: Apple issued public base 64 encoded certificate to encrypt the provisioning data
           minLength: 1
-      required:
-      - answer
-      - type
-    card.CardAuthentication:
-      type: object
-      properties:
-        knowledgeBase:
+        additionalCertificates:
           type: array
-          description: 3DS knowledge-based authentication (KBA) answers
-          items:
-            $ref: '#/components/schemas/card.CardKnowledgeBasedAuthentication'
-          minItems: 1
-      required:
-      - knowledgeBase
-    card.OneTimeTokenResponse:
-      type: object
-      properties:
-        token:
-          type: string
-          description: The token to use by the client for retrieving card details. Where 'encrypted' is true, this will be a value that must be decrypted on the client device before being used in subsequent API calls
-          example: eyJ0....zRyk
-        encrypted:
-          type: boolean
-          description: Whether this token is encrypted
-        encryptedSymmetricKey:
-          type: string
-          description: Base64 UTF-8 encoded Symmetric key used to encrypt token, encrypted with client's public key. Only provided if 'encrypted' is true.
-        initialisationVector:
-          type: string
-          description: Base64 UTF-8 encoded initialisation vector used with symmetric key for encrypting the token. Only provided if 'encrypted' is true.
-      required:
-      - encrypted
-      - token
-    card.CardConstraints:
-      type: object
-      properties:
-        mccWhitelist:
-          type: array
-          description: mccWhitelist
-          example:
-          - '1000'
-          - 1002-3000
-          - '5060'
+          description: Apple issued public base 64 encoded certificates that complete the chain including the root certificate
           items:
             type: string
-        authorisation:
-          $ref: '#/components/schemas/card.AuthorisationConstraints'
-          description: Authorisation constraints
+        nonce:
+          type: string
+          description: Hex encoded nonce generated by the client
+          minLength: 1
+        nonceSignature:
+          type: string
+          description: Hex encoded nonce signed with the private key to verify the certificate public key
+          minLength: 1
       required:
-      - mccWhitelist
-    card.UpdateCardHolder:
+      - additionalCertificates
+      - leafCertificate
+      - nonce
+      - nonceSignature
+    card.AuthorisationWindow:
       type: object
       properties:
-        billingAddress:
-          $ref: '#/components/schemas/card.AddressDetail'
-          description: Billing address for the card holder. Must be NULL for individual customers.
-        shippingAddress:
-          $ref: '#/components/schemas/card.AddressDetail'
-          description: Shipping address details for card. Optional for individual customers whose partner has verification type EXTERNAL
-        dateOfBirth:
+        startDate:
           type: string
-          format: date
-          description: Cardholder date of birth. Must match date format of yyyy-mm-dd. Required for virtual consumer and physical cards. Must be NULL for individual customers.
-          example: '2001-01-01'
-        mobileNumber:
+          format: date-time
+          description: Authorisation window start date
+        endDate:
           type: string
-          description: Cardholder mobile number. Must start with a '+', followed by the country code and then the mobile number. Required for virtual consumer and physical cards.
-          example: '+447123456000'
-        email:
-          type: string
-          format: email
-          description: Cardholder email
-          example: cardholder@example.com
-          maxLength: 50
-          minLength: 0
-    card.BulkCreateCustomFieldKeysRequest:
+          format: date-time
+          description: Authorisation window end date
+    card.UpdateCardCustomFieldsRequest:
       type: object
-      description: Bulk create custom field keys request
+      description: Custom fields to be updated
       properties:
         customFields:
           type: array
           description: Custom fields
           items:
-            $ref: '#/components/schemas/card.CustomFields'
+            $ref: '#/components/schemas/card.CardCustomFieldRequest'
           maxItems: 20
           minItems: 1
       required:
       - customFields
+    card.Constraints:
+      type: object
+      properties:
+        authorisation:
+          $ref: '#/components/schemas/card.AuthorisationConstraints'
+          description: Authorisation constraints
+    card.CardResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Card identifier. Maximum of 10 alphanumeric characters
+          example: V000000001
+        holder:
+          $ref: '#/components/schemas/card.CardHolder'
+          description: CardHolder
+        expiry:
+          type: string
+          description: An ISO 8601 date with year & month components only
+          example: 2018-12
+        status:
+          type: string
+          description: The current state of the card.
+        currency:
+          type: string
+          description: A 3 letter ISO 4217 code representing the card currency
+          example: GBP
+        limit:
+          type: string
+          description: Total card authorisation limit
+          example: '1000.00'
+        maxLimit:
+          type: string
+          description: Maximum limit which can be set on this card and is the maximum lifetime spend the card can have
+          example: '4000.00'
+        spend:
+          type: string
+          description: Current total of all authorisations on this card
+          example: '250.00'
+        externalRef:
+          type: string
+          description: Client reference for the newly created card. Maximum of 50 characters.
+          example: TTQ_51211
+        maskedPan:
+          type: string
+          description: Masked card PAN
+          example: 527095******3544
+        cardType:
+          type: string
+          description: Card product type
+          example: Business
+        cardScheme:
+          type: string
+          description: Card scheme. MASTERCARD or VISA
+          example: MASTERCARD
+        accountBid:
+          type: string
+          description: Account identifier
+          example: A020N8PD
+        productId:
+          type: string
+          description: Product identifier
+          example: O210003A
+        format:
+          type: string
+          description: The format of the card.  PHYSICAL or VIRTUAL
+          enum:
+          - PHYSICAL
+          - VIRTUAL
+          example: PHYSICAL
+        constraints:
+          $ref: '#/components/schemas/card.CardConstraints'
+          description: CardConstraints
+        design:
+          $ref: '#/components/schemas/card.ProductDesignDetail'
+          description: External reference for card design. Will only be returned for physical cards
+        printedName:
+          type: string
+          description: Name printed on the card. Will only be returned for physical cards. Maximum of 20 alphanumeric characters (including full stop, hyphen, apostrophe, caret and space)
+        cancellationDate:
+          type: string
+          description: Date card will be cancelled on
+          example: '2025-01-01'
+        createdDate:
+          type: string
+          format: date-time
+        threeDSecureStatus:
+          type: string
+          deprecated: true
+          description: The 3DS status of the card, based on the SMS one time password
+          enum:
+          - NOT_ENROLLED
+          - ENROLLED
+          - UNENROLLED
+          example: ENROLLED
+        authentication:
+          $ref: '#/components/schemas/card.CardThreeDSecureAuthentication'
+          description: The 3DS authentication method statuses
+        shippingAddress:
+          $ref: '#/components/schemas/card.AddressDetail'
+          description: Shipping address
+        customFields:
+          type: array
+          description: Custom fields currently defined for card
+          items:
+            $ref: '#/components/schemas/card.CardCustomFieldResponse'
+        authWindow:
+          $ref: '#/components/schemas/card.AuthorisationWindow'
+          description: Authorisation window defined for card
+        channelManagerId:
+          type: string
+          description: Channel Manager identifier
+          example: M883412312
+        frequencyUsage:
+          type: string
+          description: Enum that specifies the frequency usage of the card
+          enum:
+          - SINGLE_USE
+          - MULTI_USE
+          example: SINGLE_USE
+    card.Remove:
+      allOf:
+      - $ref: '#/components/schemas/card.PatchOperation'
+      description: Remove field
+      required:
+      - op
+      - path
+    card.CancelCardRequest:
+      type: object
+      description: Reason for cancellation
+      properties:
+        reason:
+          type: string
+          description: The reason for cancelling the card. Can be one of DESTROYED, LOST, STOLEN
+          enum:
+          - STOLEN
+          - DESTROYED
+          - LOST
+    card.ResetCardPinRequest:
+      type: object
+      description: Reset PIN
+      properties:
+        currentPin:
+          type: string
+          description: Card's current PIN required to reset
+          minLength: 1
+          pattern: ^[0-9]{4}$
+        newPin:
+          type: string
+          description: Card's new PIN to update
+          minLength: 1
+          pattern: ^[0-9]{4}$
+      required:
+      - currentPin
+      - newPin
+    card.AuthorisationWindowRequest:
+      type: object
+      properties:
+        startDate:
+          type: string
+          example: '2025-01-01'
+        endDate:
+          type: string
+          example: '2025-01-01'
+    card.CardReplacementRequest:
+      type: object
+      description: Replacement
+      properties:
+        reason:
+          type: string
+          description: The reason for replacing the card. Can be one of DAMAGED (physical only), LOST, STOLEN, RENEW
+          enum:
+          - STOLEN
+          - DAMAGED
+          - LOST
+          - RENEW
+          example: STOLEN
+        externalRef:
+          type: string
+          description: Client reference for the newly created card. Maximum of 50 alphanumeric characters (including underscore, hyphen and space).
+          maxLength: 50
+          minLength: 1
+          pattern: '[\w-\s]*'
+        design:
+          $ref: '#/components/schemas/card.ProductDesignDetail'
+          description: Design references for physical card and packaging
+        expiry:
+          type: string
+          description: ISO 8601 date with year & month components only. The supplied value must be in the future (cannot be the current month) and is _inclusive_ of the specified month. If no expiry is selected, the standard product expiry date will be set
+          example: 2026-12
+        shippingAddress:
+          $ref: '#/components/schemas/card.AddressDetail'
+          description: Shipping address details for card. Optional for individual customers whose partner has verification type EXTERNAL
+      required:
+      - reason
     card.AsyncTaskResponse:
       type: object
       properties:
@@ -2758,6 +3055,196 @@ components:
       - status
       - taskBid
       - type
+    card.ReportResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        reportSubjectId:
+          type: string
+        reportDate:
+          type: string
+          format: date
+        reportType:
+          type: string
+          enum:
+          - DAILY_CARD_ACTIVITY
+          - MONTHLY_CARD_ACTIVITY
+          - DAILY_ACCOUNT_FUNDING
+          - MONTHLY_ACCOUNT_FUNDING
+          - DAILY_AUTH_WINDOW
+          - DAILY_CARD_MANAGEMENT
+    card.GetCardTokensResponse:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int32
+          description: Number of elements in content
+          example: 1
+        content:
+          type: array
+          description: List of response elements
+          items:
+            $ref: '#/components/schemas/card.CardToken'
+      required:
+      - content
+      - size
+    card.CardConstraints:
+      type: object
+      properties:
+        mccWhitelist:
+          type: array
+          description: mccWhitelist
+          example:
+          - '1000'
+          - 1002-3000
+          - '5060'
+          items:
+            type: string
+        authorisation:
+          $ref: '#/components/schemas/card.AuthorisationConstraints'
+          description: Authorisation constraints
+      required:
+      - mccWhitelist
+    card.Test:
+      allOf:
+      - $ref: '#/components/schemas/card.PatchOperation'
+      - type: object
+        properties:
+          value:
+            $ref: '#/components/schemas/card.JsonNode'
+      description: Test field
+      required:
+      - op
+      - path
+      - value
+    card.CardTokenDevice:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Device ID
+          example: D110000001
+        type:
+          type: string
+          description: Device type
+          enum:
+          - CLOTHING
+          - MEDIA_GAMING
+          - CARD
+          - DOMESTIC_APPLIANCE
+          - FOB
+          - MOBILE_TAG
+          - FASHION
+          - JEWELRY
+          - MOBILE_PHONE
+          - PERSONAL_COMPUTER
+          - WRISTBAND
+          - STICKER
+          - TABLET
+          - UNKNOWN
+          - VEHICLE
+          - WATCH
+          - MOBILE_PHONE_OR_TABLET
+          example: MOBILE_PHONE
+        ip:
+          type: string
+          description: IPv4 address of the device. Either in hex format (i.e FFFFFFFF) or decimal format (i.e. 255.255.255.255)
+          example: 255.255.255.255
+        name:
+          type: string
+          description: Device name, as given by the cardholder
+          example: iPhone 12
+        status:
+          type: string
+          description: Device status
+          enum:
+          - PENDING_PROVISIONING
+          - PROVISIONED
+          - DELETED
+          - UNKNOWN
+          example: ACTIVE
+        externalId:
+          type: string
+          description: Device External Id
+      required:
+      - externalId
+      - id
+      - ip
+      - name
+      - status
+      - type
+    card.SecureCardDetails:
+      type: object
+      properties:
+        pan:
+          type: string
+          description: PAN
+          example: '4567123412341234'
+        cvv2:
+          type: string
+          description: CVV
+          example: '123'
+        pin:
+          type: string
+          description: PIN
+          example: '1234'
+      required:
+      - cvv2
+      - pan
+    card.CardPinResponse:
+      type: object
+      properties:
+        pin:
+          type: string
+          description: Card PIN
+          example: '0123'
+    card.CreateCardResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Card identifier. Maximum of 10 alphanumeric characters.
+        pan:
+          type: string
+          description: Full card PAN.
+        maskedPan:
+          type: string
+          description: Masked card PAN.
+        cvv2:
+          type: string
+          description: Card CVV2 number.
+        externalRef:
+          type: string
+          description: Client reference for the newly created card.
+        createdDate:
+          type: string
+          format: date-time
+          description: The creation date of the card
+          example: 2019-01-29T11:01:54.826+0000
+        maxLimit:
+          type: string
+          description: Maximum Limit which can be set on this card and is the maximum lifetime spend the card can have
+          example: '4000.00'
+        frequencyUsage:
+          type: string
+          description: Card frequency usage
+          enum:
+          - SINGLE_USE
+          - MULTI_USE
+          example: MULTI_USE
+        shareLink:
+          type: string
+          description: Link that can be used by client to share secure details. Will only be returned when shareDetails method is RETURN in request body.
+      required:
+      - createdDate
+      - cvv2
+      - externalRef
+      - frequencyUsage
+      - id
+      - maxLimit
+      - pan
     card.CardActivityResponse:
       type: object
       properties:
@@ -2862,52 +3349,6 @@ components:
       - transactionAmount
       - transactionCurrency
       - type
-    card.AuthorisationWindow:
-      type: object
-      properties:
-        startDate:
-          type: string
-          format: date-time
-          description: Authorisation window start date
-        endDate:
-          type: string
-          format: date-time
-          description: Authorisation window end date
-    card.CardPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/card.CardResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    card.DownloadReportResponse:
-      type: object
-      properties:
-        preSignedUrl:
-          type: string
     card.CardCustomFieldKeyPageResponse:
       type: object
       properties:
@@ -2938,6 +3379,301 @@ components:
       - size
       - totalPages
       - totalSize
+    card.AppleInAppProvisioningResponse:
+      type: object
+      description: AppleInAppProvisioningRequest
+      properties:
+        ephemeralPublicKey:
+          type: string
+          description: Ephemeral public key generated to encrypt the data on the provisioning attempt
+        encryptedPassData:
+          type: string
+          description: Encrypted payload data requested
+        activationData:
+          type: string
+          description: Encrypted OTP for the card provider
+      required:
+      - activationData
+      - encryptedPassData
+      - ephemeralPublicKey
+    card.CardActivityPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/card.CardActivityResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
+    card.AsyncTaskCreatedResponse:
+      type: object
+      properties:
+        taskUrl:
+          type: string
+          description: Url of card task resource
+        taskId:
+          type: string
+          description: ID of card task
+        metaData:
+          type: object
+          additionalProperties:
+            type: string
+          description: Meta data associated with async task response
+      required:
+      - taskId
+      - taskUrl
+    card.CardCustomFieldRequest:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Custom field key
+        value:
+          type: string
+          description: Custom field value
+      required:
+      - key
+      - value
+    card.BulkCreateCustomFieldKeysRequest:
+      type: object
+      description: Bulk create custom field keys request
+      properties:
+        customFields:
+          type: array
+          description: Custom fields
+          items:
+            $ref: '#/components/schemas/card.CustomFields'
+          maxItems: 20
+          minItems: 1
+      required:
+      - customFields
+    card.CardCustomFieldKeyResponse:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Custom field key
+        required:
+          type: boolean
+          description: Whether the custom field is required or not
+    card.CustomFields:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Custom field key
+        required:
+          type: boolean
+          description: Whether the custom field is required or not
+      required:
+      - key
+      - required
+    card.UpdateCardHolder:
+      type: object
+      properties:
+        billingAddress:
+          $ref: '#/components/schemas/card.AddressDetail'
+          description: Billing address for the card holder. Must be NULL for individual customers.
+        shippingAddress:
+          $ref: '#/components/schemas/card.AddressDetail'
+          description: Shipping address details for card. Optional for individual customers whose partner has verification type EXTERNAL
+        dateOfBirth:
+          type: string
+          format: date
+          description: Cardholder date of birth. Must match date format of yyyy-mm-dd. Required for virtual consumer and physical cards. Must be NULL for individual customers.
+          example: '2001-01-01'
+        mobileNumber:
+          type: string
+          description: Cardholder mobile number. Must start with a '+', followed by the country code and then the mobile number. Required for virtual consumer and physical cards.
+          example: '+447123456000'
+        email:
+          type: string
+          format: email
+          description: Cardholder email
+          example: cardholder@example.com
+          maxLength: 50
+          minLength: 0
+    card.CardPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/card.CardResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
+    card.OtpDetails:
+      type: object
+      properties:
+        deliveryDetails:
+          type: string
+          description: OTP delivery details
+          example: '+447777123456'
+        deliveryMethod:
+          type: string
+          description: OTP delivery method
+          enum:
+          - SMS
+          - EMAIL
+          - CALL_CENTRE
+          - AUTOMATED_CALL_CENTRE
+          - WEB
+          - APP
+          - PHONE_CALL
+          - NONE
+          example: SMS
+        expiry:
+          type: string
+          format: date-time
+          description: OTP expiry date and time (UTC, ISO 8601 format)
+          example: 2021-10-31T14:01:55+0000
+        verificationCode:
+          type: string
+          description: OTP
+          example: '393805'
+      required:
+      - deliveryDetails
+      - deliveryMethod
+      - expiry
+      - verificationCode
+    card.reportSubjectIds:
+      type: array
+      description: Report subject Ids (Customer BID, Partner BID or Channel Manager BID)
+      example: C1000001
+      items:
+        type: string
+        description: Report subject Ids (Customer BID, Partner BID or Channel Manager BID)
+        example: C1000001
+    card.PatchOperation:
+      type: object
+      discriminator:
+        propertyName: op
+        mapping:
+          add: '#/components/schemas/card.Add'
+          move: '#/components/schemas/card.Move'
+          test: '#/components/schemas/card.Test'
+          replace: '#/components/schemas/card.Replace'
+          copy: '#/components/schemas/card.Copy'
+          remove: '#/components/schemas/card.Remove'
+      properties:
+        op:
+          type: string
+        path:
+          type: string
+          example: /path/to/field
+      required:
+      - op
+      - path
+    card.UpdateCardReportNotificationRequest:
+      type: object
+      description: Notification request containing the status of the notification
+      properties:
+        status:
+          type: string
+          description: status
+          minLength: 1
+      required:
+      - status
+    card.CardReplacementResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Card identifier. Maximum of 10 alphanumeric characters.
+        cvv2:
+          type: string
+          description: Card CVV2 number.
+        pan:
+          type: string
+          description: Full card PAN.
+        createdDate:
+          type: string
+          format: date-time
+          description: The creation date of the card
+          example: 2019-01-29T11:01:54.826+0000
+        externalRef:
+          type: string
+          description: Client reference for the newly created card.
+        expiry:
+          type: string
+          description: An ISO 8601 date with year & month components only
+          example: 2018-12
+        maxLimit:
+          type: string
+          description: Maximum limit which can be set on this card and is the maximum lifetime spend the card can have
+          example: '4000.00'
+        managementToken:
+          type: string
+          description: Card Management Token required for API users for additional security when managing sensitive card data
+      required:
+      - createdDate
+      - cvv2
+      - expiry
+      - externalRef
+      - id
+      - maxLimit
+      - pan
+    card.CardThreeDSecureAuthentication:
+      type: object
+      properties:
+        otpSmsStatus:
+          type: string
+          description: The SMS one time password authentication status
+          enum:
+          - NOT_ENROLLED
+          - ENROLLED
+          - UNENROLLED
+          example: ENROLLED
+        knowledgeBaseStatus:
+          type: string
+          description: The knowledge based authentication (KBA) status
+          enum:
+          - NOT_ENROLLED
+          - ENROLLED
+          - UNENROLLED
+          example: ENROLLED
     card.MessageResponse:
       type: object
       properties:
@@ -2969,61 +3705,14 @@ components:
           type: string
         sourceService:
           type: string
-    card.CardCustomFieldKeyResponse:
-      type: object
-      properties:
-        key:
-          type: string
-          description: Custom field key
-        required:
-          type: boolean
-          description: Whether the custom field is required or not
-    card.CancelCardRequest:
-      type: object
-      description: Reason for cancellation
-      properties:
-        reason:
-          type: string
-          description: The reason for cancelling the card. Can be one of DESTROYED, LOST, STOLEN
-          enum:
-          - STOLEN
-          - DESTROYED
-          - LOST
-    card.NotificationRequest:
-      type: object
-      description: Notification request containing the emails to send the report to
-      properties:
-        emails:
-          type: array
-          items:
-            type: string
-    card.CardCustomFieldRequest:
-      type: object
-      properties:
-        key:
-          type: string
-          description: Custom field key
-        value:
-          type: string
-          description: Custom field value
-      required:
-      - key
-      - value
-    card.Remove:
-      allOf:
-      - $ref: '#/components/schemas/card.PatchOperation'
-      description: Remove field
-      required:
-      - op
-      - path
-    card.ReportTypeNotificationPageResponse:
+    card.AsyncTaskPageResponse:
       type: object
       properties:
         content:
           type: array
           description: List of responses on the current page
           items:
-            $ref: '#/components/schemas/card.ReportTypeNotificationResponse'
+            $ref: '#/components/schemas/card.AsyncTaskResponse'
         size:
           type: integer
           format: int32
@@ -3046,50 +3735,38 @@ components:
       - size
       - totalPages
       - totalSize
-    card.SecureCardDetails:
+    card.CardKnowledgeBasedAuthentication:
       type: object
       properties:
-        pan:
+        type:
           type: string
-          description: PAN
-          example: '4567123412341234'
-        cvv2:
+          description: 3DS knowledge-based authentication answer type
+          enum:
+          - FIRST_PET_NAME
+          - MATERNAL_GRANDMOTHER_MAIDEN_NAME
+          - FAVOURITE_CHILDHOOD_FRIEND
+          - FIRST_CAR
+          - CITY_PARENTS_MET
+        answer:
           type: string
-          description: CVV
-          example: '123'
-        pin:
-          type: string
-          description: PIN
-          example: '1234'
+          description: 3DS knowledge-based authentication answer
+          maxLength: 45
+          minLength: 1
       required:
-      - cvv2
-      - pan
-    card.Copy:
-      allOf:
-      - $ref: '#/components/schemas/card.PatchOperation'
-      - type: object
-        properties:
-          from:
-            type: string
-            example: /path/to/originating/field
-      description: Copy field
-      required:
-      - from
-      - op
-      - path
-    card.AuthorisationWindowRequest:
+      - answer
+      - type
+    card.UpdateCardRequest:
       type: object
+      description: Update card
       properties:
-        startDate:
+        limit:
+          type: number
+          description: Total card authorisation limit.
+          example: '1000.00'
+        cancellationDate:
           type: string
+          description: ISO 8601 date with year, month & day components only. The supplied value must be in the future and at most 1 day before the expiry date.
           example: '2025-01-01'
-        endDate:
-          type: string
-          example: '2025-01-01'
-    card.UpdateCardCustomFieldsRequest:
-      type: object
-      description: Custom fields to be updated
-      properties:
         customFields:
           type: array
           description: Custom fields
@@ -3097,8 +3774,157 @@ components:
             $ref: '#/components/schemas/card.CardCustomFieldRequest'
           maxItems: 20
           minItems: 1
+        holder:
+          $ref: '#/components/schemas/card.UpdateCardHolder'
+          description: CardHolder
+        authWindow:
+          $ref: '#/components/schemas/card.AuthorisationWindowRequest'
+          description: Authorisation Windows allow the card holder to add a period of time where the card can ONLY be used, if an Authorisation Window set then transactions outside this window will decline. ISO 8601 date with year, month & day components only.
+    card.CardCustomFieldResponse:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Custom field key
+        value:
+          type: string
+          description: Custom field value
+    card.AuthInfo:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Transaction type
+          minLength: 1
+        inputMethod:
+          type: string
+          description: Input method
+          minLength: 1
       required:
-      - customFields
+      - inputMethod
+      - type
+    card.CardToken:
+      type: object
+      description: Payment token details for a card
+      properties:
+        id:
+          type: string
+          description: Card token ID
+          example: T110000001
+        expiry:
+          type: string
+          format: date
+          description: Token expiry date (ISO 8601 format)
+          example: '2021-10-31'
+        type:
+          type: string
+          description: Type of system the token is encoded onto
+          enum:
+          - BROWSER_ACCESSIBLE_WALLET
+          - CONTACTLESS_DEVICE_PAN
+          - CARD_ON_FILE_PAN
+          - REAL_PAN
+          - UNKNOWN
+          - VIRTUAL_PAN
+          - SECURE_ELEMENT
+          - CLOUD_BASED
+          example: SECURE_ELEMENT
+        wallet:
+          type: string
+          description: Wallet the token belongs to
+          enum:
+          - APPLE
+          - GOOGLE
+          - MRCHTOKEN
+          example: APPLE
+        status:
+          type: string
+          description: Card token status
+          enum:
+          - APPROVED
+          - ACTIVE
+          - AWAITING_AUTHENTICATION
+          - AUTHENTICATION_FAILED
+          - AUTO_SUSPENDED
+          - SUSPENDED
+          - DEACTIVATED
+          - UNKNOWN
+          example: PROVISIONED
+        language:
+          type: string
+          description: 2-digit ISO 639-1 language code
+          example: EN
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/card.CardTokenDevice'
+        maskedDpan:
+          type: string
+          description: Masked DPAN (last 4 digits) to the associated token ID
+          example: '1234'
+      required:
+      - expiry
+      - id
+      - language
+      - status
+      - type
+      - wallet
+    card.ProductDesignDetail:
+      type: object
+      properties:
+        cardRef:
+          type: string
+          description: Design reference for card
+          minLength: 1
+        packagingRef:
+          type: string
+          description: Design reference for card packaging
+          minLength: 1
+      required:
+      - cardRef
+      - packagingRef
+    card.JsonNode: {}
+    card.DownloadReportResponse:
+      type: object
+      properties:
+        preSignedUrl:
+          type: string
+    card.OneTimeTokenRequest:
+      type: object
+      properties:
+        publicKey:
+          type: string
+          description: Base64 UTF-8 encoded RSA public key to be used to encrypt the token in the response. The key must be at least 4096 bits in length.
+        purpose:
+          type: string
+          default: READ
+          description: What the token will be used for. UPDATE tokens cannot be used for READ purposes, and READ tokens cannot be used for updates.
+          enum:
+          - READ
+          - UPDATE
+    card.CardAuthentication:
+      type: object
+      properties:
+        knowledgeBase:
+          type: array
+          description: 3DS knowledge-based authentication (KBA) answers
+          items:
+            $ref: '#/components/schemas/card.CardKnowledgeBasedAuthentication'
+          minItems: 1
+      required:
+      - knowledgeBase
+    card.Replace:
+      allOf:
+      - $ref: '#/components/schemas/card.PatchOperation'
+      - type: object
+        properties:
+          value:
+            $ref: '#/components/schemas/card.JsonNode'
+      description: Replace field
+      required:
+      - op
+      - path
+      - value
     card.SpendConstraintDetail:
       type: object
       description: Spending constraints
@@ -3298,92 +4124,78 @@ components:
           example: '2000.00'
       required:
       - currency
-    card.CardEnquiryRequest:
+    card.CreatePhysicalCardRequest:
       type: object
-      description: Enquiry
+      description: Card
       properties:
-        pan:
-          type: string
-          description: pan
-        providerSuppliedId:
-          type: string
-          description: providerSuppliedId
-    card.OtpDetails:
-      type: object
-      properties:
-        deliveryDetails:
-          type: string
-          description: OTP delivery details
-          example: '+447777123456'
-        deliveryMethod:
-          type: string
-          description: OTP delivery method
-          enum:
-          - SMS
-          - EMAIL
-          - CALL_CENTRE
-          - AUTOMATED_CALL_CENTRE
-          - WEB
-          - APP
-          - PHONE_CALL
-          - NONE
-          example: SMS
+        limit:
+          type: number
+          format: double
+          description: Total card authorisation limit.
+          example: '1000.00'
+          maximum: 99999999.99
+          minimum: 1
         expiry:
           type: string
-          format: date-time
-          description: OTP expiry date and time (UTC, ISO 8601 format)
-          example: 2021-10-31T14:01:55+0000
-        verificationCode:
+          description: ISO 8601 date with year & month components only. The supplied value must be in the future (cannot be the current month) and is _inclusive_ of the specified month.
+          example: 2018-12
+        productCode:
           type: string
-          description: OTP
-          example: '393805'
-      required:
-      - deliveryDetails
-      - deliveryMethod
-      - expiry
-      - verificationCode
-    card.AsyncTaskPageResponse:
-      type: object
-      properties:
-        content:
+          description: Identifies the _type_ of card to create (GBP consumer, GBP business, etc). Modulr will supply a list of possible values.
+        externalRef:
+          type: string
+          description: Client reference for the newly created card. Maximum of 50 alphanumeric characters (including underscore, hyphen and space).
+          maxLength: 50
+          minLength: 1
+          pattern: '[\w -]*'
+        constraints:
+          $ref: '#/components/schemas/card.Constraints'
+          description: Constraints
+        authentication:
+          $ref: '#/components/schemas/card.CardAuthentication'
+          description: Authentication. Required by default, optional for Virtual Business Travel Cards only
+        cancellationDate:
+          type: string
+          description: Date for card to be cancelled on
+          example: '2025-01-01'
+        customFields:
           type: array
-          description: List of responses on the current page
+          description: Custom fields of card
           items:
-            $ref: '#/components/schemas/card.AsyncTaskResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
+            $ref: '#/components/schemas/card.CardCustomFieldRequest'
+          maxItems: 20
+          minItems: 0
+        authorisationWindow:
+          $ref: '#/components/schemas/card.AuthorisationWindowRequest'
+          description: Authorisation Windows allow the card holder to add a period of time where the card can ONLY be used, if an Authorisation Window set then transactions outside this window will decline. ISO 8601 date with year, month & day components only.
+        frequencyUsage:
+          type: string
+          enum:
+          - SINGLE_USE
+          - MULTI_USE
+        holder:
+          $ref: '#/components/schemas/card.CardHolder'
+          description: CardHolder
+        shippingAddress:
+          $ref: '#/components/schemas/card.AddressDetail'
+          description: Add a Shipping address if you wish the card to be sent to an address other than the billing address
+        design:
+          $ref: '#/components/schemas/card.ProductDesignDetail'
+          description: Design references for card and packaging
+        printedName:
+          type: string
+          description: Name to be printed on the card. Maximum of 27 alphanumeric characters (including full stop, hyphen, apostrophe, caret and space). Please add business name to this field if you wish to have it on the card.
+          example: Joe Bloggs
+          maxLength: 27
+          minLength: 1
+          pattern: '[a-zA-Z 0-9À-ŽȘȚ''’.,^-]{1,27}'
       required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    card.Add:
-      allOf:
-      - $ref: '#/components/schemas/card.PatchOperation'
-      - type: object
-        properties:
-          value:
-            $ref: '#/components/schemas/card.JsonNode'
-      description: Add field
-      required:
-      - op
-      - path
-      - value
+      - design
+      - expiry
+      - externalRef
+      - limit
+      - printedName
+      - productCode
     card.AddressDetail:
       type: object
       description: Address details for the cardholder. Optional for individual customers whose partner has verification type EXTERNAL.
@@ -3486,386 +4298,36 @@ components:
       - country
       - postCode
       - postTown
-    card.AppleInAppProvisioningResponse:
+    card.OneTimeTokenResponse:
       type: object
-      description: AppleInAppProvisioningRequest
       properties:
-        ephemeralPublicKey:
+        token:
           type: string
-          description: Ephemeral public key generated to encrypt the data on the provisioning attempt
-        encryptedPassData:
+          description: The token to use by the client for retrieving card details. Where 'encrypted' is true, this will be a value that must be decrypted on the client device before being used in subsequent API calls
+          example: eyJ0....zRyk
+        encrypted:
+          type: boolean
+          description: Whether this token is encrypted
+        encryptedSymmetricKey:
           type: string
-          description: Encrypted payload data requested
-        activationData:
+          description: Base64 UTF-8 encoded Symmetric key used to encrypt token, encrypted with client's public key. Only provided if 'encrypted' is true.
+        initialisationVector:
           type: string
-          description: Encrypted OTP for the card provider
+          description: Base64 UTF-8 encoded initialisation vector used with symmetric key for encrypting the token. Only provided if 'encrypted' is true.
       required:
-      - activationData
-      - encryptedPassData
-      - ephemeralPublicKey
-    card.CardReplacementRequest:
+      - encrypted
+      - token
+    card.UpdateCardAuthenticationRequest:
       type: object
-      description: Replacement
+      description: Authentication
       properties:
-        reason:
-          type: string
-          description: The reason for replacing the card. Can be one of DAMAGED (physical only), LOST, STOLEN, RENEW
-          enum:
-          - STOLEN
-          - DAMAGED
-          - LOST
-          - RENEW
-          example: STOLEN
-        externalRef:
-          type: string
-          description: Client reference for the newly created card. Maximum of 50 alphanumeric characters (including underscore, hyphen and space).
-          maxLength: 50
-          minLength: 1
-          pattern: '[\w-\s]*'
-        design:
-          $ref: '#/components/schemas/card.ProductDesignDetail'
-          description: Design references for physical card and packaging
-        expiry:
-          type: string
-          description: ISO 8601 date with year & month components only. The supplied value must be in the future (cannot be the current month) and is _inclusive_ of the specified month. If no expiry is selected, the standard product expiry date will be set
-          example: 2026-12
-        shippingAddress:
-          $ref: '#/components/schemas/card.AddressDetail'
-          description: Shipping address details for card. Optional for individual customers whose partner has verification type EXTERNAL
-      required:
-      - reason
-    card.CardThreeDSecureAuthentication:
-      type: object
-      properties:
-        otpSmsStatus:
-          type: string
-          description: The SMS one time password authentication status
-          enum:
-          - NOT_ENROLLED
-          - ENROLLED
-          - UNENROLLED
-          example: ENROLLED
-        knowledgeBaseStatus:
-          type: string
-          description: The knowledge based authentication (KBA) status
-          enum:
-          - NOT_ENROLLED
-          - ENROLLED
-          - UNENROLLED
-          example: ENROLLED
-    card.CardCustomFieldResponse:
-      type: object
-      properties:
-        key:
-          type: string
-          description: Custom field key
-        value:
-          type: string
-          description: Custom field value
-    card.CardResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Card identifier. Maximum of 10 alphanumeric characters
-          example: V000000001
-        holder:
-          $ref: '#/components/schemas/card.CardHolder'
-          description: CardHolder
-        expiry:
-          type: string
-          description: An ISO 8601 date with year & month components only
-          example: 2018-12
-        status:
-          type: string
-          description: The current state of the card.
-        currency:
-          type: string
-          description: A 3 letter ISO 4217 code representing the card currency
-          example: GBP
-        limit:
-          type: string
-          description: Total card authorisation limit
-          example: '1000.00'
-        maxLimit:
-          type: string
-          description: Maximum limit which can be set on this card and is the maximum lifetime spend the card can have
-          example: '4000.00'
-        spend:
-          type: string
-          description: Current total of all authorisations on this card
-          example: '250.00'
-        externalRef:
-          type: string
-          description: Client reference for the newly created card. Maximum of 50 characters.
-          example: TTQ_51211
-        maskedPan:
-          type: string
-          description: Masked card PAN
-          example: 527095******3544
-        cardType:
-          type: string
-          description: Card product type
-          example: Business
-        cardScheme:
-          type: string
-          description: Card scheme. MASTERCARD or VISA
-          example: MASTERCARD
-        accountBid:
-          type: string
-          description: Account identifier
-          example: A020N8PD
-        productId:
-          type: string
-          description: Product identifier
-          example: O210003A
-        format:
-          type: string
-          description: The format of the card.  PHYSICAL or VIRTUAL
-          enum:
-          - PHYSICAL
-          - VIRTUAL
-          example: PHYSICAL
-        constraints:
-          $ref: '#/components/schemas/card.CardConstraints'
-          description: CardConstraints
-        design:
-          $ref: '#/components/schemas/card.ProductDesignDetail'
-          description: External reference for card design. Will only be returned for physical cards
-        printedName:
-          type: string
-          description: Name printed on the card. Will only be returned for physical cards. Maximum of 20 alphanumeric characters (including full stop, hyphen, apostrophe, caret and space)
-        cancellationDate:
-          type: string
-          description: Date card will be cancelled on
-          example: '2025-01-01'
-        createdDate:
-          type: string
-          format: date-time
-        threeDSecureStatus:
-          type: string
-          deprecated: true
-          description: The 3DS status of the card, based on the SMS one time password
-          enum:
-          - NOT_ENROLLED
-          - ENROLLED
-          - UNENROLLED
-          example: ENROLLED
-        authentication:
-          $ref: '#/components/schemas/card.CardThreeDSecureAuthentication'
-          description: The 3DS authentication method statuses
-        shippingAddress:
-          $ref: '#/components/schemas/card.AddressDetail'
-          description: Shipping address
-        customFields:
+        knowledgeBase:
           type: array
-          description: Custom fields currently defined for card
+          description: 3DS Knowledge-Based Authentication (KBA) answers
           items:
-            $ref: '#/components/schemas/card.CardCustomFieldResponse'
-        authWindow:
-          $ref: '#/components/schemas/card.AuthorisationWindow'
-          description: Authorisation window defined for card
-        channelManagerId:
-          type: string
-          description: Channel Manager identifier
-          example: M883412312
-        frequencyUsage:
-          type: string
-          description: Enum that specifies the frequency usage of the card
-          enum:
-          - SINGLE_USE
-          - MULTI_USE
-          example: SINGLE_USE
-    card.ResetCardPinRequest:
-      type: object
-      description: Reset PIN
-      properties:
-        currentPin:
-          type: string
-          description: Card's current PIN required to reset
-          minLength: 1
-          pattern: ^[0-9]{4}$
-        newPin:
-          type: string
-          description: Card's new PIN to update
-          minLength: 1
-          pattern: ^[0-9]{4}$
+            $ref: '#/components/schemas/card.CardKnowledgeBasedAuthentication'
       required:
-      - currentPin
-      - newPin
-    card.reportSubjectIds:
-      type: array
-      description: Report subject Ids (Customer BID, Partner BID or Channel Manager BID)
-      example: C1000001
-      items:
-        type: string
-        description: Report subject Ids (Customer BID, Partner BID or Channel Manager BID)
-        example: C1000001
-    card.CardHolder:
-      type: object
-      properties:
-        title:
-          type: string
-          description: Cardholder title is optional for all card types. Maximum of 4 alphanumeric characters.
-          example: Mr
-          pattern: ^[0-9a-zA-Z]{1,4}$
-        firstName:
-          type: string
-          description: Cardholder first name. Maximum of 20 alphanumeric characters including space, hyphen and apostrophe. Optional for individual customers whose partner has verification type EXTERNAL and for Virtual Business customers.
-          example: Joe
-          pattern: ^[A-Za-z0-9ÄÖÜäöü/.'^ -]{1,20}$
-        lastName:
-          type: string
-          description: Cardholder last name. Maximum of 20 alphanumeric characters including space, hyphen and apostrophe. Optional for individual customers whose partner has verification type EXTERNAL and for Virtual Business customers.
-          example: Bloggs
-          pattern: ^[A-Za-z0-9ÄÖÜäöü/.'^ -]{1,20}$
-        billingAddress:
-          $ref: '#/components/schemas/card.AddressDetail'
-          description: Billing address for the cardholder. Optional for individual customers whose partner has verification type EXTERNAL.
-        dateOfBirth:
-          type: string
-          format: date
-          description: Cardholder date of birth. Must match date format of yyyy-mm-dd. Required for virtual consumer and physical cards. Optional for individual customers.
-          example: '2001-01-01'
-        mobileNumber:
-          type: string
-          description: Cardholder mobile number. Must start with a '+', followed by the country code and then the mobile number. Required for virtual consumer and physical cards.
-          example: '+447123456000'
-        email:
-          type: string
-          format: email
-          description: Cardholder email
-          example: cardholder@example.com
-          maxLength: 50
-          minLength: 0
-      required:
-      - firstName
-      - lastName
-    card.PatchOperation:
-      type: object
-      discriminator:
-        propertyName: op
-        mapping:
-          add: '#/components/schemas/card.Add'
-          move: '#/components/schemas/card.Move'
-          test: '#/components/schemas/card.Test'
-          replace: '#/components/schemas/card.Replace'
-          copy: '#/components/schemas/card.Copy'
-          remove: '#/components/schemas/card.Remove'
-      properties:
-        op:
-          type: string
-        path:
-          type: string
-          example: /path/to/field
-      required:
-      - op
-      - path
-    card.CardReplacementResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Card identifier. Maximum of 10 alphanumeric characters.
-        cvv2:
-          type: string
-          description: Card CVV2 number.
-        pan:
-          type: string
-          description: Full card PAN.
-        createdDate:
-          type: string
-          format: date-time
-          description: The creation date of the card
-          example: 2019-01-29T11:01:54.826+0000
-        externalRef:
-          type: string
-          description: Client reference for the newly created card.
-        expiry:
-          type: string
-          description: An ISO 8601 date with year & month components only
-          example: 2018-12
-        maxLimit:
-          type: string
-          description: Maximum limit which can be set on this card and is the maximum lifetime spend the card can have
-          example: '4000.00'
-        managementToken:
-          type: string
-          description: Card Management Token required for API users for additional security when managing sensitive card data
-      required:
-      - createdDate
-      - cvv2
-      - expiry
-      - externalRef
-      - id
-      - maxLimit
-      - pan
-    card.CardToken:
-      type: object
-      description: Payment token details for a card
-      properties:
-        id:
-          type: string
-          description: Card token ID
-          example: T110000001
-        expiry:
-          type: string
-          format: date
-          description: Token expiry date (ISO 8601 format)
-          example: '2021-10-31'
-        type:
-          type: string
-          description: Type of system the token is encoded onto
-          enum:
-          - BROWSER_ACCESSIBLE_WALLET
-          - CONTACTLESS_DEVICE_PAN
-          - CARD_ON_FILE_PAN
-          - REAL_PAN
-          - UNKNOWN
-          - VIRTUAL_PAN
-          - SECURE_ELEMENT
-          - CLOUD_BASED
-          example: SECURE_ELEMENT
-        wallet:
-          type: string
-          description: Wallet the token belongs to
-          enum:
-          - APPLE
-          - GOOGLE
-          - MRCHTOKEN
-          example: APPLE
-        status:
-          type: string
-          description: Card token status
-          enum:
-          - APPROVED
-          - ACTIVE
-          - AWAITING_AUTHENTICATION
-          - AUTHENTICATION_FAILED
-          - AUTO_SUSPENDED
-          - SUSPENDED
-          - DEACTIVATED
-          - UNKNOWN
-          example: PROVISIONED
-        language:
-          type: string
-          description: 2-digit ISO 639-1 language code
-          example: EN
-        devices:
-          type: array
-          items:
-            $ref: '#/components/schemas/card.CardTokenDevice'
-        maskedDpan:
-          type: string
-          description: Masked DPAN (last 4 digits) to the associated token ID
-          example: '1234'
-      required:
-      - expiry
-      - id
-      - language
-      - status
-      - type
-      - wallet
+      - knowledgeBase
     card.reportTypes:
       type: array
       description: Report types
@@ -3881,476 +4343,6 @@ components:
         - DAILY_AUTH_WINDOW
         - DAILY_CARD_MANAGEMENT
         example: DAILY_CARD_ACTIVITY
-    card.Test:
-      allOf:
-      - $ref: '#/components/schemas/card.PatchOperation'
-      - type: object
-        properties:
-          value:
-            $ref: '#/components/schemas/card.JsonNode'
-      description: Test field
-      required:
-      - op
-      - path
-      - value
-    card.ReportPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/card.ReportResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    card.CreatePhysicalCardRequest:
-      type: object
-      description: Card
-      properties:
-        limit:
-          type: number
-          format: double
-          description: Total card authorisation limit.
-          example: '1000.00'
-          maximum: 99999999.99
-          minimum: 1
-        expiry:
-          type: string
-          description: ISO 8601 date with year & month components only. The supplied value must be in the future (cannot be the current month) and is _inclusive_ of the specified month.
-          example: 2018-12
-        productCode:
-          type: string
-          description: Identifies the _type_ of card to create (GBP consumer, GBP business, etc). Modulr will supply a list of possible values.
-        externalRef:
-          type: string
-          description: Client reference for the newly created card. Maximum of 50 alphanumeric characters (including underscore, hyphen and space).
-          maxLength: 50
-          minLength: 1
-          pattern: '[\w -]*'
-        constraints:
-          $ref: '#/components/schemas/card.Constraints'
-          description: Constraints
-        authentication:
-          $ref: '#/components/schemas/card.CardAuthentication'
-          description: Authentication. Required by default, optional for Virtual Business Travel Cards only
-        cancellationDate:
-          type: string
-          description: Date for card to be cancelled on
-          example: '2025-01-01'
-        customFields:
-          type: array
-          description: Custom fields of card
-          items:
-            $ref: '#/components/schemas/card.CardCustomFieldRequest'
-          maxItems: 20
-          minItems: 0
-        authorisationWindow:
-          $ref: '#/components/schemas/card.AuthorisationWindowRequest'
-          description: Authorisation Windows allow the card holder to add a period of time where the card can ONLY be used, if an Authorisation Window set then transactions outside this window will decline. ISO 8601 date with year, month & day components only.
-        frequencyUsage:
-          type: string
-          enum:
-          - SINGLE_USE
-          - MULTI_USE
-        holder:
-          $ref: '#/components/schemas/card.CardHolder'
-          description: CardHolder
-        shippingAddress:
-          $ref: '#/components/schemas/card.AddressDetail'
-          description: Add a Shipping address if you wish the card to be sent to an address other than the billing address
-        design:
-          $ref: '#/components/schemas/card.ProductDesignDetail'
-          description: Design references for card and packaging
-        printedName:
-          type: string
-          description: Name to be printed on the card. Maximum of 27 alphanumeric characters (including full stop, hyphen, apostrophe, caret and space). Please add business name to this field if you wish to have it on the card.
-          example: Joe Bloggs
-          maxLength: 27
-          minLength: 1
-          pattern: '[a-zA-Z 0-9À-ŽȘȚ''’.,^-]{1,27}'
-      required:
-      - design
-      - expiry
-      - externalRef
-      - limit
-      - printedName
-      - productCode
-    card.CardPinResponse:
-      type: object
-      properties:
-        pin:
-          type: string
-          description: Card PIN
-          example: '0123'
-    card.JsonNode: {}
-    card.ProductDesignDetail:
-      type: object
-      properties:
-        cardRef:
-          type: string
-          description: Design reference for card
-          minLength: 1
-        packagingRef:
-          type: string
-          description: Design reference for card packaging
-          minLength: 1
-      required:
-      - cardRef
-      - packagingRef
-    card.CreateCardResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Card identifier. Maximum of 10 alphanumeric characters.
-        pan:
-          type: string
-          description: Full card PAN.
-        maskedPan:
-          type: string
-          description: Masked card PAN.
-        cvv2:
-          type: string
-          description: Card CVV2 number.
-        externalRef:
-          type: string
-          description: Client reference for the newly created card.
-        createdDate:
-          type: string
-          format: date-time
-          description: The creation date of the card
-          example: 2019-01-29T11:01:54.826+0000
-        maxLimit:
-          type: string
-          description: Maximum Limit which can be set on this card and is the maximum lifetime spend the card can have
-          example: '4000.00'
-        frequencyUsage:
-          type: string
-          description: Card frequency usage
-          enum:
-          - SINGLE_USE
-          - MULTI_USE
-          example: MULTI_USE
-        shareLink:
-          type: string
-          description: Link that can be used by client to share secure details. Will only be returned when shareDetails method is RETURN in request body.
-      required:
-      - createdDate
-      - cvv2
-      - externalRef
-      - frequencyUsage
-      - id
-      - maxLimit
-      - pan
-    card.AuthorisationConstraints:
-      type: object
-      description: Authorisation constraints
-      properties:
-        spend:
-          type: array
-          description: Spending constraints
-          items:
-            $ref: '#/components/schemas/card.SpendConstraintDetail'
-    card.UpdateCardRequest:
-      type: object
-      description: Update card
-      properties:
-        limit:
-          type: number
-          description: Total card authorisation limit.
-          example: '1000.00'
-        cancellationDate:
-          type: string
-          description: ISO 8601 date with year, month & day components only. The supplied value must be in the future and at most 1 day before the expiry date.
-          example: '2025-01-01'
-        customFields:
-          type: array
-          description: Custom fields
-          items:
-            $ref: '#/components/schemas/card.CardCustomFieldRequest'
-          maxItems: 20
-          minItems: 1
-        holder:
-          $ref: '#/components/schemas/card.UpdateCardHolder'
-          description: CardHolder
-        authWindow:
-          $ref: '#/components/schemas/card.AuthorisationWindowRequest'
-          description: Authorisation Windows allow the card holder to add a period of time where the card can ONLY be used, if an Authorisation Window set then transactions outside this window will decline. ISO 8601 date with year, month & day components only.
-    card.CardTokenDevice:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Device ID
-          example: D110000001
-        type:
-          type: string
-          description: Device type
-          enum:
-          - CLOTHING
-          - MEDIA_GAMING
-          - CARD
-          - DOMESTIC_APPLIANCE
-          - FOB
-          - MOBILE_TAG
-          - FASHION
-          - JEWELRY
-          - MOBILE_PHONE
-          - PERSONAL_COMPUTER
-          - WRISTBAND
-          - STICKER
-          - TABLET
-          - UNKNOWN
-          - VEHICLE
-          - WATCH
-          - MOBILE_PHONE_OR_TABLET
-          example: MOBILE_PHONE
-        ip:
-          type: string
-          description: IPv4 address of the device. Either in hex format (i.e FFFFFFFF) or decimal format (i.e. 255.255.255.255)
-          example: 255.255.255.255
-        name:
-          type: string
-          description: Device name, as given by the cardholder
-          example: iPhone 12
-        status:
-          type: string
-          description: Device status
-          enum:
-          - PENDING_PROVISIONING
-          - PROVISIONED
-          - DELETED
-          - UNKNOWN
-          example: ACTIVE
-        externalId:
-          type: string
-          description: Device External Id
-      required:
-      - externalId
-      - id
-      - ip
-      - name
-      - status
-      - type
-    card.CardActivityPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/card.CardActivityResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    card.AsyncTaskCreatedResponse:
-      type: object
-      properties:
-        taskUrl:
-          type: string
-          description: Url of card task resource
-        taskId:
-          type: string
-          description: ID of card task
-        metaData:
-          type: object
-          additionalProperties:
-            type: string
-          description: Meta data associated with async task response
-      required:
-      - taskId
-      - taskUrl
-    card.AppleInAppProvisioningRequest:
-      type: object
-      description: Apple in app provisioning request
-      properties:
-        leafCertificate:
-          type: string
-          description: Apple issued public base 64 encoded certificate to encrypt the provisioning data
-          minLength: 1
-        additionalCertificates:
-          type: array
-          description: Apple issued public base 64 encoded certificates that complete the chain including the root certificate
-          items:
-            type: string
-        nonce:
-          type: string
-          description: Hex encoded nonce generated by the client
-          minLength: 1
-        nonceSignature:
-          type: string
-          description: Hex encoded nonce signed with the private key to verify the certificate public key
-          minLength: 1
-      required:
-      - additionalCertificates
-      - leafCertificate
-      - nonce
-      - nonceSignature
-    card.Replace:
-      allOf:
-      - $ref: '#/components/schemas/card.PatchOperation'
-      - type: object
-        properties:
-          value:
-            $ref: '#/components/schemas/card.JsonNode'
-      description: Replace field
-      required:
-      - op
-      - path
-      - value
-    card.OneTimeTokenRequest:
-      type: object
-      properties:
-        publicKey:
-          type: string
-          description: Base64 UTF-8 encoded RSA public key to be used to encrypt the token in the response. The key must be at least 4096 bits in length.
-        purpose:
-          type: string
-          default: READ
-          description: What the token will be used for. UPDATE tokens cannot be used for READ purposes, and READ tokens cannot be used for updates.
-          enum:
-          - READ
-          - UPDATE
-    card.Move:
-      allOf:
-      - $ref: '#/components/schemas/card.PatchOperation'
-      - type: object
-        properties:
-          from:
-            type: string
-            example: /path/to/originating/field
-      description: Move field
-      required:
-      - from
-      - op
-      - path
-    card.UpdateCardAuthenticationRequest:
-      type: object
-      description: Authentication
-      properties:
-        knowledgeBase:
-          type: array
-          description: 3DS Knowledge-Based Authentication (KBA) answers
-          items:
-            $ref: '#/components/schemas/card.CardKnowledgeBasedAuthentication'
-      required:
-      - knowledgeBase
-    card.Constraints:
-      type: object
-      properties:
-        authorisation:
-          $ref: '#/components/schemas/card.AuthorisationConstraints'
-          description: Authorisation constraints
-    card.ReportResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        reportSubjectId:
-          type: string
-        reportDate:
-          type: string
-          format: date
-        reportType:
-          type: string
-          enum:
-          - DAILY_CARD_ACTIVITY
-          - MONTHLY_CARD_ACTIVITY
-          - DAILY_ACCOUNT_FUNDING
-          - MONTHLY_ACCOUNT_FUNDING
-          - DAILY_AUTH_WINDOW
-          - DAILY_CARD_MANAGEMENT
-    card.AuthInfo:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Transaction type
-          minLength: 1
-        inputMethod:
-          type: string
-          description: Input method
-          minLength: 1
-      required:
-      - inputMethod
-      - type
-    card.CustomFields:
-      type: object
-      properties:
-        key:
-          type: string
-          description: Custom field key
-        required:
-          type: boolean
-          description: Whether the custom field is required or not
-      required:
-      - key
-      - required
-    card.UpdateCardReportNotificationRequest:
-      type: object
-      description: Notification request containing the status of the notification
-      properties:
-        status:
-          type: string
-          description: status
-          minLength: 1
-      required:
-      - status
-    card.GetCardTokensResponse:
-      type: object
-      properties:
-        size:
-          type: integer
-          format: int32
-          description: Number of elements in content
-          example: 1
-        content:
-          type: array
-          description: List of response elements
-          items:
-            $ref: '#/components/schemas/card.CardToken'
-      required:
-      - content
-      - size
   securitySchemes:
     modulo_security:
       type: apiKey

@@ -221,54 +221,43 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    paymentfileupload.FileUploadResponse:
+    paymentfileupload.FileUploadSummariesResponse:
       type: object
+      description: Paginated summaries of child file uploads for a delegate payment file
       properties:
         fileId:
           type: string
-          description: Unique id of the uploaded file
+          description: File ID of the parent upload
           example: F1100001
-          minLength: 1
-      required:
-      - fileId
-    paymentfileupload.MessageResponse:
-      type: object
-      properties:
-        field:
+        fileName:
           type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    paymentfileupload.FileCreateRequest:
-      type: object
-      description: File create payments request body
-      properties:
-        useDuplicate:
-          type: boolean
-          description: User confirms to proceed with creating payments on a duplicate file
+          description: File name of the parent upload
+          example: file
+        content:
+          type: array
+          description: Page content — one entry per child file upload
+          items:
+            $ref: '#/components/schemas/paymentfileupload.FileUploadSummaryContent'
+        size:
+          type: integer
+          format: int32
+          description: Number of items in this page
+          example: 3
+        totalSize:
+          type: integer
+          format: int64
+          description: Total number of child file uploads
+          example: 3
+        page:
+          type: integer
+          format: int32
+          description: Current page number (0 indexed)
+          example: 0
+        totalPages:
+          type: integer
+          format: int32
+          description: Total number of pages
+          example: 1
     paymentfileupload.FileCreatePaymentsResponse:
       type: object
       description: File create payments response
@@ -346,6 +335,15 @@ components:
           description: Aggregated payments grouped by destination account
           items:
             $ref: '#/components/schemas/paymentfileupload.PaymentSummary'
+    paymentfileupload.FilesCreatePaymentsResponse:
+      type: object
+      description: Response containing payment creation results for multiple files
+      properties:
+        results:
+          type: array
+          description: Results for each file processed
+          items:
+            $ref: '#/components/schemas/paymentfileupload.FileCreatePaymentsResult'
     paymentfileupload.FileUploadRequest:
       type: object
       description: File upload request body
@@ -370,6 +368,104 @@ components:
       required:
       - content
       - fileName
+    paymentfileupload.FileCreatePaymentsResult:
+      type: object
+      description: Payment creation result for an individual file in a multi-file request
+      properties:
+        fileId:
+          type: string
+          description: Unique ID of the uploaded file
+          example: F1100001
+          minLength: 1
+        status:
+          type: string
+          description: Status of the uploaded file
+          enum:
+          - NEW
+          - SUBMITTED
+          - PROCESSING
+          - INVALID
+          - VALID
+          - DUPLICATE
+          - REJECTED
+          - ERROR_RETRYABLE
+          - ACCEPTED
+          - PROCESSED
+          - SENDING
+          - PAYMENT_PROCESSING
+          - SPLIT_FILE
+          - PARTIALLY_ACCEPTED
+          example: INVALID
+        fileName:
+          type: string
+          description: File name of the uploaded file
+          example: file1
+        batchPaymentId:
+          type: string
+          description: Optional batch payment ID for successful files
+          example: B1100001
+        reason:
+          type: string
+          description: Reason, if any, for invalid status
+          example: Issue sending Batch payments
+      required:
+      - fileId
+      - status
+    paymentfileupload.FileCreateRequest:
+      type: object
+      description: File create payments request body
+      properties:
+        useDuplicate:
+          type: boolean
+          description: User confirms to proceed with creating payments on a duplicate file
+    paymentfileupload.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    paymentfileupload.PaymentSummary:
+      type: object
+      description: Aggregated payment count per destination account
+      properties:
+        sortCode:
+          type: string
+          description: Destination account sort code
+          example: '111111'
+        accountNumber:
+          type: string
+          description: Destination account number
+          example: '11111111'
+        numberOfPayments:
+          type: integer
+          format: int32
+          description: Number of payments to this account
+          example: 3
     paymentfileupload.FilesCreatePaymentsRequest:
       type: object
       description: Request body containing file IDs to process for payment creation
@@ -445,112 +541,16 @@ components:
               invalidValue: '01'
       required:
       - status
-    paymentfileupload.PaymentSummary:
+    paymentfileupload.FileUploadResponse:
       type: object
-      description: Aggregated payment count per destination account
-      properties:
-        sortCode:
-          type: string
-          description: Destination account sort code
-          example: '111111'
-        accountNumber:
-          type: string
-          description: Destination account number
-          example: '11111111'
-        numberOfPayments:
-          type: integer
-          format: int32
-          description: Number of payments to this account
-          example: 3
-    paymentfileupload.FilesCreatePaymentsResponse:
-      type: object
-      description: Response containing payment creation results for multiple files
-      properties:
-        results:
-          type: array
-          description: Results for each file processed
-          items:
-            $ref: '#/components/schemas/paymentfileupload.FileCreatePaymentsResult'
-    paymentfileupload.FileUploadSummariesResponse:
-      type: object
-      description: Paginated summaries of child file uploads for a delegate payment file
       properties:
         fileId:
           type: string
-          description: File ID of the parent upload
-          example: F1100001
-        fileName:
-          type: string
-          description: File name of the parent upload
-          example: file
-        content:
-          type: array
-          description: Page content — one entry per child file upload
-          items:
-            $ref: '#/components/schemas/paymentfileupload.FileUploadSummaryContent'
-        size:
-          type: integer
-          format: int32
-          description: Number of items in this page
-          example: 3
-        totalSize:
-          type: integer
-          format: int64
-          description: Total number of child file uploads
-          example: 3
-        page:
-          type: integer
-          format: int32
-          description: Current page number (0 indexed)
-          example: 0
-        totalPages:
-          type: integer
-          format: int32
-          description: Total number of pages
-          example: 1
-    paymentfileupload.FileCreatePaymentsResult:
-      type: object
-      description: Payment creation result for an individual file in a multi-file request
-      properties:
-        fileId:
-          type: string
-          description: Unique ID of the uploaded file
+          description: Unique id of the uploaded file
           example: F1100001
           minLength: 1
-        status:
-          type: string
-          description: Status of the uploaded file
-          enum:
-          - NEW
-          - SUBMITTED
-          - PROCESSING
-          - INVALID
-          - VALID
-          - DUPLICATE
-          - REJECTED
-          - ERROR_RETRYABLE
-          - ACCEPTED
-          - PROCESSED
-          - SENDING
-          - PAYMENT_PROCESSING
-          - SPLIT_FILE
-          - PARTIALLY_ACCEPTED
-          example: INVALID
-        fileName:
-          type: string
-          description: File name of the uploaded file
-          example: file1
-        batchPaymentId:
-          type: string
-          description: Optional batch payment ID for successful files
-          example: B1100001
-        reason:
-          type: string
-          description: Reason, if any, for invalid status
-          example: Issue sending Batch payments
       required:
       - fileId
-      - status
   securitySchemes:
     modulo_security:
       type: apiKey

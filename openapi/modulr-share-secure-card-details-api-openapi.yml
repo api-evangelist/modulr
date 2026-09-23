@@ -342,202 +342,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    card.ShareSecureCardDetailsResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        createdBy:
-          type: string
-        email:
-          type: string
-        status:
-          type: string
-        expiryDate:
-          type: string
-          format: date-time
-        createdDate:
-          type: string
-          format: date-time
-        lastRevealedDate:
-          type: string
-          format: date-time
-        noOfAccessesLeft:
-          type: integer
-          format: int64
-        maxAccessesAllowed:
-          type: integer
-          format: int64
-    card.ShareSecureCardDetailsTokenActivityPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/card.ShareSecureCardDetailsActivity'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    card.shareDetails:
-      type: object
-      properties:
-        method:
-          type: string
-          description: Method to share secure card details. Can be one of RETURN or EMAIL. Will default to EMAIL if not provided.
-          enum:
-          - RETURN
-          - EMAIL
-        emails:
-          type: array
-          description: 'Emails to share secure card details with. Optional: Required if no method provided or if method EMAIL. Must be null for method RETURN'
-          items:
-            type: string
-            format: email
-          maxItems: 50
-          minItems: 0
-        noOfLinkAccesses:
-          type: integer
-          format: int64
-          description: Number of times token/link shared will be accessible. Default of 3
-        expiryDate:
-          type: string
-          format: date
-          description: Date of expiry of the secure card details link should be default of 15 days. Must match date format of yyyy-mm-dd and be in the future.
-          example: '2026-01-01'
-        otherDetailsToShare:
-          type: array
-          description: List of other card details to share. Will be validated against fields in card response. Default is nothing.
-          items:
-            type: string
-        message:
-          type: string
-          description: Message to be shared with the details. Only alphanumeric characters maximum of 200 and allowed chars -/:€$£#¢%().,!@
-          maxLength: 200
-          minLength: 0
-          pattern: ^[a-zA-Z0-9\-/:€$£#¢%().,!@ ]*$
-        externalReference:
-          type: string
-          description: External reference for the shared secure detail link
-          maxLength: 50
-          minLength: 1
-          pattern: '[\w -]*'
-    card.ShareSecureCardDetailSummaryResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        createdBy:
-          type: string
-        email:
-          type: string
-        status:
-          type: string
-        expiryDate:
-          type: string
-          format: date-time
-        createdDate:
-          type: string
-          format: date-time
-        lastRevealedDate:
-          type: string
-          format: date-time
-        noOfAccessesLeft:
-          type: integer
-          format: int64
-        maxAccessesAllowed:
-          type: integer
-          format: int64
-        message:
-          type: string
-        externalReference:
-          type: string
-        otherDetails:
-          type: array
-          items:
-            type: object
-            additionalProperties: {}
-        activity:
-          type: array
-          items:
-            $ref: '#/components/schemas/card.ShareSecureCardDetailsActivity'
-        customerId:
-          type: string
-        customerName:
-          type: string
-        cardScheme:
-          type: string
-        currency:
-          type: string
-    card.UpdateShareSecureDetailsRequest:
-      type: object
-      description: Share secure card details request
-      properties:
-        noOfLinkAccesses:
-          type: integer
-          format: int64
-          description: Number of times token/link shared will be accessible. Cannot be smaller than existing number of accesses
-        expiryDate:
-          type: string
-          format: date
-          description: Date of expiry of the secure card details link.Must match date format of yyyy-mm-dd and be in the future.
-          example: '2026-01-01'
-        otherDetailsToShare:
-          type: array
-          description: List of other card details to share. Will be validated against fields in card response. Will replace existing list
-          items:
-            type: string
-    card.ShareSecureCardDetailsActivity:
-      type: object
-      properties:
-        action:
-          type: string
-        createdDate:
-          type: string
-          format: date-time
-        createdBy:
-          type: string
-        shareMethod:
-          type: string
-          description: Method to share secure card details
-          enum:
-          - RETURN
-          - EMAIL
-    card.CreateShareSecureCardDetailsResponse:
-      type: object
-      description: Response for creating a share secure card details link.
-      properties:
-        link:
-          type: string
-          description: Link to secure card details. Only returned for method RETURN
-        passcode:
-          type: string
-          description: passcode to view the secured card details. Only returned for method RETURN
-    card.ShareSecureCardDetailsRequest:
-      type: object
-      description: Share secure card details request
-      properties:
-        shareCardDetails:
-          $ref: '#/components/schemas/card.shareDetails'
     card.MessageResponse:
       type: object
       properties:
@@ -599,6 +403,202 @@ components:
       - size
       - totalPages
       - totalSize
+    card.ShareSecureCardDetailsActivity:
+      type: object
+      properties:
+        action:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        shareMethod:
+          type: string
+          description: Method to share secure card details
+          enum:
+          - RETURN
+          - EMAIL
+    card.ShareSecureCardDetailsTokenActivityPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/card.ShareSecureCardDetailsActivity'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
+    card.ShareSecureCardDetailSummaryResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        createdBy:
+          type: string
+        email:
+          type: string
+        status:
+          type: string
+        expiryDate:
+          type: string
+          format: date-time
+        createdDate:
+          type: string
+          format: date-time
+        lastRevealedDate:
+          type: string
+          format: date-time
+        noOfAccessesLeft:
+          type: integer
+          format: int64
+        maxAccessesAllowed:
+          type: integer
+          format: int64
+        message:
+          type: string
+        externalReference:
+          type: string
+        otherDetails:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        activity:
+          type: array
+          items:
+            $ref: '#/components/schemas/card.ShareSecureCardDetailsActivity'
+        customerId:
+          type: string
+        customerName:
+          type: string
+        cardScheme:
+          type: string
+        currency:
+          type: string
+    card.ShareSecureCardDetailsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        createdBy:
+          type: string
+        email:
+          type: string
+        status:
+          type: string
+        expiryDate:
+          type: string
+          format: date-time
+        createdDate:
+          type: string
+          format: date-time
+        lastRevealedDate:
+          type: string
+          format: date-time
+        noOfAccessesLeft:
+          type: integer
+          format: int64
+        maxAccessesAllowed:
+          type: integer
+          format: int64
+    card.ShareSecureCardDetailsRequest:
+      type: object
+      description: Share secure card details request
+      properties:
+        shareCardDetails:
+          $ref: '#/components/schemas/card.shareDetails'
+    card.UpdateShareSecureDetailsRequest:
+      type: object
+      description: Share secure card details request
+      properties:
+        noOfLinkAccesses:
+          type: integer
+          format: int64
+          description: Number of times token/link shared will be accessible. Cannot be smaller than existing number of accesses
+        expiryDate:
+          type: string
+          format: date
+          description: Date of expiry of the secure card details link.Must match date format of yyyy-mm-dd and be in the future.
+          example: '2026-01-01'
+        otherDetailsToShare:
+          type: array
+          description: List of other card details to share. Will be validated against fields in card response. Will replace existing list
+          items:
+            type: string
+    card.CreateShareSecureCardDetailsResponse:
+      type: object
+      description: Response for creating a share secure card details link.
+      properties:
+        link:
+          type: string
+          description: Link to secure card details. Only returned for method RETURN
+        passcode:
+          type: string
+          description: passcode to view the secured card details. Only returned for method RETURN
+    card.shareDetails:
+      type: object
+      properties:
+        method:
+          type: string
+          description: Method to share secure card details. Can be one of RETURN or EMAIL. Will default to EMAIL if not provided.
+          enum:
+          - RETURN
+          - EMAIL
+        emails:
+          type: array
+          description: 'Emails to share secure card details with. Optional: Required if no method provided or if method EMAIL. Must be null for method RETURN'
+          items:
+            type: string
+            format: email
+          maxItems: 50
+          minItems: 0
+        noOfLinkAccesses:
+          type: integer
+          format: int64
+          description: Number of times token/link shared will be accessible. Default of 3
+        expiryDate:
+          type: string
+          format: date
+          description: Date of expiry of the secure card details link should be default of 15 days. Must match date format of yyyy-mm-dd and be in the future.
+          example: '2026-01-01'
+        otherDetailsToShare:
+          type: array
+          description: List of other card details to share. Will be validated against fields in card response. Default is nothing.
+          items:
+            type: string
+        message:
+          type: string
+          description: Message to be shared with the details. Only alphanumeric characters maximum of 200 and allowed chars -/:€$£#¢%().,!@
+          maxLength: 200
+          minLength: 0
+          pattern: ^[a-zA-Z0-9\-/:€$£#¢%().,!@ ]*$
+        externalReference:
+          type: string
+          description: External reference for the shared secure detail link
+          maxLength: 50
+          minLength: 1
+          pattern: '[\w -]*'
   securitySchemes:
     modulo_security:
       type: apiKey

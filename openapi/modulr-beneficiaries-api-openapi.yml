@@ -890,18 +890,228 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    account.id:
+    account.AddressRequest:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+          maxLength: 50
+          minLength: 0
+        addressLine2:
+          type: string
+          maxLength: 50
+          minLength: 0
+        postTown:
+          type: string
+          maxLength: 50
+          minLength: 0
+        postCode:
+          type: string
+          maxLength: 10
+        country:
+          type: string
+          description: Mandatory for international payments.
+        countrySubDivision:
+          type: string
+          maxLength: 35
+          minLength: 0
+    account.BeneficiaryLockPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/account.BeneficiaryLockResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+    account.BeneficiaryLockResponse:
+      type: object
+      description: BeneficiaryLock
+      properties:
+        ownerId:
+          type: string
+          description: Reference for the entity owning the lock.
+          example: R00000001A
+        ownerType:
+          type: string
+          description: Entity type owning the lock.
+          enum:
+          - RULE
+          - PAYMENT
+    account.qualifier:
       type: array
-      description: ID of Customer(s) to fetch
+      description: A list of external qualifiers
       items:
         type: string
-        description: ID of Customer(s) to fetch
+        description: A list of external qualifiers
+    account.AddressResponse:
+      type: object
+      description: Address
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        postTown:
+          type: string
+        postCode:
+          type: string
+        country:
+          type: string
+        countrySubDivision:
+          type: string
+    account.IdentifierRequest:
+      type: object
+      properties:
+        type:
+          type: string
+        accountNumber:
+          type: string
+          example: '12345678'
+        accountType:
+          type: string
+          description: Bank account type like PERSONAL/BUSINESS
+          enum:
+          - PERSONAL
+          - BUSINESS
+        sortCode:
+          type: string
+          example: '000000'
+          pattern: ^\d{6}
+        iban:
+          type: string
+          example: GB20MODR00000000000001
+          pattern: '[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}([a-zA-Z0-9]?){0,26}'
+        bic:
+          type: string
+          example: MODRGB21
+          pattern: ([a-zA-Z]{6,6}[a-zA-Z2-9][a-nA-Np-zP-Z0-9]([a-zA-Z0-9]{3})?)
+        currency:
+          type: string
+          example: GBP
+          pattern: '[a-zA-Z]{3}'
+        countrySpecificDetails:
+          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsRequest'
+          example:
+            branchCode: '123456789'
+    account.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    account.IdentifierResponse:
+      type: object
+      description: Account Identifier
+      properties:
+        type:
+          type: string
+        accountNumber:
+          type: string
+          description: Bank account Sort Code
+          example: '12345678'
+        accountType:
+          type: string
+          description: Bank account type like PERSONAL/BUSINESS
+          enum:
+          - PERSONAL
+          - BUSINESS
+        sortCode:
+          type: string
+          description: Bank account Sort Code
+          example: '000000'
+        iban:
+          type: string
+          example: GB20MODR04001401100000
+        bic:
+          type: string
+          example: MODRGB21
+        currency:
+          type: string
+          example: GBP
+        countrySpecificDetails:
+          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsResponse'
+          example:
+            branchCode: '123456789'
+        productId:
+          type: string
+          example: O2100001
+    account.BeneficiaryPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/account.BeneficiaryResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
     account.state:
       type: array
       description: Approval item state(s) to filter by
       items:
         type: string
         description: Approval item state(s) to filter by
+    account.id:
+      type: array
+      description: ID of Customer(s) to fetch
+      items:
+        type: string
+        description: ID of Customer(s) to fetch
     account.CreateBeneficiaryRequest:
       type: object
       properties:
@@ -1253,44 +1463,6 @@ components:
           type: string
           description: The 9 digit identification code of the beneficiary. Applies to US beneficiaries only.
           example: '123456789'
-    account.BeneficiaryLockPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/account.BeneficiaryLockResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-    account.BeneficiaryLockResponse:
-      type: object
-      description: BeneficiaryLock
-      properties:
-        ownerId:
-          type: string
-          description: Reference for the entity owning the lock.
-          example: R00000001A
-        ownerType:
-          type: string
-          description: Entity type owning the lock.
-          enum:
-          - RULE
-          - PAYMENT
     account.IdentifierCountrySpecificDetailsRequest:
       type: object
       properties:
@@ -1609,137 +1781,6 @@ components:
           description: The 9 digit identification code of the beneficiary. Applies to US beneficiaries only.
           example: '123456789'
           pattern: ^\d{9}$
-    account.IdentifierResponse:
-      type: object
-      description: Account Identifier
-      properties:
-        type:
-          type: string
-        accountNumber:
-          type: string
-          description: Bank account Sort Code
-          example: '12345678'
-        accountType:
-          type: string
-          description: Bank account type like PERSONAL/BUSINESS
-          enum:
-          - PERSONAL
-          - BUSINESS
-        sortCode:
-          type: string
-          description: Bank account Sort Code
-          example: '000000'
-        iban:
-          type: string
-          example: GB20MODR04001401100000
-        bic:
-          type: string
-          example: MODRGB21
-        currency:
-          type: string
-          example: GBP
-        countrySpecificDetails:
-          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsResponse'
-          example:
-            branchCode: '123456789'
-        productId:
-          type: string
-          example: O2100001
-    account.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    account.BeneficiaryPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/account.BeneficiaryResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-    account.qualifier:
-      type: array
-      description: A list of external qualifiers
-      items:
-        type: string
-        description: A list of external qualifiers
-    account.IdentifierRequest:
-      type: object
-      properties:
-        type:
-          type: string
-        accountNumber:
-          type: string
-          example: '12345678'
-        accountType:
-          type: string
-          description: Bank account type like PERSONAL/BUSINESS
-          enum:
-          - PERSONAL
-          - BUSINESS
-        sortCode:
-          type: string
-          example: '000000'
-          pattern: ^\d{6}
-        iban:
-          type: string
-          example: GB20MODR00000000000001
-          pattern: '[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}([a-zA-Z0-9]?){0,26}'
-        bic:
-          type: string
-          example: MODRGB21
-          pattern: ([a-zA-Z]{6,6}[a-zA-Z2-9][a-nA-Np-zP-Z0-9]([a-zA-Z0-9]{3})?)
-        currency:
-          type: string
-          example: GBP
-          pattern: '[a-zA-Z]{3}'
-        countrySpecificDetails:
-          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsRequest'
-          example:
-            branchCode: '123456789'
     account.BeneficiaryResponse:
       type: object
       description: Beneficiary
@@ -1822,47 +1863,6 @@ components:
         createdBy:
           type: string
           description: System or person who created the beneficiary
-    account.AddressResponse:
-      type: object
-      description: Address
-      properties:
-        addressLine1:
-          type: string
-        addressLine2:
-          type: string
-        postTown:
-          type: string
-        postCode:
-          type: string
-        country:
-          type: string
-        countrySubDivision:
-          type: string
-    account.AddressRequest:
-      type: object
-      properties:
-        addressLine1:
-          type: string
-          maxLength: 50
-          minLength: 0
-        addressLine2:
-          type: string
-          maxLength: 50
-          minLength: 0
-        postTown:
-          type: string
-          maxLength: 50
-          minLength: 0
-        postCode:
-          type: string
-          maxLength: 10
-        country:
-          type: string
-          description: Mandatory for international payments.
-        countrySubDivision:
-          type: string
-          maxLength: 35
-          minLength: 0
   securitySchemes:
     modulo_security:
       type: apiKey

@@ -235,51 +235,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    rule.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    rule.SplitConfig:
-      type: object
-      description: Configuration for a Split Rule
-      properties:
-        destinationId:
-          type: string
-          description: Id of destination beneficiary. e.g. B1000001.
-        percent:
-          type: string
-          description: Percentage of payment to be moved to specified destination. e.g. 7.25.
-          minLength: 1
-      required:
-      - destinationId
-      - percent
     rule.RuleConfigData:
       type: object
       description: Configuration fields for all types of rules. To be populated where applicable based on rule type.
@@ -548,29 +503,6 @@ components:
       - masterId
       - name
       - type
-    rule.ConditionalSplitConfig:
-      type: object
-      description: Configuration for a Conditional Split Rule
-      properties:
-        destinationId:
-          type: string
-          description: Id of destination beneficiary. e.g. B1000001.
-        percent:
-          type: string
-          description: Percentage of payment to be moved to specified destination. e.g. 7.25.
-          minLength: 1
-        conditionAmount:
-          type: number
-          description: Amount the conditional split rule should reach before defaulting to the split rule. e.g. 100.
-          maximum: 2147483647
-          minimum: 0.01
-        conditionDone:
-          type: boolean
-          description: Whether the condition amount has been met. e.g. true or false
-      required:
-      - conditionAmount
-      - destinationId
-      - percent
     rule.RulePageResponse:
       type: object
       properties:
@@ -601,6 +533,74 @@ components:
       - size
       - totalPages
       - totalSize
+    rule.SplitConfig:
+      type: object
+      description: Configuration for a Split Rule
+      properties:
+        destinationId:
+          type: string
+          description: Id of destination beneficiary. e.g. B1000001.
+        percent:
+          type: string
+          description: Percentage of payment to be moved to specified destination. e.g. 7.25.
+          minLength: 1
+      required:
+      - destinationId
+      - percent
+    rule.ConditionalSplitConfig:
+      type: object
+      description: Configuration for a Conditional Split Rule
+      properties:
+        destinationId:
+          type: string
+          description: Id of destination beneficiary. e.g. B1000001.
+        percent:
+          type: string
+          description: Percentage of payment to be moved to specified destination. e.g. 7.25.
+          minLength: 1
+        conditionAmount:
+          type: number
+          description: Amount the conditional split rule should reach before defaulting to the split rule. e.g. 100.
+          maximum: 2147483647
+          minimum: 0.01
+        conditionDone:
+          type: boolean
+          description: Whether the condition amount has been met. e.g. true or false
+      required:
+      - conditionAmount
+      - destinationId
+      - percent
+    rule.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
     rule.CreateRuleRequest:
       type: object
       description: create rule request

@@ -269,6 +269,146 @@ components:
         securedFundingLimit:
           type: string
           description: Limit of funds available below a balance of zero
+    account.TransactionPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/account.TransactionResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+        pageStartBalance:
+          type: number
+          description: 'The sum of the transactions up to this page.
+
+            This is only present if there are no filters other than page and size defined'
+          example: '250.30'
+    account.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    account.IdentifierResponse:
+      type: object
+      description: Account Identifier
+      properties:
+        type:
+          type: string
+        accountNumber:
+          type: string
+          description: Bank account Sort Code
+          example: '12345678'
+        accountType:
+          type: string
+          description: Bank account type like PERSONAL/BUSINESS
+          enum:
+          - PERSONAL
+          - BUSINESS
+        sortCode:
+          type: string
+          description: Bank account Sort Code
+          example: '000000'
+        iban:
+          type: string
+          example: GB20MODR04001401100000
+        bic:
+          type: string
+          example: MODRGB21
+        currency:
+          type: string
+          example: GBP
+        countrySpecificDetails:
+          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsResponse'
+          example:
+            branchCode: '123456789'
+        productId:
+          type: string
+          example: O2100001
+    account.TransactionResponse:
+      type: object
+      description: Transaction
+      properties:
+        id:
+          type: string
+          description: Unique id for the Transaction
+          example: T000000001
+        amount:
+          type: number
+          description: Amount of the transaction in Major Currency Units
+        currency:
+          type: string
+          description: Currency of the account in ISO 4217 format
+          example: GBP
+        description:
+          type: string
+          description: Description of the transaction. Contains Payer/ Payee details and reference
+        transactionDate:
+          type: string
+          format: date-time
+          description: Datetime when the transaction took place. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
+          example: 2017-01-28T01:01:01+0000
+        postedDate:
+          type: string
+          format: date-time
+          description: Datetime when the transaction was posted to the Modulr system. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
+          example: 2017-01-28T01:01:01+0000
+        credit:
+          type: boolean
+          description: Indicates if the transaction was a Credit or a Debit
+        type:
+          type: string
+          description: Enumerated type indicating the type of the transaction
+        sourceId:
+          type: string
+        sourceExternalReference:
+          type: string
+        additionalInfo:
+          description: any extra information available on transaction.
+        account:
+          $ref: '#/components/schemas/account.AccountResponse'
+          description: Account information
     account.IdentifierCountrySpecificDetailsResponse:
       type: object
       properties:
@@ -576,146 +716,6 @@ components:
           type: string
           description: The 9 digit identification code of the beneficiary. Applies to US beneficiaries only.
           example: '123456789'
-    account.TransactionResponse:
-      type: object
-      description: Transaction
-      properties:
-        id:
-          type: string
-          description: Unique id for the Transaction
-          example: T000000001
-        amount:
-          type: number
-          description: Amount of the transaction in Major Currency Units
-        currency:
-          type: string
-          description: Currency of the account in ISO 4217 format
-          example: GBP
-        description:
-          type: string
-          description: Description of the transaction. Contains Payer/ Payee details and reference
-        transactionDate:
-          type: string
-          format: date-time
-          description: Datetime when the transaction took place. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
-          example: 2017-01-28T01:01:01+0000
-        postedDate:
-          type: string
-          format: date-time
-          description: Datetime when the transaction was posted to the Modulr system. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
-          example: 2017-01-28T01:01:01+0000
-        credit:
-          type: boolean
-          description: Indicates if the transaction was a Credit or a Debit
-        type:
-          type: string
-          description: Enumerated type indicating the type of the transaction
-        sourceId:
-          type: string
-        sourceExternalReference:
-          type: string
-        additionalInfo:
-          description: any extra information available on transaction.
-        account:
-          $ref: '#/components/schemas/account.AccountResponse'
-          description: Account information
-    account.IdentifierResponse:
-      type: object
-      description: Account Identifier
-      properties:
-        type:
-          type: string
-        accountNumber:
-          type: string
-          description: Bank account Sort Code
-          example: '12345678'
-        accountType:
-          type: string
-          description: Bank account type like PERSONAL/BUSINESS
-          enum:
-          - PERSONAL
-          - BUSINESS
-        sortCode:
-          type: string
-          description: Bank account Sort Code
-          example: '000000'
-        iban:
-          type: string
-          example: GB20MODR04001401100000
-        bic:
-          type: string
-          example: MODRGB21
-        currency:
-          type: string
-          example: GBP
-        countrySpecificDetails:
-          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsResponse'
-          example:
-            branchCode: '123456789'
-        productId:
-          type: string
-          example: O2100001
-    account.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    account.TransactionPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/account.TransactionResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-        pageStartBalance:
-          type: number
-          description: 'The sum of the transactions up to this page.
-
-            This is only present if there are no filters other than page and size defined'
-          example: '250.30'
   securitySchemes:
     modulo_security:
       type: apiKey

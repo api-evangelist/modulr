@@ -19,7 +19,7 @@ paths:
       tags:
       - Async
       summary: Get tasks
-      description: View the details of card tasks.  Ordered by createdDate, with the newest entries appearing first
+      description: View the details of card tasks. Ordered by createdDate, with the newest entries appearing first
       operationId: getAsyncTasks
       parameters:
       - name: id
@@ -141,7 +141,7 @@ paths:
       tags:
       - Async
       summary: Get physical card create tasks by account
-      description: View the details of create physical card tasks by account.  Ordered by createdDate, with the newest entries appearing first
+      description: View the details of create physical card tasks by account. Ordered by createdDate, with the newest entries appearing first
       operationId: getCreatePhysicalCardAsyncTasksByAccount
       parameters:
       - name: accountId
@@ -206,37 +206,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    card.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
     card.AsyncTaskResponse:
       type: object
       properties:
@@ -271,6 +240,37 @@ components:
       - status
       - taskBid
       - type
+    card.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
     card.AsyncTaskPageResponse:
       type: object
       properties:
