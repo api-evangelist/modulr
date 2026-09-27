@@ -43,52 +43,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    inboundpayment.PartyDetailRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Party name
-        identifier:
-          $ref: '#/components/schemas/inboundpayment.AccountIdentifierDetailRequest'
-          description: Account identifier
-        address:
-          $ref: '#/components/schemas/inboundpayment.Address'
-          description: Party address
-      required:
-      - identifier
-      - name
-    inboundpayment.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
     inboundpayment.InboundPaymentRequest:
       type: object
       description: Details of credit to the account
@@ -142,6 +96,21 @@ components:
       - description
       - payerDetail
       - type
+    inboundpayment.PartyDetailRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Party name
+        identifier:
+          $ref: '#/components/schemas/inboundpayment.AccountIdentifierDetailRequest'
+          description: Account identifier
+        address:
+          $ref: '#/components/schemas/inboundpayment.Address'
+          description: Party address
+      required:
+      - identifier
+      - name
     inboundpayment.AccountIdentifierDetailRequest:
       type: object
       properties:
@@ -169,6 +138,12 @@ components:
           description: BIC
       required:
       - type
+    inboundpayment.SchemeInfoRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id that identifies a payment end-to-end within a scheme. If used ensure that its unique
     inboundpayment.Address:
       type: object
       properties:
@@ -182,12 +157,37 @@ components:
           type: string
         country:
           type: string
-    inboundpayment.SchemeInfoRequest:
+    inboundpayment.MessageResponse:
       type: object
       properties:
-        id:
+        field:
           type: string
-          description: unique id that identifies a payment end-to-end within a scheme. If used ensure that its unique
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
   securitySchemes:
     modulo_security:
       type: apiKey

@@ -70,20 +70,23 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    verificationofpayee.OutboundVopResponse:
+    verificationofpayee.OutboundVopErrorResponse:
       type: object
-      description: Verify Payee Response
+      description: Verify Payee Error Response
       properties:
-        id:
+        field:
           type: string
-          description: Unique id of verify payee request.
-          example: PAV0000001
-        result:
-          $ref: '#/components/schemas/verificationofpayee.OutboundVopResponseResult'
-          description: The result of verify payee.
+        code:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+        errorCode:
+          type: string
       required:
-      - id
-      - result
+      - code
+      - message
     verificationofpayee.OutboundVopResponseResult:
       type: object
       description: Verify Payee Result
@@ -103,23 +106,20 @@ components:
           example: Joseph Bloggs
       required:
       - code
-    verificationofpayee.OutboundVopErrorResponse:
+    verificationofpayee.OutboundVopResponse:
       type: object
-      description: Verify Payee Error Response
+      description: Verify Payee Response
       properties:
-        field:
+        id:
           type: string
-        code:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-        errorCode:
-          type: string
+          description: Unique id of verify payee request.
+          example: PAV0000001
+        result:
+          $ref: '#/components/schemas/verificationofpayee.OutboundVopResponseResult'
+          description: The result of verify payee.
       required:
-      - code
-      - message
+      - id
+      - result
     verificationofpayee.OutboundVopRequest:
       type: object
       description: Verify Payee Request

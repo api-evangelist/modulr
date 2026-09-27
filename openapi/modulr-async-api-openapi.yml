@@ -206,40 +206,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    card.AsyncTaskResponse:
-      type: object
-      properties:
-        taskBid:
-          type: string
-          description: ID of async task
-          example: T110000003
-        resourceUrl:
-          type: string
-          description: Url of available resource after task completion
-          example: /cards/V110000022
-        resourceId:
-          type: string
-          description: ID of resource after task completion. Will only be returned for COMPLETE tasks.
-          example: V110000022
-        type:
-          type: string
-          description: Type of async task
-        status:
-          type: string
-          description: Status of the task
-        createdDate:
-          type: string
-          format: date-time
-          description: The creation date of the task
-          example: 2020-03-23T11:01:54.826+0000
-        errorReason:
-          type: string
-          description: The error reason. Only populated if status is ERROR
-      required:
-      - createdDate
-      - status
-      - taskBid
-      - type
     card.MessageResponse:
       type: object
       properties:
@@ -301,6 +267,40 @@ components:
       - size
       - totalPages
       - totalSize
+    card.AsyncTaskResponse:
+      type: object
+      properties:
+        taskBid:
+          type: string
+          description: ID of async task
+          example: T110000003
+        resourceUrl:
+          type: string
+          description: Url of available resource after task completion
+          example: /cards/V110000022
+        resourceId:
+          type: string
+          description: ID of resource after task completion. Will only be returned for COMPLETE tasks.
+          example: V110000022
+        type:
+          type: string
+          description: Type of async task
+        status:
+          type: string
+          description: Status of the task
+        createdDate:
+          type: string
+          format: date-time
+          description: The creation date of the task
+          example: 2020-03-23T11:01:54.826+0000
+        errorReason:
+          type: string
+          description: The error reason. Only populated if status is ERROR
+      required:
+      - createdDate
+      - status
+      - taskBid
+      - type
   securitySchemes:
     modulo_security:
       type: apiKey

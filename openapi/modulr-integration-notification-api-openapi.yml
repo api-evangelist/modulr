@@ -316,14 +316,14 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    integrationnotification.PaginatedWebhookFailureResponse:
+    integrationnotification.PaginatedWebhookNotificationResponse:
       type: object
       properties:
         content:
           type: array
-          description: List of failed webhook delivery records
+          description: List of Webhook Notification records
           items:
-            $ref: '#/components/schemas/integrationnotification.WebhookFailureResponse'
+            $ref: '#/components/schemas/integrationnotification.WebhookNotificationResponse'
         size:
           type: integer
           format: int32
@@ -340,37 +340,14 @@ components:
           type: integer
           format: int32
           description: Total number of pages available
-    integrationnotification.MessageResponse:
+    integrationnotification.WebhookTypeConfiguration:
       type: object
+      description: Optional webhook type specific configuration
       properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
+        amountThreshold:
+          type: number
+          description: Amount threshold used to determine whether PAYIN webhooks should be sent.
+          minimum: 0
     integrationnotification.WebhookNotificationResponse:
       type: object
       description: Response object for integration notification operations. Contains all common fields from WebhookNotificationRequestBase, along with the notification ID and type.
@@ -418,6 +395,37 @@ components:
       - secret
       - type
       - url
+    integrationnotification.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
     integrationnotification.WebhookNotificationRequest:
       type: object
       description: Request object used to create/update a new integration notification.
@@ -477,14 +485,14 @@ components:
       - data
       - failureDateTime
       - id
-    integrationnotification.PaginatedWebhookNotificationResponse:
+    integrationnotification.PaginatedWebhookFailureResponse:
       type: object
       properties:
         content:
           type: array
-          description: List of Webhook Notification records
+          description: List of failed webhook delivery records
           items:
-            $ref: '#/components/schemas/integrationnotification.WebhookNotificationResponse'
+            $ref: '#/components/schemas/integrationnotification.WebhookFailureResponse'
         size:
           type: integer
           format: int32
@@ -501,14 +509,6 @@ components:
           type: integer
           format: int32
           description: Total number of pages available
-    integrationnotification.WebhookTypeConfiguration:
-      type: object
-      description: Optional webhook type specific configuration
-      properties:
-        amountThreshold:
-          type: number
-          description: Amount threshold used to determine whether PAYIN webhooks should be sent.
-          minimum: 0
   securitySchemes:
     modulo_security:
       type: apiKey

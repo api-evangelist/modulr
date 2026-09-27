@@ -416,6 +416,66 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    notification.WebHookFailureResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Endpoint URL for receiving webhook data
+        eventName:
+          type: string
+          description: Event which would trigger the webhook
+          enum:
+          - PAYIN
+          - PAYOUT
+          - BALANCE_LOW
+          - BALANCE_HIGH
+          - BALANCE
+          - DDMANDATE
+          - CUSTVSTAT
+          - ACCOUNT_STATEMENT
+          - PENDING_PAYMENTS
+          - DD_INCOMING_DEBIT
+          - DD_FAILED_CLAIM
+          - DD_FUNDS_RETURNED
+          - CARD_AUTH
+          - CARD_AUTH_OFFLINE
+          - CARD_CREATION
+          - UPCOMING_CREDIT
+          - UPCOMING_COLLECTION_CREDIT
+          - UPCOMING_COLLECTION_DEBIT
+          - CARD_STATUS_UPDATE
+          - CARD_TOKEN_PROVISIONING
+          - PAYMENT_COMPLIANCE_STATUS
+          - DD_COLLECTION_STATUS
+          - ACCOUNT_SWITCH_UPDATE
+          - PAYMENT_FILE_UPLOAD
+          - ACCOUNT_STATUS_CHANGE
+          - PAYMENT_APPROVAL_STATUS_CHANGE
+          - CUSTOMER_BATCH_PAYMENT_APPROVAL_STATUS_CHANGE
+          - CARD_BULK_OPS_COMPLETED
+          - CUSTOMER_STATUS
+          - CREDIT_AUTH
+          - DD_INDEMNITY_CLAIM_STATUS
+          - APPLICATION_STATUS_CHANGE
+          - CUSTOMER_CREATED
+        customerBid:
+          type: string
+          description: Unique Identifier for the customer of this webhook.
+        retry:
+          type: boolean
+          description: Turn webhook retry mechanism on/off
+        lastFailedTime:
+          type: string
+          format: date-time
+          description: Last failure time. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01+0000'
+        data: {}
+      required:
+      - customerBid
+      - eventName
+      - lastFailedTime
+      - retry
+      - url
     notification.NotificationConfig:
       type: object
       properties:
@@ -460,6 +520,88 @@ components:
           - hmac-sha256
           - hmac-sha384
           - hmac-sha512
+    notification.NotificationRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the notification.
+          enum:
+          - PAYIN
+          - PAYOUT
+          - BALANCE_LOW
+          - BALANCE_HIGH
+          - BALANCE
+          - DDMANDATE
+          - CUSTVSTAT
+          - ACCOUNT_STATEMENT
+          - PENDING_PAYMENTS
+          - DD_INCOMING_DEBIT
+          - DD_FAILED_CLAIM
+          - DD_FUNDS_RETURNED
+          - CARD_AUTH
+          - CARD_AUTH_OFFLINE
+          - CARD_CREATION
+          - UPCOMING_CREDIT
+          - UPCOMING_COLLECTION_CREDIT
+          - UPCOMING_COLLECTION_DEBIT
+          - CARD_STATUS_UPDATE
+          - CARD_TOKEN_PROVISIONING
+          - PAYMENT_COMPLIANCE_STATUS
+          - DD_COLLECTION_STATUS
+          - ACCOUNT_SWITCH_UPDATE
+          - PAYMENT_FILE_UPLOAD
+          - ACCOUNT_STATUS_CHANGE
+          - PAYMENT_APPROVAL_STATUS_CHANGE
+          - CUSTOMER_BATCH_PAYMENT_APPROVAL_STATUS_CHANGE
+          - CARD_BULK_OPS_COMPLETED
+          - CUSTOMER_STATUS
+          - CREDIT_AUTH
+          - DD_INDEMNITY_CLAIM_STATUS
+          - APPLICATION_STATUS_CHANGE
+          - CUSTOMER_CREATED
+        channel:
+          type: string
+          description: Channel used for sending the notification
+          enum:
+          - EMAIL
+          - WEBHOOK
+        destinations:
+          type: array
+          description: The list of emails or url(webhook) used for sending the notification. For 'EMAIL' channel this can be a list of comma separated email addresses. For 'WEBHOOK' channel this should be a single URL.
+          items:
+            type: string
+          minItems: 1
+        config:
+          $ref: '#/components/schemas/notification.NotificationConfig'
+          description: Configuration information for this Notification entity.
+      required:
+      - channel
+      - config
+      - destinations
+      - type
+    notification.UpdateNotificationRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the notification.
+          enum:
+          - ACTIVE
+          - INACTIVE
+        destinations:
+          type: array
+          description: The list of emails or url(webhook) used for sending the notification. For 'EMAIL' channel this can be a list of comma separated email addresses. For 'WEBHOOK' channel this should be a single URL.
+          items:
+            type: string
+          minItems: 1
+        config:
+          $ref: '#/components/schemas/notification.NotificationConfig'
+          description: Configuration information for this Notification entity.
+      required:
+      - config
+      - destinations
+      - status
     notification.NotificationResponse:
       type: object
       properties:
@@ -565,148 +707,6 @@ components:
           type: string
         sourceService:
           type: string
-    notification.NotificationRequest:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of the notification.
-          enum:
-          - PAYIN
-          - PAYOUT
-          - BALANCE_LOW
-          - BALANCE_HIGH
-          - BALANCE
-          - DDMANDATE
-          - CUSTVSTAT
-          - ACCOUNT_STATEMENT
-          - PENDING_PAYMENTS
-          - DD_INCOMING_DEBIT
-          - DD_FAILED_CLAIM
-          - DD_FUNDS_RETURNED
-          - CARD_AUTH
-          - CARD_AUTH_OFFLINE
-          - CARD_CREATION
-          - UPCOMING_CREDIT
-          - UPCOMING_COLLECTION_CREDIT
-          - UPCOMING_COLLECTION_DEBIT
-          - CARD_STATUS_UPDATE
-          - CARD_TOKEN_PROVISIONING
-          - PAYMENT_COMPLIANCE_STATUS
-          - DD_COLLECTION_STATUS
-          - ACCOUNT_SWITCH_UPDATE
-          - PAYMENT_FILE_UPLOAD
-          - ACCOUNT_STATUS_CHANGE
-          - PAYMENT_APPROVAL_STATUS_CHANGE
-          - CUSTOMER_BATCH_PAYMENT_APPROVAL_STATUS_CHANGE
-          - CARD_BULK_OPS_COMPLETED
-          - CUSTOMER_STATUS
-          - CREDIT_AUTH
-          - DD_INDEMNITY_CLAIM_STATUS
-          - APPLICATION_STATUS_CHANGE
-          - CUSTOMER_CREATED
-        channel:
-          type: string
-          description: Channel used for sending the notification
-          enum:
-          - EMAIL
-          - WEBHOOK
-        destinations:
-          type: array
-          description: The list of emails or url(webhook) used for sending the notification. For 'EMAIL' channel this can be a list of comma separated email addresses. For 'WEBHOOK' channel this should be a single URL.
-          items:
-            type: string
-          minItems: 1
-        config:
-          $ref: '#/components/schemas/notification.NotificationConfig'
-          description: Configuration information for this Notification entity.
-      required:
-      - channel
-      - config
-      - destinations
-      - type
-    notification.UpdateNotificationRequest:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the notification.
-          enum:
-          - ACTIVE
-          - INACTIVE
-        destinations:
-          type: array
-          description: The list of emails or url(webhook) used for sending the notification. For 'EMAIL' channel this can be a list of comma separated email addresses. For 'WEBHOOK' channel this should be a single URL.
-          items:
-            type: string
-          minItems: 1
-        config:
-          $ref: '#/components/schemas/notification.NotificationConfig'
-          description: Configuration information for this Notification entity.
-      required:
-      - config
-      - destinations
-      - status
-    notification.WebHookFailureResponse:
-      type: object
-      properties:
-        url:
-          type: string
-          description: Endpoint URL for receiving webhook data
-        eventName:
-          type: string
-          description: Event which would trigger the webhook
-          enum:
-          - PAYIN
-          - PAYOUT
-          - BALANCE_LOW
-          - BALANCE_HIGH
-          - BALANCE
-          - DDMANDATE
-          - CUSTVSTAT
-          - ACCOUNT_STATEMENT
-          - PENDING_PAYMENTS
-          - DD_INCOMING_DEBIT
-          - DD_FAILED_CLAIM
-          - DD_FUNDS_RETURNED
-          - CARD_AUTH
-          - CARD_AUTH_OFFLINE
-          - CARD_CREATION
-          - UPCOMING_CREDIT
-          - UPCOMING_COLLECTION_CREDIT
-          - UPCOMING_COLLECTION_DEBIT
-          - CARD_STATUS_UPDATE
-          - CARD_TOKEN_PROVISIONING
-          - PAYMENT_COMPLIANCE_STATUS
-          - DD_COLLECTION_STATUS
-          - ACCOUNT_SWITCH_UPDATE
-          - PAYMENT_FILE_UPLOAD
-          - ACCOUNT_STATUS_CHANGE
-          - PAYMENT_APPROVAL_STATUS_CHANGE
-          - CUSTOMER_BATCH_PAYMENT_APPROVAL_STATUS_CHANGE
-          - CARD_BULK_OPS_COMPLETED
-          - CUSTOMER_STATUS
-          - CREDIT_AUTH
-          - DD_INDEMNITY_CLAIM_STATUS
-          - APPLICATION_STATUS_CHANGE
-          - CUSTOMER_CREATED
-        customerBid:
-          type: string
-          description: Unique Identifier for the customer of this webhook.
-        retry:
-          type: boolean
-          description: Turn webhook retry mechanism on/off
-        lastFailedTime:
-          type: string
-          format: date-time
-          description: Last failure time. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01+0000'
-        data: {}
-      required:
-      - customerBid
-      - eventName
-      - lastFailedTime
-      - retry
-      - url
   securitySchemes:
     modulo_security:
       type: apiKey

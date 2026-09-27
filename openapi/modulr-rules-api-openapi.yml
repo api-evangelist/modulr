@@ -235,6 +235,62 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    rule.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    rule.CreateRuleRequest:
+      type: object
+      description: create rule request
+      properties:
+        type:
+          type: string
+          description: The type of Rule. Can be one of the following {SWEEP, SPLIT, FUNDING}
+        name:
+          type: string
+          description: Rule's name
+          example: My new rule
+          maxLength: 25
+          minLength: 0
+        accountId:
+          type: string
+          description: The Account which the Rule is created on.
+          example: A1000001
+          minLength: 1
+        data:
+          $ref: '#/components/schemas/rule.RuleConfigData'
+      required:
+      - accountId
+      - data
+      - name
+      - type
     rule.RuleConfigData:
       type: object
       description: Configuration fields for all types of rules. To be populated where applicable based on rule type.
@@ -279,6 +335,20 @@ components:
         sourceId:
           type: string
           description: Account to fund the supplied accountId. e.g. A1000002. Funding Rule Only
+    rule.SplitConfig:
+      type: object
+      description: Configuration for a Split Rule
+      properties:
+        destinationId:
+          type: string
+          description: Id of destination beneficiary. e.g. B1000001.
+        percent:
+          type: string
+          description: Percentage of payment to be moved to specified destination. e.g. 7.25.
+          minLength: 1
+      required:
+      - destinationId
+      - percent
     rule.RuleResponse:
       type: object
       properties:
@@ -533,20 +603,6 @@ components:
       - size
       - totalPages
       - totalSize
-    rule.SplitConfig:
-      type: object
-      description: Configuration for a Split Rule
-      properties:
-        destinationId:
-          type: string
-          description: Id of destination beneficiary. e.g. B1000001.
-        percent:
-          type: string
-          description: Percentage of payment to be moved to specified destination. e.g. 7.25.
-          minLength: 1
-      required:
-      - destinationId
-      - percent
     rule.ConditionalSplitConfig:
       type: object
       description: Configuration for a Conditional Split Rule
@@ -570,62 +626,6 @@ components:
       - conditionAmount
       - destinationId
       - percent
-    rule.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    rule.CreateRuleRequest:
-      type: object
-      description: create rule request
-      properties:
-        type:
-          type: string
-          description: The type of Rule. Can be one of the following {SWEEP, SPLIT, FUNDING}
-        name:
-          type: string
-          description: Rule's name
-          example: My new rule
-          maxLength: 25
-          minLength: 0
-        accountId:
-          type: string
-          description: The Account which the Rule is created on.
-          example: A1000001
-          minLength: 1
-        data:
-          $ref: '#/components/schemas/rule.RuleConfigData'
-      required:
-      - accountId
-      - data
-      - name
-      - type
   securitySchemes:
     modulo_security:
       type: apiKey
