@@ -211,6 +211,116 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    confirmationofpayee.JsonOutboundCopResponse:
+      type: object
+      description: Account Name Check Response
+      properties:
+        id:
+          type: string
+          description: Unique id for the account name check.
+          example: C12001569Z
+        result:
+          $ref: '#/components/schemas/confirmationofpayee.JsonOutboundCopResult'
+          description: The result of the account name check.
+      required:
+      - id
+      - result
+    confirmationofpayee.JsonSrdAccount:
+      type: object
+      properties:
+        sortCode:
+          type: string
+          description: 'The sort code of one or more accounts that requires Secondary Reference Data to be provided when making account name check requests.
+
+            '
+          example: '123456'
+        accountNumbers:
+          type: array
+          description: Account numbers that require Secondary Reference Data. If empty, Secondary Reference Data is required for all name check requests for this sort code.
+          items:
+            type: string
+            description: The account number of a specific account that requires Secondary Reference Data to be provided when making account name check requests.
+            example: '11111111'
+      required:
+      - sortCode
+    confirmationofpayee.CopPageResponseJsonSrdAccount:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/confirmationofpayee.JsonSrdAccount'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
+    confirmationofpayee.JsonOutboundCopResult:
+      type: object
+      description: Account Name Check Result
+      properties:
+        code:
+          type: string
+          description: The result of the account name check.
+          enum:
+          - MATCHED
+          - NOT_MATCHED
+          - CLOSE_MATCH
+          - BUSINESS_ACCOUNT_NAME_MATCHED
+          - PERSONAL_ACCOUNT_NAME_MATCHED
+          - BUSINESS_ACCOUNT_CLOSE_MATCH
+          - PERSONAL_ACCOUNT_CLOSE_MATCH
+          - ACCOUNT_DOES_NOT_EXIST
+          - SECONDARY_ACCOUNT_ID_NOT_FOUND
+          - ACCOUNT_NOT_SUPPORTED
+          - ACCOUNT_SWITCHED
+          - WRONG_PARTICIPANT
+          - NO_RESPONSE
+          - NOT_ENROLLED
+          example: MATCHED
+        name:
+          type: string
+          description: The actual name on the account (as provided by the participating organisation).
+          example: Joseph Bloggs
+      required:
+      - code
+    confirmationofpayee.JsonOutboundCopErrorResponse:
+      type: object
+      description: Account Name Check Error Response
+      properties:
+        id:
+          type: string
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+        errorCode:
+          type: string
+      required:
+      - code
+      - message
     confirmationofpayee.JsonOutboundCopRequest:
       type: object
       description: Details of Account Name Check Request
@@ -254,116 +364,6 @@ components:
       - accountType
       - name
       - paymentAccountId
-      - sortCode
-    confirmationofpayee.JsonOutboundCopResult:
-      type: object
-      description: Account Name Check Result
-      properties:
-        code:
-          type: string
-          description: The result of the account name check.
-          enum:
-          - MATCHED
-          - NOT_MATCHED
-          - CLOSE_MATCH
-          - BUSINESS_ACCOUNT_NAME_MATCHED
-          - PERSONAL_ACCOUNT_NAME_MATCHED
-          - BUSINESS_ACCOUNT_CLOSE_MATCH
-          - PERSONAL_ACCOUNT_CLOSE_MATCH
-          - ACCOUNT_DOES_NOT_EXIST
-          - SECONDARY_ACCOUNT_ID_NOT_FOUND
-          - ACCOUNT_NOT_SUPPORTED
-          - ACCOUNT_SWITCHED
-          - WRONG_PARTICIPANT
-          - NO_RESPONSE
-          - NOT_ENROLLED
-          example: MATCHED
-        name:
-          type: string
-          description: The actual name on the account (as provided by the participating organisation).
-          example: Joseph Bloggs
-      required:
-      - code
-    confirmationofpayee.JsonOutboundCopResponse:
-      type: object
-      description: Account Name Check Response
-      properties:
-        id:
-          type: string
-          description: Unique id for the account name check.
-          example: C12001569Z
-        result:
-          $ref: '#/components/schemas/confirmationofpayee.JsonOutboundCopResult'
-          description: The result of the account name check.
-      required:
-      - id
-      - result
-    confirmationofpayee.CopPageResponseJsonSrdAccount:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/confirmationofpayee.JsonSrdAccount'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    confirmationofpayee.JsonOutboundCopErrorResponse:
-      type: object
-      description: Account Name Check Error Response
-      properties:
-        id:
-          type: string
-        field:
-          type: string
-        code:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-        errorCode:
-          type: string
-      required:
-      - code
-      - message
-    confirmationofpayee.JsonSrdAccount:
-      type: object
-      properties:
-        sortCode:
-          type: string
-          description: 'The sort code of one or more accounts that requires Secondary Reference Data to be provided when making account name check requests.
-
-            '
-          example: '123456'
-        accountNumbers:
-          type: array
-          description: Account numbers that require Secondary Reference Data. If empty, Secondary Reference Data is required for all name check requests for this sort code.
-          items:
-            type: string
-            description: The account number of a specific account that requires Secondary Reference Data to be provided when making account name check requests.
-            example: '11111111'
-      required:
       - sortCode
     confirmationofpayee.MessageResponse:
       type: object

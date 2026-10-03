@@ -100,6 +100,37 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    directdebitoutbound.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
     directdebitoutbound.CollectionRejectRequest:
       type: object
       description: Collection reject request
@@ -120,20 +151,40 @@ components:
       required:
       - claimBId
       - rejectCode
-    directdebitoutbound.EnquiryMandatesResponse:
+    directdebitoutbound.MandateCancelRequest:
       type: object
+      description: Details of the Mandate Cancel Request
       properties:
+        mandateId:
+          type: string
+          description: Mandate Id
+          minLength: 1
         accountId:
           type: string
           description: Account Id
-        mandatesList:
-          type: array
-          description: List of Mandates
-          items:
-            $ref: '#/components/schemas/directdebitoutbound.EnquiryMandateResponse'
+          minLength: 1
+        cancellationCode:
+          type: string
+          description: Cancellation Code
+          enum:
+          - REFER_TO_PAYER
+          - INSTRUCTION_CANCELLED_BY_PAYER
+          - PAYER_DECEASED
+          - ACCOUNT_TRANSFERRED
+          - ACCOUNT_CLOSED
+          - ACCOUNT_OR_INSTRUCTION_TRANSFERRED
+          - ADVANCE_NOTICE_DISPUTED
+          - INSTRUCTION_AMENDED
+          - INSTRUCTION_REINSTATED
+        merchantNumber:
+          type: string
+          description: Merchant Number
+          minLength: 1
       required:
       - accountId
-      - mandatesList
+      - cancellationCode
+      - mandateId
+      - merchantNumber
     directdebitoutbound.EnquiryMandateResponse:
       type: object
       properties:
@@ -178,71 +229,20 @@ components:
       - merchantNumber
       - merchantSortCode
       - setupDate
-    directdebitoutbound.MessageResponse:
+    directdebitoutbound.EnquiryMandatesResponse:
       type: object
       properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    directdebitoutbound.MandateCancelRequest:
-      type: object
-      description: Details of the Mandate Cancel Request
-      properties:
-        mandateId:
-          type: string
-          description: Mandate Id
-          minLength: 1
         accountId:
           type: string
           description: Account Id
-          minLength: 1
-        cancellationCode:
-          type: string
-          description: Cancellation Code
-          enum:
-          - REFER_TO_PAYER
-          - INSTRUCTION_CANCELLED_BY_PAYER
-          - PAYER_DECEASED
-          - ACCOUNT_TRANSFERRED
-          - ACCOUNT_CLOSED
-          - ACCOUNT_OR_INSTRUCTION_TRANSFERRED
-          - ADVANCE_NOTICE_DISPUTED
-          - INSTRUCTION_AMENDED
-          - INSTRUCTION_REINSTATED
-        merchantNumber:
-          type: string
-          description: Merchant Number
-          minLength: 1
+        mandatesList:
+          type: array
+          description: List of Mandates
+          items:
+            $ref: '#/components/schemas/directdebitoutbound.EnquiryMandateResponse'
       required:
       - accountId
-      - cancellationCode
-      - mandateId
-      - merchantNumber
+      - mandatesList
   securitySchemes:
     modulo_security:
       type: apiKey

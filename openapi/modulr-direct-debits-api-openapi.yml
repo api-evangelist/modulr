@@ -987,149 +987,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    directdebit.CreateMandateRequest:
-      type: object
-      description: Details of the Direct Debit mandate.
-      properties:
-        name:
-          type: string
-          description: Name for mandate
-          maxLength: 40
-          minLength: 0
-        reference:
-          type: string
-          description: Mandate reference, should contain only letters, numbers, space, dot, ampersand, forward-slash , hyphen
-          example: REFER-1.2
-          maxLength: 18
-          minLength: 6
-          pattern: ^[a-zA-Z 0-9\.\&\/-]+$
-        externalReference:
-          type: string
-          description: External reference for mandate
-          maxLength: 50
-          minLength: 0
-          pattern: '[\w-\s]*'
-        accountName:
-          type: string
-          description: Payee's account name
-          maxLength: 100
-          minLength: 1
-        sortCode:
-          type: string
-          description: Payee's sort code of account for which direct-debit-mandate has to be created.
-          example: '000000'
-          pattern: \p{Digit}{6}
-        accountNumber:
-          type: string
-          description: Payee's account number for which direct-debit-mandate has to be created.
-          example: '12345678'
-          pattern: \p{Digit}{8}
-        address:
-          $ref: '#/components/schemas/directdebit.Address'
-          description: Payee's address
-        phone:
-          type: string
-          description: Payee's phone number
-          maxLength: 14
-          minLength: 0
-          pattern: \p{Digit}+
-        email:
-          type: string
-          description: Payee's email address
-          maxLength: 100
-          minLength: 0
-          pattern: '[^\s@]+@[^\s@]+\.[^\s@]+'
-        payeeAccountBid:
-          type: string
-          description: Payee's accountBid
-      required:
-      - accountName
-      - accountNumber
-      - address
-      - externalReference
-      - name
-      - phone
-      - reference
-      - sortCode
-    directdebit.Address:
-      type: object
-      properties:
-        addressLine1:
-          type: string
-          maxLength: 150
-          minLength: 0
-        addressLine2:
-          type: string
-          maxLength: 150
-          minLength: 0
-        postTown:
-          type: string
-          maxLength: 150
-          minLength: 0
-        postCode:
-          type: string
-          maxLength: 8
-          minLength: 0
-        country:
-          type: string
-          minLength: 1
-      required:
-      - addressLine1
-      - country
-      - postCode
-      - postTown
-    directdebit.ReconciliationPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/directdebit.ReconciliationResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0-based, i.e first page = 0, second page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    directdebit.ReconciliationResponse:
-      type: object
-      properties:
-        reconciliationId:
-          type: string
-        accountId:
-          type: string
-        collectionDate:
-          type: string
-          format: date
-        amount:
-          type: number
-        currency:
-          type: string
-        status:
-          type: string
-        notifiedDate:
-          type: string
-          format: date-time
-        schemeDetails:
-          type: object
-          additionalProperties: {}
     directdebit.BulkCancelMandateResponse:
       type: object
       properties:
@@ -1166,397 +1023,6 @@ components:
       - migrationType
       - status
       - totalMandatesRequested
-    directdebit.IndemnityClaimDirectDebitResponse:
-      type: object
-      properties:
-        amount:
-          type: number
-        collectionDate:
-          type: string
-          format: date
-        collectionId:
-          type: string
-    directdebit.BulkCreateResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique id for this bulk request.
-          example: R210000001
-        accountId:
-          type: string
-          description: Unique id for account for this bulk request.
-          example: A0000001
-        status:
-          type: string
-          description: Status for this bulk request.
-        migrationType:
-          type: string
-          description: Migration type for this bulk request.
-          enum:
-          - SCHEDULE_AUDDIS_MIGRATION
-          - TRANSFER_OF_SUN
-          - OFFBOARDING
-        totalMandatesRequested:
-          type: integer
-          format: int64
-          description: Total mandates requested for this bulk request.
-        auddisSubmissionDate:
-          type: string
-          format: date
-          description: auddis submission date for this bulk request.
-      required:
-      - accountId
-      - auddisSubmissionDate
-      - id
-      - migrationType
-      - status
-      - totalMandatesRequested
-    directdebit.accountId:
-      type: array
-      description: Id(s) of account to fetch Mandates for.
-      items:
-        type: string
-        description: Id(s) of account to fetch Mandates for.
-    directdebit.CancelMandateRequest:
-      type: object
-      description: Details of Mandate cancellation.
-      properties:
-        reason:
-          type: string
-          description: Reason to cancel the mandate
-          minLength: 1
-      required:
-      - reason
-    directdebit.status:
-      type: array
-      description: Status of the Mandate
-      items:
-        type: string
-        description: Status of the Mandate
-        enum:
-        - PENDING
-        - SUBMITTED
-        - ACTIVE
-        - SUSPENDED
-        - REJECTED
-        - CANCELLED
-        - INVALID_REQUEST
-    directdebit.CollectionScheduleResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique id for direct-debit collection.
-          example: Q0000001
-        frequency:
-          type: string
-          description: Frequency for direct-debit collection
-          example: MONTHLY
-        numberOfPayments:
-          type: integer
-          format: int32
-          description: Number of payments for direct-debit collection
-          example: 12
-        firstPaymentAmount:
-          type: number
-          description: Amount of the first collection payment
-          example: '100.00'
-        firstPaymentDate:
-          type: string
-          description: Date of the first collection payment. Format is yyyy-MM-dd.
-          example: '2018-01-10'
-        regularPaymentAmount:
-          type: number
-          description: Amount of the regular collection payments
-          example: '100.00'
-        regularPaymentStartDate:
-          type: string
-          description: Start date of the regular collection payment. Format is yyyy-MM-dd.
-          example: '2018-01-10'
-        createdDate:
-          type: string
-          format: date-time
-          description: Datetime when direct-debit collection was created.Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
-          example: 2017-01-28T01:01:01+0000
-        status:
-          type: string
-          description: 'Status of the direct-debit collection. Can be one of '
-          example: PROCESSING
-        externalReference:
-          type: string
-        collectionReference:
-          type: string
-      required:
-      - createdDate
-      - frequency
-      - id
-      - numberOfPayments
-      - status
-    directdebit.Mandate:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique id for direct-debit-mandate.
-          example: G0000001
-        accountId:
-          type: string
-          description: Unique id for account for this mandate.
-          example: A0000001
-        reference:
-          type: string
-          description: DDI reference that was used during creation.
-        externalReference:
-          type: string
-          description: External reference that was used during creation (appears on the bank statement).
-        createdDate:
-          type: string
-          format: date-time
-          description: Datetime when direct-debit-mandate was created.Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
-          example: 2017-01-28T01:01:01+0000
-        status:
-          type: string
-          description: 'Status of the direct-debit-mandate. mandates must be ''ACTIVE'' to make collections. Can be one of '
-          example: ACTIVE
-        nextValidCollectionDate:
-          type: string
-          description: The earliest date a collection can be created. Format is yyyy-MM-dd.
-          example: '2018-01-10'
-        Name given on Mandate:
-          type: string
-        Address given on Mandate:
-          $ref: '#/components/schemas/directdebit.Address'
-        sortCode:
-          type: string
-          description: Sort Code of the account for which direct-debit-mandate has been created.
-          example: '123456'
-        accountNumber:
-          type: string
-          description: Account Number for which direct-debit-mandate has been created.
-          example: '87654321'
-        payeeAccountBid:
-          type: string
-          description: Unique id for individual recipient account used for internal transfers
-          example: A0000001
-        bulkCreateRequestId:
-          type: string
-          description: Id associate to the bulk create request of this mandate.
-          example: R210000005
-        bulkCancelRequestId:
-          type: string
-          description: Id associate to the bulk cancel request of this mandate.
-          example: R210000006
-      required:
-      - accountId
-      - accountNumber
-      - createdDate
-      - externalReference
-      - id
-      - nextValidCollectionDate
-      - reference
-      - sortCode
-      - status
-    directdebit.DirectDebitPageResponseCollection:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/directdebit.Collection'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0-based, i.e first page = 0, second page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    directdebit.BulkCancelMandateRequest:
-      type: object
-      description: List of the Direct Debit mandates to cancel
-      properties:
-        accountId:
-          type: string
-          description: The unique identifier for the account for which the mandates are to be cancelled.
-          minLength: 1
-        migrationType:
-          type: string
-          description: The type of migration process that is being initiated.
-          enum:
-          - SCHEDULE_AUDDIS_MIGRATION
-          - TRANSFER_OF_SUN
-          - OFFBOARDING
-        auddisCancellationDate:
-          type: string
-          format: date
-          description: The date for the AUDDIS (Automated Direct Debit Instruction Service) cancellation.
-        mandateIds:
-          type: array
-          description: List of mandate ids to be cancelled.
-          items:
-            type: string
-          minItems: 1
-      required:
-      - accountId
-      - mandateIds
-      - migrationType
-    directdebit.id:
-      type: array
-      description: Id(s) of Mandate(s) to fetch.
-      items:
-        type: string
-        description: Id(s) of Mandate(s) to fetch.
-    directdebit.IndemnityClaimPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/directdebit.IndemnityClaimResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0-based, i.e first page = 0, second page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    directdebit.MandatePageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/directdebit.Mandate'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0-based, i.e first page = 0, second page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    directdebit.Collection:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique id for a direct-debit collection
-          example: K000100100
-        mandateId:
-          type: string
-          description: Unique id for direct-debit mandate.
-          example: G0000001
-        collectionScheduleId:
-          type: string
-          description: Unique id for direct-debit collection schedule for which triggered the collection
-          example: Q9200001
-        activityDate:
-          type: string
-          description: collection or reportRaised date for indemnity???
-          example: '2018-01-09'
-        amount:
-          type: number
-          description: Amount of the collection payment
-          example: '100.00'
-        type:
-          type: string
-          description: 'Type of the collection activity.  Can be one of '
-          example: COLLECTION
-        payerName:
-          type: string
-          description: Name of the payer
-          example: Mr John Doe
-        status:
-          type: string
-          description: 'Status of the collection.  Can be one of '
-          example: FAILED
-        message:
-          type: string
-          description: Failure description of the payment activity
-          example: Instruction Cancelled
-        originalActivityDate:
-          type: string
-          description: The original scheduled date for a payment to be collected
-          example: '2018-01-09'
-        reconciliationDate:
-          type: string
-          description: The reconciled date for a payment to be collected
-          example: '2018-01-09'
-        reconciliationReference:
-          type: string
-          description: The reconciled reference that links to a payment
-          example: '2018-01-09'
-        ddiReference:
-          type: string
-          description: 'collectionReference - if present - is appended to the original DDI reference
-
-            (used during mandate creation - referred to as core reference) for the specified scheduled collection
-
-            without altering the original mandate core reference. This will be visible to the payer on their account.
-
-            The reference and collectionReference combined have 18 character limit and can only contain alphanumeric
-
-            characters with underscore, hyphen and space permitted'
-          example: ABCD-EFGH
-      required:
-      - activityDate
-      - amount
-      - id
-      - mandateId
-      - message
-      - originalActivityDate
-      - payerName
-      - reconciliationDate
-      - reconciliationReference
-      - status
-      - type
     directdebit.CreateCollectionScheduleRequest:
       type: object
       description: Details of collection to create.
@@ -1640,6 +1106,400 @@ components:
       - currency
       - frequency
       - numberOfPayments
+    directdebit.Collection:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id for a direct-debit collection
+          example: K000100100
+        mandateId:
+          type: string
+          description: Unique id for direct-debit mandate.
+          example: G0000001
+        collectionScheduleId:
+          type: string
+          description: Unique id for direct-debit collection schedule for which triggered the collection
+          example: Q9200001
+        activityDate:
+          type: string
+          description: collection or reportRaised date for indemnity???
+          example: '2018-01-09'
+        amount:
+          type: number
+          description: Amount of the collection payment
+          example: '100.00'
+        type:
+          type: string
+          description: 'Type of the collection activity.  Can be one of '
+          example: COLLECTION
+        payerName:
+          type: string
+          description: Name of the payer
+          example: Mr John Doe
+        status:
+          type: string
+          description: 'Status of the collection.  Can be one of '
+          example: FAILED
+        message:
+          type: string
+          description: Failure description of the payment activity
+          example: Instruction Cancelled
+        originalActivityDate:
+          type: string
+          description: The original scheduled date for a payment to be collected
+          example: '2018-01-09'
+        reconciliationDate:
+          type: string
+          description: The reconciled date for a payment to be collected
+          example: '2018-01-09'
+        reconciliationReference:
+          type: string
+          description: The reconciled reference that links to a payment
+          example: '2018-01-09'
+        ddiReference:
+          type: string
+          description: 'collectionReference - if present - is appended to the original DDI reference
+
+            (used during mandate creation - referred to as core reference) for the specified scheduled collection
+
+            without altering the original mandate core reference. This will be visible to the payer on their account.
+
+            The reference and collectionReference combined have 18 character limit and can only contain alphanumeric
+
+            characters with underscore, hyphen and space permitted'
+          example: ABCD-EFGH
+      required:
+      - activityDate
+      - amount
+      - id
+      - mandateId
+      - message
+      - originalActivityDate
+      - payerName
+      - reconciliationDate
+      - reconciliationReference
+      - status
+      - type
+    directdebit.ReconciliationResponse:
+      type: object
+      properties:
+        reconciliationId:
+          type: string
+        accountId:
+          type: string
+        collectionDate:
+          type: string
+          format: date
+        amount:
+          type: number
+        currency:
+          type: string
+        status:
+          type: string
+        notifiedDate:
+          type: string
+          format: date-time
+        schemeDetails:
+          type: object
+          additionalProperties: {}
+    directdebit.ReconciliationPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/directdebit.ReconciliationResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0-based, i.e first page = 0, second page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
+    directdebit.Mandate:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id for direct-debit-mandate.
+          example: G0000001
+        accountId:
+          type: string
+          description: Unique id for account for this mandate.
+          example: A0000001
+        reference:
+          type: string
+          description: DDI reference that was used during creation.
+        externalReference:
+          type: string
+          description: External reference that was used during creation (appears on the bank statement).
+        createdDate:
+          type: string
+          format: date-time
+          description: Datetime when direct-debit-mandate was created.Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
+          example: 2017-01-28T01:01:01+0000
+        status:
+          type: string
+          description: 'Status of the direct-debit-mandate. mandates must be ''ACTIVE'' to make collections. Can be one of '
+          example: ACTIVE
+        nextValidCollectionDate:
+          type: string
+          description: The earliest date a collection can be created. Format is yyyy-MM-dd.
+          example: '2018-01-10'
+        Name given on Mandate:
+          type: string
+        Address given on Mandate:
+          $ref: '#/components/schemas/directdebit.Address'
+        sortCode:
+          type: string
+          description: Sort Code of the account for which direct-debit-mandate has been created.
+          example: '123456'
+        accountNumber:
+          type: string
+          description: Account Number for which direct-debit-mandate has been created.
+          example: '87654321'
+        payeeAccountBid:
+          type: string
+          description: Unique id for individual recipient account used for internal transfers
+          example: A0000001
+        bulkCreateRequestId:
+          type: string
+          description: Id associate to the bulk create request of this mandate.
+          example: R210000005
+        bulkCancelRequestId:
+          type: string
+          description: Id associate to the bulk cancel request of this mandate.
+          example: R210000006
+      required:
+      - accountId
+      - accountNumber
+      - createdDate
+      - externalReference
+      - id
+      - nextValidCollectionDate
+      - reference
+      - sortCode
+      - status
+    directdebit.IndemnityClaimStatusHistoryResponse:
+      type: object
+      properties:
+        changeDate:
+          type: string
+          format: date
+        schemeId:
+          type: string
+        status:
+          type: string
+          enum:
+          - NEW
+          - CANCELLED
+          - SETTLED
+    directdebit.Address:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+          maxLength: 150
+          minLength: 0
+        addressLine2:
+          type: string
+          maxLength: 150
+          minLength: 0
+        postTown:
+          type: string
+          maxLength: 150
+          minLength: 0
+        postCode:
+          type: string
+          maxLength: 8
+          minLength: 0
+        country:
+          type: string
+          minLength: 1
+      required:
+      - addressLine1
+      - country
+      - postCode
+      - postTown
+    directdebit.id:
+      type: array
+      description: Id(s) of Mandate(s) to fetch.
+      items:
+        type: string
+        description: Id(s) of Mandate(s) to fetch.
+    directdebit.BulkCreateMandateRequest:
+      type: object
+      description: List of Details of the Direct Debit mandates.
+      properties:
+        accountId:
+          type: string
+          description: The unique identifier for the account for which the mandates are to be created.
+          minLength: 1
+        migrationType:
+          type: string
+          description: The type of migration process that is being initiated.
+          enum:
+          - SCHEDULE_AUDDIS_MIGRATION
+          - TRANSFER_OF_SUN
+          - OFFBOARDING
+        auddisSubmissionDate:
+          type: string
+          format: date
+          description: The scheduled date for the AUDDIS (Automated Direct Debit Instruction Service) submission. This is the date when the mandates will be submitted to the AUDDIS system for processing.
+        createMandateRequests:
+          type: array
+          description: The number of mandate creation requests. Each item in the array represents a request to create an individual mandate with its own set of parameters.
+          items:
+            $ref: '#/components/schemas/directdebit.CreateMandateRequest'
+          minItems: 1
+      required:
+      - accountId
+      - createMandateRequests
+      - migrationType
+    directdebit.DirectDebitPageResponseCollection:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/directdebit.Collection'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0-based, i.e first page = 0, second page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
+    directdebit.accountId:
+      type: array
+      description: Id(s) of account to fetch Mandates for.
+      items:
+        type: string
+        description: Id(s) of account to fetch Mandates for.
+    directdebit.CancelMandateRequest:
+      type: object
+      description: Details of Mandate cancellation.
+      properties:
+        reason:
+          type: string
+          description: Reason to cancel the mandate
+          minLength: 1
+      required:
+      - reason
+    directdebit.CollectionScheduleResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id for direct-debit collection.
+          example: Q0000001
+        frequency:
+          type: string
+          description: Frequency for direct-debit collection
+          example: MONTHLY
+        numberOfPayments:
+          type: integer
+          format: int32
+          description: Number of payments for direct-debit collection
+          example: 12
+        firstPaymentAmount:
+          type: number
+          description: Amount of the first collection payment
+          example: '100.00'
+        firstPaymentDate:
+          type: string
+          description: Date of the first collection payment. Format is yyyy-MM-dd.
+          example: '2018-01-10'
+        regularPaymentAmount:
+          type: number
+          description: Amount of the regular collection payments
+          example: '100.00'
+        regularPaymentStartDate:
+          type: string
+          description: Start date of the regular collection payment. Format is yyyy-MM-dd.
+          example: '2018-01-10'
+        createdDate:
+          type: string
+          format: date-time
+          description: Datetime when direct-debit collection was created.Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
+          example: 2017-01-28T01:01:01+0000
+        status:
+          type: string
+          description: 'Status of the direct-debit collection. Can be one of '
+          example: PROCESSING
+        externalReference:
+          type: string
+        collectionReference:
+          type: string
+      required:
+      - createdDate
+      - frequency
+      - id
+      - numberOfPayments
+      - status
+    directdebit.MandatePageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/directdebit.Mandate'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0-based, i.e first page = 0, second page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
     directdebit.MessageResponse:
       type: object
       properties:
@@ -1671,50 +1531,6 @@ components:
           type: string
         sourceService:
           type: string
-    directdebit.IndemnityClaimStatusHistoryResponse:
-      type: object
-      properties:
-        changeDate:
-          type: string
-          format: date
-        schemeId:
-          type: string
-        status:
-          type: string
-          enum:
-          - NEW
-          - CANCELLED
-          - SETTLED
-    directdebit.DirectDebitPageResponseCollectionScheduleResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/directdebit.CollectionScheduleResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0-based, i.e first page = 0, second page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
     directdebit.IndemnityClaimResponse:
       type: object
       properties:
@@ -1761,13 +1577,167 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/directdebit.IndemnityClaimDirectDebitResponse'
-    directdebit.BulkCreateMandateRequest:
+    directdebit.IndemnityClaimPageResponse:
       type: object
-      description: List of Details of the Direct Debit mandates.
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/directdebit.IndemnityClaimResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0-based, i.e first page = 0, second page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
+    directdebit.CreateMandateRequest:
+      type: object
+      description: Details of the Direct Debit mandate.
+      properties:
+        name:
+          type: string
+          description: Name for mandate
+          maxLength: 40
+          minLength: 0
+        reference:
+          type: string
+          description: Mandate reference, should contain only letters, numbers, space, dot, ampersand, forward-slash , hyphen
+          example: REFER-1.2
+          maxLength: 18
+          minLength: 6
+          pattern: ^[a-zA-Z 0-9\.\&\/-]+$
+        externalReference:
+          type: string
+          description: External reference for mandate
+          maxLength: 50
+          minLength: 0
+          pattern: '[\w-\s]*'
+        accountName:
+          type: string
+          description: Payee's account name
+          maxLength: 100
+          minLength: 1
+        sortCode:
+          type: string
+          description: Payee's sort code of account for which direct-debit-mandate has to be created.
+          example: '000000'
+          pattern: \p{Digit}{6}
+        accountNumber:
+          type: string
+          description: Payee's account number for which direct-debit-mandate has to be created.
+          example: '12345678'
+          pattern: \p{Digit}{8}
+        address:
+          $ref: '#/components/schemas/directdebit.Address'
+          description: Payee's address
+        phone:
+          type: string
+          description: Payee's phone number
+          maxLength: 14
+          minLength: 0
+          pattern: \p{Digit}+
+        email:
+          type: string
+          description: Payee's email address
+          maxLength: 100
+          minLength: 0
+          pattern: '[^\s@]+@[^\s@]+\.[^\s@]+'
+        payeeAccountBid:
+          type: string
+          description: Payee's accountBid
+      required:
+      - accountName
+      - accountNumber
+      - address
+      - externalReference
+      - name
+      - phone
+      - reference
+      - sortCode
+    directdebit.status:
+      type: array
+      description: Status of the Mandate
+      items:
+        type: string
+        description: Status of the Mandate
+        enum:
+        - PENDING
+        - SUBMITTED
+        - ACTIVE
+        - SUSPENDED
+        - REJECTED
+        - CANCELLED
+        - INVALID_REQUEST
+    directdebit.IndemnityClaimDirectDebitResponse:
+      type: object
+      properties:
+        amount:
+          type: number
+        collectionDate:
+          type: string
+          format: date
+        collectionId:
+          type: string
+    directdebit.BulkCreateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id for this bulk request.
+          example: R210000001
+        accountId:
+          type: string
+          description: Unique id for account for this bulk request.
+          example: A0000001
+        status:
+          type: string
+          description: Status for this bulk request.
+        migrationType:
+          type: string
+          description: Migration type for this bulk request.
+          enum:
+          - SCHEDULE_AUDDIS_MIGRATION
+          - TRANSFER_OF_SUN
+          - OFFBOARDING
+        totalMandatesRequested:
+          type: integer
+          format: int64
+          description: Total mandates requested for this bulk request.
+        auddisSubmissionDate:
+          type: string
+          format: date
+          description: auddis submission date for this bulk request.
+      required:
+      - accountId
+      - auddisSubmissionDate
+      - id
+      - migrationType
+      - status
+      - totalMandatesRequested
+    directdebit.BulkCancelMandateRequest:
+      type: object
+      description: List of the Direct Debit mandates to cancel
       properties:
         accountId:
           type: string
-          description: The unique identifier for the account for which the mandates are to be created.
+          description: The unique identifier for the account for which the mandates are to be cancelled.
           minLength: 1
         migrationType:
           type: string
@@ -1776,20 +1746,50 @@ components:
           - SCHEDULE_AUDDIS_MIGRATION
           - TRANSFER_OF_SUN
           - OFFBOARDING
-        auddisSubmissionDate:
+        auddisCancellationDate:
           type: string
           format: date
-          description: The scheduled date for the AUDDIS (Automated Direct Debit Instruction Service) submission. This is the date when the mandates will be submitted to the AUDDIS system for processing.
-        createMandateRequests:
+          description: The date for the AUDDIS (Automated Direct Debit Instruction Service) cancellation.
+        mandateIds:
           type: array
-          description: The number of mandate creation requests. Each item in the array represents a request to create an individual mandate with its own set of parameters.
+          description: List of mandate ids to be cancelled.
           items:
-            $ref: '#/components/schemas/directdebit.CreateMandateRequest'
+            type: string
           minItems: 1
       required:
       - accountId
-      - createMandateRequests
+      - mandateIds
       - migrationType
+    directdebit.DirectDebitPageResponseCollectionScheduleResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/directdebit.CollectionScheduleResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0-based, i.e first page = 0, second page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
   securitySchemes:
     modulo_security:
       type: apiKey

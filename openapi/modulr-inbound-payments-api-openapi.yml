@@ -43,6 +43,34 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    inboundpayment.Address:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        postTown:
+          type: string
+        postCode:
+          type: string
+        country:
+          type: string
+    inboundpayment.PartyDetailRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Party name
+        identifier:
+          $ref: '#/components/schemas/inboundpayment.AccountIdentifierDetailRequest'
+          description: Account identifier
+        address:
+          $ref: '#/components/schemas/inboundpayment.Address'
+          description: Party address
+      required:
+      - identifier
+      - name
     inboundpayment.InboundPaymentRequest:
       type: object
       description: Details of credit to the account
@@ -96,67 +124,6 @@ components:
       - description
       - payerDetail
       - type
-    inboundpayment.PartyDetailRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Party name
-        identifier:
-          $ref: '#/components/schemas/inboundpayment.AccountIdentifierDetailRequest'
-          description: Account identifier
-        address:
-          $ref: '#/components/schemas/inboundpayment.Address'
-          description: Party address
-      required:
-      - identifier
-      - name
-    inboundpayment.AccountIdentifierDetailRequest:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Account identifier type
-          enum:
-          - SCAN
-          - IBAN
-          - DD
-          - INTL
-          - ANBRN
-          - AN
-        accountNumber:
-          type: string
-          description: Account number
-        sortCode:
-          type: string
-          description: Sortcode
-        iban:
-          type: string
-          description: IBAN
-        bic:
-          type: string
-          description: BIC
-      required:
-      - type
-    inboundpayment.SchemeInfoRequest:
-      type: object
-      properties:
-        id:
-          type: string
-          description: unique id that identifies a payment end-to-end within a scheme. If used ensure that its unique
-    inboundpayment.Address:
-      type: object
-      properties:
-        addressLine1:
-          type: string
-        addressLine2:
-          type: string
-        postTown:
-          type: string
-        postCode:
-          type: string
-        country:
-          type: string
     inboundpayment.MessageResponse:
       type: object
       properties:
@@ -188,6 +155,39 @@ components:
           type: string
         sourceService:
           type: string
+    inboundpayment.SchemeInfoRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id that identifies a payment end-to-end within a scheme. If used ensure that its unique
+    inboundpayment.AccountIdentifierDetailRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Account identifier type
+          enum:
+          - SCAN
+          - IBAN
+          - DD
+          - INTL
+          - ANBRN
+          - AN
+        accountNumber:
+          type: string
+          description: Account number
+        sortCode:
+          type: string
+          description: Sortcode
+        iban:
+          type: string
+          description: IBAN
+        bic:
+          type: string
+          description: BIC
+      required:
+      - type
   securitySchemes:
     modulo_security:
       type: apiKey

@@ -84,13 +84,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    document.DocumentResponse:
-      type: object
-      properties:
-        path:
-          type: string
-        fileName:
-          type: string
     document.MessageResponse:
       type: object
       properties:
@@ -121,6 +114,13 @@ components:
         message:
           type: string
         sourceService:
+          type: string
+    document.DocumentResponse:
+      type: object
+      properties:
+        path:
+          type: string
+        fileName:
           type: string
     document.CustomerDocumentUploadRequest:
       type: object

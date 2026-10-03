@@ -186,6 +186,125 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    pispgateway.StandingOrderSchedule:
+      type: object
+      description: The schedule of the standing order
+      properties:
+        frequency:
+          type: string
+          description: Type of the capability, can be one of WEEKLY, MONTHLY
+          enum:
+          - WEEKLY
+          - MONTHLY
+        initialDate:
+          type: string
+          description: The date on which the standing order should begin. This must be at least 3 days in the future from today. Date format 'yyyy-MM-dd'
+          example: '2021-03-25'
+        finalDate:
+          type: string
+          description: The optional date on which the standing order should end. If unspecified, the standing order will continue until cancelled.This must be at least 3 days in the future from today. Date format 'yyyy-MM-dd'
+          example: '2021-03-25'
+      required:
+      - frequency
+      - initialDate
+    pispgateway.PaymentContext:
+      type: object
+      description: Payment context for the initiation request
+      properties:
+        paymentContextCode:
+          type: string
+          description: Indicates type of Payment Context, can be one of BILLPAYMENT, ECOMMERCEGOODS, ECOMMERCESERVICES, OTHER, PARTYTOPARTY. If no value or paymentContext is provided, PARTYTOPARTY is considered the default value.
+          enum:
+          - BILLPAYMENT
+          - ECOMMERCEGOODS
+          - ECOMMERCESERVICES
+          - OTHER
+          - PARTYTOPARTY
+        deliveryAddress:
+          $ref: '#/components/schemas/pispgateway.DeliveryAddress'
+          description: Delivery address, must be specified if paymentContextCode is 'ECOMMERCEGOODS'
+        merchant:
+          $ref: '#/components/schemas/pispgateway.MerchantDetails'
+          description: The merchant for the payment context
+      required:
+      - merchant
+    pispgateway.PaymentAmount:
+      type: object
+      description: The amount of the payment
+      properties:
+        currency:
+          type: string
+          description: Currency of the account in ISO 4217 format. Only allowable value is GBP
+          enum:
+          - GBP
+        value:
+          type: number
+          description: Amount of the payment in Major Currency Units - '1' = 1.00 GBP
+          example: '100.00'
+          maximum: 2147483647
+          minimum: 0.01
+      required:
+      - currency
+      - value
+    pispgateway.AspsProviderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier (within Modulr) of the ASPSP
+          example: H100000001
+        name:
+          type: string
+          description: Name of the ASPSP
+          example: Bank of Money
+        capabilities:
+          type: array
+          description: Capability list of the ASPSP
+          items:
+            $ref: '#/components/schemas/pispgateway.Capability'
+    pispgateway.CreateStandingOrderInitiationResponse:
+      type: object
+      description: Response object to Initiate Standing Order
+      properties:
+        standingOrderInitiationId:
+          type: string
+          description: The unique identifier of the standing order initiation request at Modulr
+          example: I000000001
+        redirectUrl:
+          type: string
+          description: A redirect URL for the user to authorise the standing order initiation request at the ASPSP
+          example: https://www.bankofmoney.com/authorize
+    pispgateway.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
     pispgateway.Destination:
       type: object
       description: The destination account for the payment
@@ -218,20 +337,24 @@ components:
           minLength: 0
       required:
       - type
-    pispgateway.MerchantDetails:
+    pispgateway.StandingOrderPaymentAmount:
       type: object
-      description: Merchant details for the payment context
+      description: The amount of the standing order
       properties:
-        categoryCode:
+        currency:
           type: string
-          description: Merchant category code conform to ISO 18245, related to the type of services or goods provided for the transaction. Must be specified if paymentContextCode is either ECOMMERCEGOODS or ECOMMERCESERVICES
-          maxLength: 4
-          minLength: 3
-        customerId:
-          type: string
-          description: Merchant customer identification, must be specified if paymentContextCode is either ECOMMERCEGOODS or ECOMMERCESERVICES
-          maxLength: 70
-          minLength: 1
+          description: Currency of the account in ISO 4217 format. Default is GBP
+          enum:
+          - GBP
+        recurringAmount:
+          type: number
+          description: Recurring amount of the payment in Major Currency Units - '1' = 1.00 GBP
+          example: '100.00'
+          maximum: 2147483647
+          minimum: 0.01
+      required:
+      - currency
+      - recurringAmount
     pispgateway.StandingOrderPayment:
       type: object
       description: The payment of the standing order
@@ -251,122 +374,6 @@ components:
       - amount
       - destination
       - reference
-    pispgateway.CreatePaymentInitiationResponse:
-      type: object
-      description: Response object to Initiate Payment
-      properties:
-        paymentInitiationId:
-          type: string
-          description: The unique identifier of the payment initiation request at Modulr
-          example: I000000001
-        redirectUrl:
-          type: string
-          description: A redirect URL for the user to authorise the payment initiation request at the ASPSP
-          example: https://www.bankofmoney.com/authorize
-    pispgateway.StandingOrderSchedule:
-      type: object
-      description: The schedule of the standing order
-      properties:
-        frequency:
-          type: string
-          description: Type of the capability, can be one of WEEKLY, MONTHLY
-          enum:
-          - WEEKLY
-          - MONTHLY
-        initialDate:
-          type: string
-          description: The date on which the standing order should begin. This must be at least 3 days in the future from today. Date format 'yyyy-MM-dd'
-          example: '2021-03-25'
-        finalDate:
-          type: string
-          description: The optional date on which the standing order should end. If unspecified, the standing order will continue until cancelled.This must be at least 3 days in the future from today. Date format 'yyyy-MM-dd'
-          example: '2021-03-25'
-      required:
-      - frequency
-      - initialDate
-    pispgateway.StandingOrderInitiationResponse:
-      type: object
-      description: Response object for Get Standing Order Initiation
-      properties:
-        id:
-          type: string
-          description: The identifier of the standing order initiation
-          example: I000000001
-        payment:
-          $ref: '#/components/schemas/pispgateway.StandingOrderPayment'
-          description: The payment of the standing order
-        schedule:
-          $ref: '#/components/schemas/pispgateway.StandingOrderSchedule'
-          description: The schedule of the standing order
-        status:
-          type: string
-          description: The status of the standing order initiation, can be one of SUBMITTED, AWAITING_CONSENT, CONSENT_REJECTED, EXECUTED, ER_EXPIRED, ER_EXTSYS, ER_GENERAL
-          example: AWAITING_CONSENT
-        aspspId:
-          type: string
-          description: The identifier of the ASPSP used for the standing order
-          example: H100000001
-        standingOrderStatus:
-          type: string
-          description: The status of the standing order at the ASPSP. When available, this is passed through from the ASPSP without modification.
-          example: InitiationCompleted
-    pispgateway.PaymentContext:
-      type: object
-      description: Payment context for the initiation request
-      properties:
-        paymentContextCode:
-          type: string
-          description: Indicates type of Payment Context, can be one of BILLPAYMENT, ECOMMERCEGOODS, ECOMMERCESERVICES, OTHER, PARTYTOPARTY. If no value or paymentContext is provided, PARTYTOPARTY is considered the default value.
-          enum:
-          - BILLPAYMENT
-          - ECOMMERCEGOODS
-          - ECOMMERCESERVICES
-          - OTHER
-          - PARTYTOPARTY
-        deliveryAddress:
-          $ref: '#/components/schemas/pispgateway.DeliveryAddress'
-          description: Delivery address, must be specified if paymentContextCode is 'ECOMMERCEGOODS'
-        merchant:
-          $ref: '#/components/schemas/pispgateway.MerchantDetails'
-          description: The merchant for the payment context
-      required:
-      - merchant
-    pispgateway.StandingOrderPaymentAmount:
-      type: object
-      description: The amount of the standing order
-      properties:
-        currency:
-          type: string
-          description: Currency of the account in ISO 4217 format. Default is GBP
-          enum:
-          - GBP
-        recurringAmount:
-          type: number
-          description: Recurring amount of the payment in Major Currency Units - '1' = 1.00 GBP
-          example: '100.00'
-          maximum: 2147483647
-          minimum: 0.01
-      required:
-      - currency
-      - recurringAmount
-    pispgateway.PaymentAmount:
-      type: object
-      description: The amount of the payment
-      properties:
-        currency:
-          type: string
-          description: Currency of the account in ISO 4217 format. Only allowable value is GBP
-          enum:
-          - GBP
-        value:
-          type: number
-          description: Amount of the payment in Major Currency Units - '1' = 1.00 GBP
-          example: '100.00'
-          maximum: 2147483647
-          minimum: 0.01
-      required:
-      - currency
-      - value
     pispgateway.PaymentInitiationResponse:
       type: object
       description: Response object for Get Payment Initiation
@@ -396,6 +403,86 @@ components:
           type: string
           description: The status of the payment at the ASPSP. When available, this is passed through from the ASPSP without modification.
           example: AcceptedSettlementCompleted
+    pispgateway.CreatePaymentInitiationResponse:
+      type: object
+      description: Response object to Initiate Payment
+      properties:
+        paymentInitiationId:
+          type: string
+          description: The unique identifier of the payment initiation request at Modulr
+          example: I000000001
+        redirectUrl:
+          type: string
+          description: A redirect URL for the user to authorise the payment initiation request at the ASPSP
+          example: https://www.bankofmoney.com/authorize
+    pispgateway.MerchantDetails:
+      type: object
+      description: Merchant details for the payment context
+      properties:
+        categoryCode:
+          type: string
+          description: Merchant category code conform to ISO 18245, related to the type of services or goods provided for the transaction. Must be specified if paymentContextCode is either ECOMMERCEGOODS or ECOMMERCESERVICES
+          maxLength: 4
+          minLength: 3
+        customerId:
+          type: string
+          description: Merchant customer identification, must be specified if paymentContextCode is either ECOMMERCEGOODS or ECOMMERCESERVICES
+          maxLength: 70
+          minLength: 1
+    pispgateway.StandingOrderInitiationResponse:
+      type: object
+      description: Response object for Get Standing Order Initiation
+      properties:
+        id:
+          type: string
+          description: The identifier of the standing order initiation
+          example: I000000001
+        payment:
+          $ref: '#/components/schemas/pispgateway.StandingOrderPayment'
+          description: The payment of the standing order
+        schedule:
+          $ref: '#/components/schemas/pispgateway.StandingOrderSchedule'
+          description: The schedule of the standing order
+        status:
+          type: string
+          description: The status of the standing order initiation, can be one of SUBMITTED, AWAITING_CONSENT, CONSENT_REJECTED, EXECUTED, ER_EXPIRED, ER_EXTSYS, ER_GENERAL
+          example: AWAITING_CONSENT
+        aspspId:
+          type: string
+          description: The identifier of the ASPSP used for the standing order
+          example: H100000001
+        standingOrderStatus:
+          type: string
+          description: The status of the standing order at the ASPSP. When available, this is passed through from the ASPSP without modification.
+          example: InitiationCompleted
+    pispgateway.CreatePaymentInitiationRequest:
+      type: object
+      description: Request object to Initiate Payment
+      properties:
+        paymentAmount:
+          $ref: '#/components/schemas/pispgateway.PaymentAmount'
+          description: The amount of the payment
+        paymentReference:
+          type: string
+          description: Reference to be used for the Payment. This will appear on the Account statement/the recipient's bank account. Min 6 to max 18 characters. Can contain alphanumeric, '-', '.', '&', '/' and space.
+          example: Invoice ABC123
+          minLength: 1
+        destination:
+          $ref: '#/components/schemas/pispgateway.Destination'
+          description: The destination account for the payment
+        aspspId:
+          type: string
+          description: Identifier for ASPSP being used for the payment
+          example: H100000001
+          minLength: 1
+        paymentContext:
+          $ref: '#/components/schemas/pispgateway.LegacyPaymentContext'
+          description: Payment context used to specify additional details for risk scoring
+      required:
+      - aspspId
+      - destination
+      - paymentAmount
+      - paymentReference
     pispgateway.LegacyPaymentContext:
       type: object
       description: Payment context for the initiation request
@@ -422,22 +509,29 @@ components:
           description: Merchant customer identification, must be specified if paymentContextCode is either ECOMMERCEGOODS or ECOMMERCESERVICES
           maxLength: 70
           minLength: 1
-    pispgateway.AspsProviderResponse:
+    pispgateway.CreateStandingOrderInitiationRequest:
       type: object
+      description: Request object to Initiate Standing Order
       properties:
-        id:
+        aspspId:
           type: string
-          description: Unique identifier (within Modulr) of the ASPSP
+          description: Identifier for ASPSP being used for the standing order
           example: H100000001
-        name:
-          type: string
-          description: Name of the ASPSP
-          example: Bank of Money
-        capabilities:
-          type: array
-          description: Capability list of the ASPSP
-          items:
-            $ref: '#/components/schemas/pispgateway.Capability'
+          minLength: 1
+        payment:
+          $ref: '#/components/schemas/pispgateway.StandingOrderPayment'
+          description: The payment of the standing order
+        schedule:
+          $ref: '#/components/schemas/pispgateway.StandingOrderSchedule'
+          description: The schedule of the standing order
+        context:
+          $ref: '#/components/schemas/pispgateway.PaymentContext'
+          description: Payment context used to specify additional details for risk scoring
+      required:
+      - aspspId
+      - context
+      - payment
+      - schedule
     pispgateway.DeliveryAddress:
       type: object
       description: Information that locates and identifies a specific address, as defined by postal services or in free format text, must be specified if paymentContextCode is ECOMMERCEGOODS
@@ -471,18 +565,6 @@ components:
       - country
       - postCode
       - postTown
-    pispgateway.CreateStandingOrderInitiationResponse:
-      type: object
-      description: Response object to Initiate Standing Order
-      properties:
-        standingOrderInitiationId:
-          type: string
-          description: The unique identifier of the standing order initiation request at Modulr
-          example: I000000001
-        redirectUrl:
-          type: string
-          description: A redirect URL for the user to authorise the standing order initiation request at the ASPSP
-          example: https://www.bankofmoney.com/authorize
     pispgateway.Capability:
       type: object
       properties:
@@ -502,88 +584,6 @@ components:
           - ENABLED
           - DISABLED
           example: ENABLED
-    pispgateway.CreateStandingOrderInitiationRequest:
-      type: object
-      description: Request object to Initiate Standing Order
-      properties:
-        aspspId:
-          type: string
-          description: Identifier for ASPSP being used for the standing order
-          example: H100000001
-          minLength: 1
-        payment:
-          $ref: '#/components/schemas/pispgateway.StandingOrderPayment'
-          description: The payment of the standing order
-        schedule:
-          $ref: '#/components/schemas/pispgateway.StandingOrderSchedule'
-          description: The schedule of the standing order
-        context:
-          $ref: '#/components/schemas/pispgateway.PaymentContext'
-          description: Payment context used to specify additional details for risk scoring
-      required:
-      - aspspId
-      - context
-      - payment
-      - schedule
-    pispgateway.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    pispgateway.CreatePaymentInitiationRequest:
-      type: object
-      description: Request object to Initiate Payment
-      properties:
-        paymentAmount:
-          $ref: '#/components/schemas/pispgateway.PaymentAmount'
-          description: The amount of the payment
-        paymentReference:
-          type: string
-          description: Reference to be used for the Payment. This will appear on the Account statement/the recipient's bank account. Min 6 to max 18 characters. Can contain alphanumeric, '-', '.', '&', '/' and space.
-          example: Invoice ABC123
-          minLength: 1
-        destination:
-          $ref: '#/components/schemas/pispgateway.Destination'
-          description: The destination account for the payment
-        aspspId:
-          type: string
-          description: Identifier for ASPSP being used for the payment
-          example: H100000001
-          minLength: 1
-        paymentContext:
-          $ref: '#/components/schemas/pispgateway.LegacyPaymentContext'
-          description: Payment context used to specify additional details for risk scoring
-      required:
-      - aspspId
-      - destination
-      - paymentAmount
-      - paymentReference
   securitySchemes:
     modulo_security:
       type: apiKey

@@ -262,74 +262,36 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    card.BulkCardsOpsRequest:
+    card.BulkRequestPageResponse:
       type: object
       properties:
-        externalRef:
-          type: string
-        operations:
+        content:
           type: array
+          description: List of responses on the current page
           items:
-            $ref: '#/components/schemas/card.BulkCardsOperation'
-          minItems: 1
+            $ref: '#/components/schemas/card.BulkRequestResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
       required:
-      - operations
-    card.BulkRequestResponse:
-      type: object
-      description: Bulk card request details
-      properties:
-        id:
-          type: string
-          description: Bulk request ID
-          example: B000000001
-        filename:
-          type: string
-          description: Filename of the uploaded file
-          example: example.csv
-        createdDate:
-          type: string
-          format: date-time
-          description: Date and time when the bulk request was created
-        createdBy:
-          type: string
-          description: User ID who created the bulk request
-          example: U000001
-        status:
-          type: string
-          description: Status of the bulk request
-          example: VALIDATED_WITH_ERRORS
-        totalOperations:
-          type: integer
-          format: int64
-          description: Total number of operations in the bulk request
-          example: 200
-        successfulOperations:
-          type: integer
-          format: int64
-          description: Number of successful operations
-          example: 194
-        failedOperations:
-          type: integer
-          format: int64
-          description: Number of failed operations
-          example: 6
-        processedOperations:
-          type: integer
-          format: int64
-          description: Number of processed operations
-          example: 142
-        externalRef:
-          type: string
-          description: External reference
-          example: example ref
-      required:
-      - createdBy
-      - createdDate
-      - failedOperations
-      - id
-      - status
-      - successfulOperations
-      - totalOperations
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
     card.BulkCardsInfoResponse:
       type: object
       properties:
@@ -408,68 +370,6 @@ components:
           type: string
         sourceService:
           type: string
-    card.BulkCardsOperation:
-      type: object
-      properties:
-        id:
-          type: string
-        operationType:
-          type: string
-          enum:
-          - CREATE
-          - UPDATE
-          - PATCH
-          - CANCEL
-        payload: {}
-        cardId:
-          type: string
-        accountId:
-          type: string
-      required:
-      - operationType
-      - payload
-    card.Error:
-      type: object
-      properties:
-        operationIndex:
-          type: integer
-          format: int64
-        operationId:
-          type: string
-        field:
-          type: string
-        description:
-          type: string
-    card.BulkRequestPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/card.BulkRequestResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
     card.BulkCardsOpsResponse:
       type: object
       properties:
@@ -490,6 +390,106 @@ components:
           - PROCESSED
           - ARCHIVED
           - DELETED
+    card.BulkRequestResponse:
+      type: object
+      description: Bulk card request details
+      properties:
+        id:
+          type: string
+          description: Bulk request ID
+          example: B000000001
+        filename:
+          type: string
+          description: Filename of the uploaded file
+          example: example.csv
+        createdDate:
+          type: string
+          format: date-time
+          description: Date and time when the bulk request was created
+        createdBy:
+          type: string
+          description: User ID who created the bulk request
+          example: U000001
+        status:
+          type: string
+          description: Status of the bulk request
+          example: VALIDATED_WITH_ERRORS
+        totalOperations:
+          type: integer
+          format: int64
+          description: Total number of operations in the bulk request
+          example: 200
+        successfulOperations:
+          type: integer
+          format: int64
+          description: Number of successful operations
+          example: 194
+        failedOperations:
+          type: integer
+          format: int64
+          description: Number of failed operations
+          example: 6
+        processedOperations:
+          type: integer
+          format: int64
+          description: Number of processed operations
+          example: 142
+        externalRef:
+          type: string
+          description: External reference
+          example: example ref
+      required:
+      - createdBy
+      - createdDate
+      - failedOperations
+      - id
+      - status
+      - successfulOperations
+      - totalOperations
+    card.BulkCardsOpsRequest:
+      type: object
+      properties:
+        externalRef:
+          type: string
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/card.BulkCardsOperation'
+          minItems: 1
+      required:
+      - operations
+    card.Error:
+      type: object
+      properties:
+        operationIndex:
+          type: integer
+          format: int64
+        operationId:
+          type: string
+        field:
+          type: string
+        description:
+          type: string
+    card.BulkCardsOperation:
+      type: object
+      properties:
+        id:
+          type: string
+        operationType:
+          type: string
+          enum:
+          - CREATE
+          - UPDATE
+          - PATCH
+          - CANCEL
+        payload: {}
+        cardId:
+          type: string
+        accountId:
+          type: string
+      required:
+      - operationType
+      - payload
   securitySchemes:
     modulo_security:
       type: apiKey

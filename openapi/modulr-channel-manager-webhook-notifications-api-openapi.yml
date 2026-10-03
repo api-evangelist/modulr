@@ -215,6 +215,105 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    channelmanager.CreateWebhookNotificationRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Webhook type
+        destination:
+          type: string
+          description: URL destination
+          example: https://example.com/webhook
+          maxLength: 250
+          minLength: 12
+          pattern: ^(?i)(https://)([\w\.-]+)\.([a-z\.]{2,10})([\w\./-])*
+        retry:
+          type: boolean
+          description: Flag indicating whether failed webhooks should be retried
+        secret:
+          type: string
+          description: Webhook secret, must be 32 chars
+          maxLength: 32
+          minLength: 32
+        hmacAlgorithm:
+          type: string
+          description: Signing algorithm that is used in Webhook HMAC calculation
+          enum:
+          - hmac-sha1
+          - hmac-sha256
+          - hmac-sha384
+          - hmac-sha512
+      required:
+      - destination
+      - hmacAlgorithm
+      - retry
+      - secret
+      - type
+    channelmanager.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    channelmanager.PatchOperation:
+      type: object
+      discriminator:
+        propertyName: op
+        mapping:
+          add: '#/components/schemas/channelmanager.Add'
+          move: '#/components/schemas/channelmanager.Move'
+          test: '#/components/schemas/channelmanager.Test'
+          replace: '#/components/schemas/channelmanager.Replace'
+          copy: '#/components/schemas/channelmanager.Copy'
+          remove: '#/components/schemas/channelmanager.Remove'
+      properties:
+        op:
+          type: string
+        path:
+          type: string
+          example: /path/to/field
+      required:
+      - op
+      - path
+    channelmanager.JsonNode: {}
+    channelmanager.Replace:
+      allOf:
+      - $ref: '#/components/schemas/channelmanager.PatchOperation'
+      - type: object
+        properties:
+          value:
+            $ref: '#/components/schemas/channelmanager.JsonNode'
+      description: Replace field
+      required:
+      - op
+      - path
+      - value
     channelmanager.WebhookNotificationPageResponse:
       type: object
       properties:
@@ -282,105 +381,6 @@ components:
           - hmac-sha256
           - hmac-sha384
           - hmac-sha512
-    channelmanager.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    channelmanager.Replace:
-      allOf:
-      - $ref: '#/components/schemas/channelmanager.PatchOperation'
-      - type: object
-        properties:
-          value:
-            $ref: '#/components/schemas/channelmanager.JsonNode'
-      description: Replace field
-      required:
-      - op
-      - path
-      - value
-    channelmanager.PatchOperation:
-      type: object
-      discriminator:
-        propertyName: op
-        mapping:
-          add: '#/components/schemas/channelmanager.Add'
-          move: '#/components/schemas/channelmanager.Move'
-          test: '#/components/schemas/channelmanager.Test'
-          replace: '#/components/schemas/channelmanager.Replace'
-          copy: '#/components/schemas/channelmanager.Copy'
-          remove: '#/components/schemas/channelmanager.Remove'
-      properties:
-        op:
-          type: string
-        path:
-          type: string
-          example: /path/to/field
-      required:
-      - op
-      - path
-    channelmanager.CreateWebhookNotificationRequest:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Webhook type
-        destination:
-          type: string
-          description: URL destination
-          example: https://example.com/webhook
-          maxLength: 250
-          minLength: 12
-          pattern: ^(?i)(https://)([\w\.-]+)\.([a-z\.]{2,10})([\w\./-])*
-        retry:
-          type: boolean
-          description: Flag indicating whether failed webhooks should be retried
-        secret:
-          type: string
-          description: Webhook secret, must be 32 chars
-          maxLength: 32
-          minLength: 32
-        hmacAlgorithm:
-          type: string
-          description: Signing algorithm that is used in Webhook HMAC calculation
-          enum:
-          - hmac-sha1
-          - hmac-sha256
-          - hmac-sha384
-          - hmac-sha512
-      required:
-      - destination
-      - hmacAlgorithm
-      - retry
-      - secret
-      - type
-    channelmanager.JsonNode: {}
   securitySchemes:
     modulo_security:
       type: apiKey

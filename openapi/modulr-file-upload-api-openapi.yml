@@ -221,18 +221,22 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    paymentfileupload.FileCreatePaymentsResponse:
+    paymentfileupload.FilesCreatePaymentsResponse:
       type: object
-      description: File create payments response
+      description: Response containing payment creation results for multiple files
       properties:
-        fileId:
-          type: string
-          description: Unique id of the uploaded file
-          example: F1100001
-          minLength: 1
+        results:
+          type: array
+          description: Results for each file processed
+          items:
+            $ref: '#/components/schemas/paymentfileupload.FileCreatePaymentsResult'
+    paymentfileupload.FileUploadSummaryContent:
+      type: object
+      description: Summary of a single child file upload
+      properties:
         status:
           type: string
-          description: Status of the uploaded file
+          description: Status of the child file upload
           enum:
           - NEW
           - SUBMITTED
@@ -248,53 +252,37 @@ components:
           - PAYMENT_PROCESSING
           - SPLIT_FILE
           - PARTIALLY_ACCEPTED
-          example: INVALID
-        fileName:
+          example: ACCEPTED
+        customerName:
           type: string
-          description: File name of the uploaded file
-          example: file1
+          description: Customer name associated with the child file
+          example: TestCustomer
         batchPaymentId:
           type: string
-          description: Unique id for the Batch Payment
-          example: B1100001
-          minLength: 1
-      required:
-      - batchPaymentId
-      - fileId
-      - status
-    paymentfileupload.FilesCreatePaymentsResponse:
-      type: object
-      description: Response containing payment creation results for multiple files
-      properties:
-        results:
+          description: Batch payment ID, null if not yet processed
+          example: D0000001
+        payments:
           type: array
-          description: Results for each file processed
+          description: Aggregated payments grouped by destination account
           items:
-            $ref: '#/components/schemas/paymentfileupload.FileCreatePaymentsResult'
-    paymentfileupload.FileUploadRequest:
+            $ref: '#/components/schemas/paymentfileupload.PaymentSummary'
+    paymentfileupload.PaymentSummary:
       type: object
-      description: File upload request body
+      description: Aggregated payment count per destination account
       properties:
-        fileName:
+        sortCode:
           type: string
-          description: Original file name
-          minLength: 1
-        content:
+          description: Destination account sort code
+          example: '111111'
+        accountNumber:
           type: string
-          description: The file content must be zipped using gzip format and then Base64 encoded
-          minLength: 1
-        submissionType:
-          type: string
-          description: BATCH restricts operations to batch level.  BULK (default) allows payment level operations such as approval
-          enum:
-          - BATCH
-          - BULK
-        processingDate:
-          type: string
-          description: Allows overriding the file processing date
-      required:
-      - content
-      - fileName
+          description: Destination account number
+          example: '11111111'
+        numberOfPayments:
+          type: integer
+          format: int32
+          description: Number of payments to this account
+          example: 3
     paymentfileupload.FileUploadSummariesResponse:
       type: object
       description: Paginated summaries of child file uploads for a delegate payment file
@@ -332,6 +320,53 @@ components:
           format: int32
           description: Total number of pages
           example: 1
+    paymentfileupload.FilesCreatePaymentsRequest:
+      type: object
+      description: Request body containing file IDs to process for payment creation
+      properties:
+        fileIds:
+          type: array
+          description: List of fileIds to create payments from
+          items:
+            type: string
+          maxItems: 10
+          minItems: 0
+        useDuplicate:
+          type: boolean
+          description: When true, duplicate files will be processed - Applies to all fileIds in this request
+      required:
+      - fileIds
+    paymentfileupload.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
     paymentfileupload.FileUploadStatusResponse:
       type: object
       description: File upload Status Response
@@ -391,44 +426,42 @@ components:
               invalidValue: '01'
       required:
       - status
-    paymentfileupload.MessageResponse:
+    paymentfileupload.FileUploadRequest:
       type: object
+      description: File upload request body
       properties:
-        field:
+        fileName:
           type: string
-        code:
+          description: Original file name
+          minLength: 1
+        content:
           type: string
+          description: The file content must be zipped using gzip format and then Base64 encoded
+          minLength: 1
+        submissionType:
+          type: string
+          description: BATCH restricts operations to batch level.  BULK (default) allows payment level operations such as approval
           enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
+          - BATCH
+          - BULK
+        processingDate:
           type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    paymentfileupload.FileUploadSummaryContent:
+          description: Allows overriding the file processing date
+      required:
+      - content
+      - fileName
+    paymentfileupload.FileCreatePaymentsResponse:
       type: object
-      description: Summary of a single child file upload
+      description: File create payments response
       properties:
+        fileId:
+          type: string
+          description: Unique id of the uploaded file
+          example: F1100001
+          minLength: 1
         status:
           type: string
-          description: Status of the child file upload
+          description: Status of the uploaded file
           enum:
           - NEW
           - SUBMITTED
@@ -444,63 +477,20 @@ components:
           - PAYMENT_PROCESSING
           - SPLIT_FILE
           - PARTIALLY_ACCEPTED
-          example: ACCEPTED
-        customerName:
+          example: INVALID
+        fileName:
           type: string
-          description: Customer name associated with the child file
-          example: TestCustomer
+          description: File name of the uploaded file
+          example: file1
         batchPaymentId:
           type: string
-          description: Batch payment ID, null if not yet processed
-          example: D0000001
-        payments:
-          type: array
-          description: Aggregated payments grouped by destination account
-          items:
-            $ref: '#/components/schemas/paymentfileupload.PaymentSummary'
-    paymentfileupload.FilesCreatePaymentsRequest:
-      type: object
-      description: Request body containing file IDs to process for payment creation
-      properties:
-        fileIds:
-          type: array
-          description: List of fileIds to create payments from
-          items:
-            type: string
-          maxItems: 10
-          minItems: 0
-        useDuplicate:
-          type: boolean
-          description: When true, duplicate files will be processed - Applies to all fileIds in this request
-      required:
-      - fileIds
-    paymentfileupload.FileUploadResponse:
-      type: object
-      properties:
-        fileId:
-          type: string
-          description: Unique id of the uploaded file
-          example: F1100001
+          description: Unique id for the Batch Payment
+          example: B1100001
           minLength: 1
       required:
+      - batchPaymentId
       - fileId
-    paymentfileupload.PaymentSummary:
-      type: object
-      description: Aggregated payment count per destination account
-      properties:
-        sortCode:
-          type: string
-          description: Destination account sort code
-          example: '111111'
-        accountNumber:
-          type: string
-          description: Destination account number
-          example: '11111111'
-        numberOfPayments:
-          type: integer
-          format: int32
-          description: Number of payments to this account
-          example: 3
+      - status
     paymentfileupload.FileCreateRequest:
       type: object
       description: File create payments request body
@@ -551,6 +541,16 @@ components:
       required:
       - fileId
       - status
+    paymentfileupload.FileUploadResponse:
+      type: object
+      properties:
+        fileId:
+          type: string
+          description: Unique id of the uploaded file
+          example: F1100001
+          minLength: 1
+      required:
+      - fileId
   securitySchemes:
     modulo_security:
       type: apiKey
