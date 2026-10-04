@@ -604,971 +604,61 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    payment.PaymentPageResponse:
+    payment.MessageResponse:
       type: object
       properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/payment.PaymentResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0-based, i.e first page = 0, second page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
-    payment.Destination:
-      type: object
-      properties:
-        type:
+        field:
           type: string
-          description: Indicates the type of destination. IBAN type is required for international payments.
+        code:
+          type: string
           enum:
-          - BENEFICIARY
-          - ACCOUNT
-          - IBAN
-          - SCAN
-          - INTL
-          - ANBRN
-          - AN
-          example: SCAN
-        id:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
           type: string
-          description: 'Identifier for the Payment destination if using ACCOUNT or BENEFICIARY type. Can be either: a) Beneficiary id for an external Payment, b) Account id for a transfer to another Account'
-        iban:
-          type: string
-          description: International Bank Account Number (IBAN). To be used as the destination identifier when sending ‘IBAN’ type payments
-          example: GB20MODR00000000000001
-          pattern: ^[a-zA-Z]{2}[0-9]{2}([a-zA-Z0-9]){11,30}$
-        accountNumber:
-          type: string
-          description: Account Number of destination account if using SCAN type.
-          example: '12345678'
-        sortCode:
-          type: string
-          description: Sort Code of destination account if using SCAN type.
-          example: '000000'
-          pattern: ^[0-9]{6}$
-        name:
-          type: string
-          description: Name to use if a new beneficiary is created, and for using as the payee name if SCAN or IBAN types are specified for the destination
-          example: Test
-          maxLength: 100
-          minLength: 0
-        address:
-          $ref: '#/components/schemas/payment.AddressRequest'
-          description: Optional address. Mandatory for international payments.
-        birthdate:
-          type: string
-          format: date
-          description: 'The destination beneficiary''s date of birth. Format: yyyy-MM-dd'
-          example: '2000-01-01'
-        emailAddress:
-          type: string
-          description: The destination beneficiary's email address
-          pattern: '[^\s@]+@[^\s@]+\.[^\s@]+'
-        phoneNumber:
-          type: string
-          description: The destination beneficiary's phone number
-        bic:
-          type: string
-          description: The destination beneficiary's SWIFT BIC (Bank Identifier Code). Only to be used for international payments.
-        countrySpecificDetails:
-          $ref: '#/components/schemas/payment.DestinationCountrySpecificDetails'
-          description: Further details required, depending on the destination's country
-        legalEntityIdentifier:
-          type: string
-          description: The destination beneficiary's Legal entity Identifier
-      required:
-      - type
-    payment.UltimatePayer:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the ultimate payer
-          maxLength: 70
-          minLength: 0
-        address:
-          $ref: '#/components/schemas/payment.Address'
-        birthDetails:
-          $ref: '#/components/schemas/payment.BirthDetails'
-          description: Birth details of a person. Official identification details. Property 'birthDetails' and/or 'officialIdentification' Or 'officialIdDetailOrgs' is mandatory
-        officialIdentification:
-          $ref: '#/components/schemas/payment.OfficialIdDetails'
-          description: Official identification for a person. Property 'birthDetails' and/or 'officialIdentification' Or 'officialIdDetailOrgs' is mandatory
-        officialIdDetailOrgs:
-          $ref: '#/components/schemas/payment.OfficialOrganisationIdentity'
-          description: Organisation's official identification. Official identification details. Property 'birthDetails' and/or 'officialIdentification' Or 'officialIdDetailOrgs' is mandatory
-        overseasAccountIdentifier:
-          $ref: '#/components/schemas/payment.OverseasAccountIdentifier'
-        bic:
-          type: string
-          description: Destination beneficiary's BIC/Swift Code.
-          example: MODRDEFF123
-          pattern: ^[A-Z]{6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3})?$
-      required:
-      - address
-      - name
-    payment.POODetails:
-      type: object
-      properties:
-        ultimatePayer:
-          $ref: '#/components/schemas/payment.UltimatePayer'
-        originalPaymentDetails:
-          $ref: '#/components/schemas/payment.PaymentDetails'
-        chargeDetails:
-          $ref: '#/components/schemas/payment.Charge'
-        additionalRemittanceInformation:
-          type: string
-          maxLength: 140
-          minLength: 0
-    payment.RegulatoryAuthority:
-      type: object
-      properties:
-        authorityName:
-          type: string
-          description: Authority name. Maximum of 70 characters.
-          example: Financial Conduct Authority
-          maxLength: 70
-          minLength: 0
-        authorityCountry:
-          type: string
-          description: ISO 3166 country code of the ultimate payers address
-          enum:
-          - AT
-          - BE
-          - BG
-          - CY
-          - CZ
-          - DK
-          - EE
-          - FI
-          - FR
-          - DE
-          - GR
-          - HR
-          - HU
-          - IS
-          - IE
-          - IT
-          - LV
-          - LI
-          - LT
-          - LU
-          - MT
-          - NL
-          - 'NO'
-          - PL
-          - PT
-          - RO
-          - SK
-          - SI
-          - ES
-          - SE
-          - GB
-          - MQ
-          - YT
-          - GP
-          - GF
-          - RE
-          - MF
-          - GI
-          - GG
-          - IM
-          - JE
-          - MC
-          - CH
-          - AD
-          - SM
-          - VA
-          - AX
-          - PM
-          - BL
-          - AL
-          - MD
-          - ME
-          - MK
-          - RS
-          - AF
-          - DZ
-          - AS
-          - AO
-          - AI
-          - AQ
-          - AG
-          - AR
-          - AM
-          - AW
-          - AU
-          - AZ
-          - BS
-          - BH
-          - BD
-          - BB
-          - BY
-          - BZ
-          - BJ
-          - BM
-          - BT
-          - BO
-          - BQ
-          - BA
-          - BW
-          - BV
-          - BR
-          - IO
-          - VG
-          - BN
-          - BF
-          - BI
-          - KH
-          - CM
-          - CA
-          - CV
-          - KY
-          - CF
-          - TD
-          - CL
-          - CN
-          - CX
-          - CC
-          - CO
-          - KM
-          - CK
-          - CR
-          - CU
-          - CW
-          - CD
-          - DJ
-          - DM
-          - DO
-          - TL
-          - EC
-          - EG
-          - SV
-          - GQ
-          - ER
-          - SZ
-          - ET
-          - FK
-          - FO
-          - FJ
-          - PF
-          - TF
-          - GA
-          - GM
-          - GE
-          - GH
-          - GL
-          - GD
-          - GU
-          - GT
-          - GN
-          - GW
-          - GY
-          - HT
-          - HM
-          - HN
-          - HK
-          - IN
-          - ID
-          - IR
-          - IQ
-          - IL
-          - CI
-          - JM
-          - JP
-          - JO
-          - KZ
-          - KE
-          - KI
-          - XK
-          - KW
-          - KG
-          - LA
-          - LB
-          - LS
-          - LR
-          - LY
-          - MO
-          - MG
-          - MW
-          - MY
-          - MV
-          - ML
-          - MH
-          - MR
-          - MU
-          - MX
-          - FM
-          - MN
-          - MS
-          - MA
-          - MZ
-          - MM
-          - NA
-          - NR
-          - NP
-          - AN
-          - NC
-          - NZ
-          - NI
-          - NE
-          - NG
-          - NU
-          - NF
-          - KP
-          - MP
-          - OM
-          - PK
-          - PW
-          - PS
-          - PA
-          - PG
-          - PY
-          - PE
-          - PH
-          - PN
-          - PR
-          - QA
-          - CG
-          - RU
-          - RW
-          - SH
-          - KN
-          - LC
-          - VC
-          - WS
-          - ST
-          - SA
-          - SN
-          - SC
-          - SL
-          - SG
-          - SX
-          - SB
-          - SO
-          - ZA
-          - KR
-          - GS
-          - SS
-          - LK
-          - SD
-          - SR
-          - SY
-          - SJ
-          - TW
-          - TJ
-          - TZ
-          - TH
-          - TG
-          - TK
-          - TO
-          - TT
-          - TN
-          - TR
-          - TM
-          - TC
-          - TV
-          - UG
-          - UA
-          - AE
-          - UM
-          - US
-          - UY
-          - UZ
-          - VU
-          - VE
-          - VN
-          - VI
-          - WF
-          - EH
-          - YE
-          - ZM
-          - ZW
-          example: GB
-    payment.PaymentDetails:
-      type: object
-      properties:
-        amount:
-          type: number
-          description: Amount of currency that the payment is in
-          example: '1000.45'
-        exchangeRate:
-          type: number
-          description: Exchange rate
-          example: '1.45'
-        currency:
-          type: string
-          description: ISO 4217 currency code that the amount is in
-          enum:
-          - GBP
-          - EUR
-          - AED
-          - AFN
-          - ALL
-          - AMD
-          - ANG
-          - AOA
-          - ARS
-          - AUD
-          - AWG
-          - AZN
-          - BAM
-          - BBD
-          - BDT
-          - BGN
-          - BHD
-          - BIF
-          - BMD
-          - BND
-          - BOB
-          - BOV
-          - BRL
-          - BSD
-          - BTN
-          - BWP
-          - BYN
-          - BZD
-          - CAD
-          - CDF
-          - CHE
-          - CHF
-          - CHW
-          - CLF
-          - CLP
-          - CNY
-          - COP
-          - COU
-          - CRC
-          - CUC
-          - CUP
-          - CVE
-          - CZK
-          - DJF
-          - DKK
-          - DOP
-          - DZD
-          - EGP
-          - ERN
-          - ETB
-          - FJD
-          - FKP
-          - GEL
-          - GHS
-          - GIP
-          - GMD
-          - GNF
-          - GTQ
-          - GYD
-          - HKD
-          - HNL
-          - HRK
-          - HTG
-          - HUF
-          - IDR
-          - ILS
-          - INR
-          - IQD
-          - IRR
-          - ISK
-          - JMD
-          - JOD
-          - JPY
-          - KES
-          - KGS
-          - KHR
-          - KMF
-          - KPW
-          - KRW
-          - KWD
-          - KYD
-          - KZT
-          - LAK
-          - LBP
-          - LKR
-          - LRD
-          - LSL
-          - LYD
-          - MAD
-          - MDL
-          - MGA
-          - MKD
-          - MMK
-          - MNT
-          - MOP
-          - MRU
-          - MUR
-          - MVR
-          - MWK
-          - MXN
-          - MXV
-          - MYR
-          - MZN
-          - NAD
-          - NGN
-          - NIO
-          - NOK
-          - NPR
-          - NZD
-          - OMR
-          - PAB
-          - PEN
-          - PGK
-          - PHP
-          - PKR
-          - PLN
-          - PYG
-          - QAR
-          - RON
-          - RSD
-          - RUB
-          - RWF
-          - SAR
-          - SBD
-          - SCR
-          - SDG
-          - SEK
-          - SGD
-          - SLE
-          - SLL
-          - SOS
-          - SRD
-          - SSP
-          - STN
-          - SVC
-          - SYP
-          - SZL
-          - SHP
-          - THB
-          - TJS
-          - TMT
-          - TND
-          - TOP
-          - TRY
-          - TTD
-          - TWD
-          - TZS
-          - UAH
-          - UGX
-          - USD
-          - USN
-          - UYI
-          - UYU
-          - UYW
-          - UZS
-          - VES
-          - VND
-          - VUV
-          - WST
-          - XAF
-          - XAG
-          - XAU
-          - XBA
-          - XBB
-          - XBC
-          - XBD
-          - XCD
-          - XDR
-          - XOF
-          - XPD
-          - XPF
-          - XPT
-          - XSU
-          - XTS
-          - XUA
-          - XXX
-          - YER
-          - ZAR
-          - ZMW
-          - ZWL
-      required:
-      - amount
-      - currency
-      - exchangeRate
-    payment.Charge:
-      type: object
-      properties:
-        bearer:
-          type: string
-          description: Information about bearer of the charges. Its can be Creditor, Debtor or shared between both
-          enum:
-          - CRED
-          - DEBT
-          - SHAR
-          example: CRED
-        amount:
-          type: number
-          description: Amount of the charges. Max allowed is 999999999999.99
-          example: '100.00'
-        currency:
-          type: string
-          description: Currency of charge. Should be ISO Standard currency
-          enum:
-          - GBP
-          - EUR
-          - AED
-          - AFN
-          - ALL
-          - AMD
-          - ANG
-          - AOA
-          - ARS
-          - AUD
-          - AWG
-          - AZN
-          - BAM
-          - BBD
-          - BDT
-          - BGN
-          - BHD
-          - BIF
-          - BMD
-          - BND
-          - BOB
-          - BOV
-          - BRL
-          - BSD
-          - BTN
-          - BWP
-          - BYN
-          - BZD
-          - CAD
-          - CDF
-          - CHE
-          - CHF
-          - CHW
-          - CLF
-          - CLP
-          - CNY
-          - COP
-          - COU
-          - CRC
-          - CUC
-          - CUP
-          - CVE
-          - CZK
-          - DJF
-          - DKK
-          - DOP
-          - DZD
-          - EGP
-          - ERN
-          - ETB
-          - FJD
-          - FKP
-          - GEL
-          - GHS
-          - GIP
-          - GMD
-          - GNF
-          - GTQ
-          - GYD
-          - HKD
-          - HNL
-          - HRK
-          - HTG
-          - HUF
-          - IDR
-          - ILS
-          - INR
-          - IQD
-          - IRR
-          - ISK
-          - JMD
-          - JOD
-          - JPY
-          - KES
-          - KGS
-          - KHR
-          - KMF
-          - KPW
-          - KRW
-          - KWD
-          - KYD
-          - KZT
-          - LAK
-          - LBP
-          - LKR
-          - LRD
-          - LSL
-          - LYD
-          - MAD
-          - MDL
-          - MGA
-          - MKD
-          - MMK
-          - MNT
-          - MOP
-          - MRU
-          - MUR
-          - MVR
-          - MWK
-          - MXN
-          - MXV
-          - MYR
-          - MZN
-          - NAD
-          - NGN
-          - NIO
-          - NOK
-          - NPR
-          - NZD
-          - OMR
-          - PAB
-          - PEN
-          - PGK
-          - PHP
-          - PKR
-          - PLN
-          - PYG
-          - QAR
-          - RON
-          - RSD
-          - RUB
-          - RWF
-          - SAR
-          - SBD
-          - SCR
-          - SDG
-          - SEK
-          - SGD
-          - SLE
-          - SLL
-          - SOS
-          - SRD
-          - SSP
-          - STN
-          - SVC
-          - SYP
-          - SZL
-          - SHP
-          - THB
-          - TJS
-          - TMT
-          - TND
-          - TOP
-          - TRY
-          - TTD
-          - TWD
-          - TZS
-          - UAH
-          - UGX
-          - USD
-          - USN
-          - UYI
-          - UYU
-          - UYW
-          - UZS
-          - VES
-          - VND
-          - VUV
-          - WST
-          - XAF
-          - XAG
-          - XAU
-          - XBA
-          - XBB
-          - XBC
-          - XBD
-          - XCD
-          - XDR
-          - XOF
-          - XPD
-          - XPF
-          - XPT
-          - XSU
-          - XTS
-          - XUA
-          - XXX
-          - YER
-          - ZAR
-          - ZMW
-          - ZWL
-          example: GBP
-      required:
-      - amount
-      - bearer
-      - currency
-    payment.AddressRequest:
-      type: object
-      properties:
-        addressLine1:
-          type: string
-          maxLength: 50
-          minLength: 0
-        addressLine2:
-          type: string
-          maxLength: 50
-          minLength: 0
-        postTown:
-          type: string
-          maxLength: 50
-          minLength: 0
-        postCode:
-          type: string
-          maxLength: 10
-        country:
-          type: string
-          description: Mandatory for international payments.
-        countrySubDivision:
-          type: string
-          maxLength: 35
-          minLength: 0
-      required:
-      - addressLine1
-      - postTown
-    payment.paymentStatuses:
-      type: array
-      items:
-        type: string
-        description: Current status of payment. Multiple statuses can be specified by repeating the parameter.
-        enum:
-        - SUBMITTED
-        - SCREENING_REQ
-        - VALIDATED
-        - PENDING_FOR_DATE
-        - PENDING_FOR_FUNDS
-        - EXT_PROC
-        - PROCESSED
-        - RECONCILED
-        - ER_INVALID
-        - ER_EXTCONN
-        - ER_EXTSYS
-        - ER_EXPIRED
-        - ER_GENERAL
-        - ER_BATCH
-        - EXT_SENT
-        - UNALLOCATED
-        - HELD
-        - RETURNED
-        - CANCELLED
-        - REPROCESSING
-        - VOID
-        - CLEARING
-        - HELD_IN_SUSPENSE
-    payment.RegulatoryReporting:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Regulatory Reporting Type
-          enum:
-          - CRED
-          - DEBT
-          - BOTH
-          example: CRED
-        regulatoryAuthority:
-          $ref: '#/components/schemas/payment.RegulatoryAuthority'
-          description: Regulatory authority
-        structuredRegulatoryReporting:
-          $ref: '#/components/schemas/payment.StructuredRegulatoryReporting'
-          description: Structured regulatory reporting
-    payment.PaymentResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique id for the Payment request. 10 characters long
-          example: P000001ABC
-        status:
-          type: string
-          description: Current status of payment.
-          enum:
-          - SUBMITTED
-          - SCREENING_REQ
-          - VALIDATED
-          - PENDING_FOR_DATE
-          - PENDING_FOR_FUNDS
-          - EXT_PROC
-          - PROCESSED
-          - RECONCILED
-          - ER_INVALID
-          - ER_EXTCONN
-          - ER_EXTSYS
-          - ER_EXPIRED
-          - ER_GENERAL
-          - ER_BATCH
-          - EXT_SENT
-          - UNALLOCATED
-          - HELD
-          - RETURNED
-          - CANCELLED
-          - REPROCESSING
-          - VOID
-          - CLEARING
-          - HELD_IN_SUSPENSE
-        createdDate:
-          type: string
-          format: date-time
-          description: Datetime the request was created. Format is 'yyyy-MM-dd'T'HH:mm:ss.sssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01.010+0000'
-          example: 2017-01-28T01:01:01.010+0000
-        externalReference:
-          type: string
-          description: external reference if provided
-          example: aReference_00001
-        details:
-          description: All the details of the payment from the original request
-        approvalStatus:
-          type: string
-          description: Current approval status of payment
-          enum:
-          - NOTNEEDED
-          - PENDING
-          - APPROVED
-          - REJECTED
-          - DELETED
         message:
           type: string
-          description: Information about payment (if available)
-        schemeInfo:
-          $ref: '#/components/schemas/payment.SchemeInfo'
-          description: Information with regards to the payment scheme
-        createdBy:
+        sourceService:
           type: string
-          description: ID of the user that created the payment
-        type:
+    payment.BirthDetails:
+      type: object
+      properties:
+        dateOfBirth:
           type: string
-          enum:
-          - PAYIN
-          - PAYOUT
-          - RETURN
-        paymentScheduledDate:
+          description: Date of birth in ISO 8601 format of the ultimate payer
+          example: '1978-01-01'
+          pattern: ^\d{4}-([0]\d|1[0-2])-([0-2]\d|3[01])$
+        cityOfBirth:
           type: string
-          format: date-time
-          description: Datetime of the payment scheduled at. Format is 'yyyy-MM-dd'T'HH:mm:ss.sssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01.010+0000'
-          example: 2017-01-28T01:01:01.010+0000
-        currentUserCanApprove:
-          type: boolean
-          description: Indicates if current user can approve the payment
-        approvals:
-          type: array
-          description: List of approvals performed on the payment
-          items:
-            $ref: '#/components/schemas/payment.PaymentApproval'
-      required:
-      - details
-      - externalReference
-      - id
-      - status
+          description: City of birth of the ultimate payer
+          example: Edinburgh
+          maxLength: 35
+          minLength: 0
+        countryOfBirth:
+          type: string
+          description: ISO 3166 country code of the ultimate payers country of birth
+          example: GB
+    payment.id:
+      type: array
+      description: List of batch payment IDs
+      items:
+        type: string
+        description: List of batch payment IDs
     payment.ids:
       type: array
       items:
@@ -1775,35 +865,11 @@ components:
           type: string
           maxLength: 35
           minLength: 0
-    payment.BirthDetails:
-      type: object
-      properties:
-        dateOfBirth:
-          type: string
-          description: Date of birth in ISO 8601 format of the ultimate payer
-          example: '1978-01-01'
-          pattern: ^\d{4}-([0]\d|1[0-2])-([0-2]\d|3[01])$
-        cityOfBirth:
-          type: string
-          description: City of birth of the ultimate payer
-          example: Edinburgh
-          maxLength: 35
-          minLength: 0
-        countryOfBirth:
-          type: string
-          description: ISO 3166 country code of the ultimate payers country of birth
-          example: GB
-    payment.id:
-      type: array
-      description: List of batch payment IDs
-      items:
-        type: string
-        description: List of batch payment IDs
-    payment.status:
+    payment.paymentStatuses:
       type: array
       items:
         type: string
-        description: Payment status, multiple statuses can be specified by repeating the parameter
+        description: Current status of payment. Multiple statuses can be specified by repeating the parameter.
         enum:
         - SUBMITTED
         - SCREENING_REQ
@@ -1828,6 +894,244 @@ components:
         - VOID
         - CLEARING
         - HELD_IN_SUSPENSE
+    payment.BatchPaymentOutRequest:
+      type: object
+      description: Details of Batch request
+      properties:
+        externalReference:
+          type: string
+          description: Your reference for this Batch of payments
+          example: aReference_00001
+          maxLength: 50
+          minLength: 0
+          pattern: '[\w-\s]*'
+        strictProcessing:
+          type: boolean
+          description: Flag to control if the entire batch fails for any individual payment validation failure
+        submissionType:
+          type: string
+          description: BATCH restricts operations to batch level.  BULK (default) allows payment level operations such as approval
+          enum:
+          - BATCH
+          - BULK
+        payments:
+          type: array
+          description: List of payments.
+          items:
+            $ref: '#/components/schemas/payment.PaymentOutRequest'
+          maxItems: 10000
+          minItems: 1
+      required:
+      - payments
+    payment.Address:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+          description: First line of the ultimate payers address
+          example: 2nd Floor
+          maxLength: 70
+          minLength: 0
+        addressLine2:
+          type: string
+          description: Second line of the ultimate payers address
+          example: 123 High Street
+          maxLength: 70
+          minLength: 0
+        postTown:
+          type: string
+          description: Postal town of the ultimate payers address
+          example: Edinburgh
+          maxLength: 35
+          minLength: 0
+        postCode:
+          type: string
+          description: Post code of the ultimate payers address
+          example: AB12 3XX
+          maxLength: 16
+          minLength: 0
+        country:
+          type: string
+          description: ISO 3166 country code of the ultimate payers address
+          example: GB
+      required:
+      - country
+    payment.approvalStatus:
+      type: array
+      description: Payment approval status, multiple statuses can be specified by repeating the parameter
+      items:
+        type: string
+        description: Payment approval status, multiple statuses can be specified by repeating the parameter
+        enum:
+        - NOTNEEDED
+        - PENDING
+        - APPROVED
+        - REJECTED
+        - DELETED
+    payment.batchPaymentStatuses:
+      type: array
+      items:
+        type: string
+        description: Current status of batch. Multiple statuses can be specified by repeating the parameter.
+        enum:
+        - ACCEPTED
+        - REJECTED
+        - SUBMITTED
+        - CANCELLED
+    payment.OfficialOrganisationIdentity:
+      type: object
+      properties:
+        bankPartyIdentification:
+          type: string
+          description: Bank party identification
+          example: '12345'
+          maxLength: 35
+          minLength: 0
+        centralBankIdNumber:
+          type: string
+          description: Central bank identification number
+          example: '678910'
+          maxLength: 35
+          minLength: 0
+        clearingIdNumber:
+          type: string
+          description: Clearing identification Number
+          example: xx15402
+          maxLength: 35
+          minLength: 0
+        certificateOfIncorporationNumber:
+          type: string
+          description: Certification of the incorporation number
+          example: '1100010'
+          maxLength: 35
+          minLength: 0
+        countryIdCode:
+          type: string
+          description: Country identification code
+          example: '111111'
+          maxLength: 35
+          minLength: 0
+        customerNumber:
+          type: string
+          description: Customer number
+          example: '00221133'
+          maxLength: 35
+          minLength: 0
+        dataUniversalNumberingSystem:
+          type: string
+          description: Data universal numbering system
+          example: '002211330'
+          pattern: ^[0-9]{9,9}?$
+        employerIdNumber:
+          type: string
+          description: Employer identification number
+          example: '00221133'
+          maxLength: 35
+          minLength: 0
+        gs1glnIdentifier:
+          type: string
+          description: GS1GLN identifier
+          example: '00221133'
+          maxLength: 35
+          minLength: 0
+        sirenCode:
+          type: string
+          description: SIREN code
+          example: '00221133'
+          maxLength: 35
+          minLength: 0
+        siretCode:
+          type: string
+          description: SIRET code
+          example: '00221133'
+          maxLength: 35
+          minLength: 0
+        taxIdNumber:
+          type: string
+          description: Tax identification number
+          example: '00221133'
+          maxLength: 35
+          minLength: 0
+        bicIdentifier:
+          type: string
+          description: BICI identification
+          example: MGALODJAO7A
+          pattern: ^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}?$
+        ibeiIdentifier:
+          type: string
+          description: IBEI identification
+          example: HIZFTMTT59
+          pattern: ^[A-Z]{2,2}[B-DF-HJ-NP-TV-XZ0-9]{7,7}[0-9]{1,1}?$
+        beiIdentifier:
+          type: string
+          description: BEI identification
+          example: MHIHISVZUMH
+          pattern: ^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}?$
+        eanglnIdentifier:
+          type: string
+          description: EANGLN identification
+          example: '7516164953429'
+          pattern: ^[0-9]{13,13}?$
+        chipsUniversalIdentifier:
+          type: string
+          description: CHIPS universal identification
+          example: CH157373
+          pattern: ^CH[0-9]{6,6}?$
+        genericIdentification3:
+          type: string
+          description: Generic identification 3
+          example: '123456788'
+          maxLength: 35
+          minLength: 0
+        genericIdentificationIssr:
+          type: string
+          description: Generic identification issr
+          example: '13143225'
+          maxLength: 35
+          minLength: 0
+    payment.BatchSummary:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int64
+          description: Total count of payment requests in this batch
+        inprogress:
+          type: integer
+          format: int64
+          description: Count of payment requests in progress
+        invalid:
+          type: integer
+          format: int64
+          description: Count of invalid payment requests
+        errors:
+          type: integer
+          format: int64
+          description: Count of failed payment requests
+        cancelled:
+          type: integer
+          format: int64
+          description: Count of cancelled payment requests
+        completed:
+          type: integer
+          format: int64
+          description: Count of completed payments
+        info:
+          type: string
+          description: Additional information or error message regarding this batch payment request
+    payment.POODetails:
+      type: object
+      properties:
+        ultimatePayer:
+          $ref: '#/components/schemas/payment.UltimatePayer'
+        originalPaymentDetails:
+          $ref: '#/components/schemas/payment.PaymentDetails'
+        chargeDetails:
+          $ref: '#/components/schemas/payment.Charge'
+        additionalRemittanceInformation:
+          type: string
+          maxLength: 140
+          minLength: 0
     payment.PaymentOutRequest:
       type: object
       description: Details of Payment request
@@ -2249,61 +1553,6 @@ components:
           writeOnly: true
       required:
       - sourceAccountId
-    payment.OfficialIdDetails:
-      type: object
-      properties:
-        drivingLicenceNumber:
-          type: string
-          description: Driving licence number
-          example: JONES849339TS8AD
-          maxLength: 35
-          minLength: 0
-        customerNumber:
-          type: string
-          description: Customer number
-          example: '23547326547632'
-          maxLength: 35
-          minLength: 0
-        socialSecurityNumber:
-          type: string
-          description: Social security number or equivalent
-          example: 1110000000022AB
-          maxLength: 35
-          minLength: 0
-        passportNumber:
-          type: string
-          description: Passport number
-          example: '123456789'
-          maxLength: 35
-          minLength: 0
-        idCardNumber:
-          type: string
-          description: National ID card number
-          example: '123456789'
-          maxLength: 35
-          minLength: 0
-        otherIdNumber:
-          type: string
-          description: Other ID number
-          example: '123456789'
-          maxLength: 35
-          minLength: 0
-    payment.NameCheck:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Identifier of name check result
-          example: PAV2322342
-        source:
-          type: string
-          description: Origin of the name check result, could be MODULR or EXTERNAL
-          enum:
-          - MODULR
-          - EXTERNAL
-          example: MODULR
-      required:
-      - id
     payment.BatchPaymentsResponse:
       type: object
       properties:
@@ -2334,37 +1583,60 @@ components:
       - size
       - totalPages
       - totalSize
-    payment.MessageResponse:
+    payment.SchemeInfo:
       type: object
       properties:
-        field:
+        name:
           type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
+        id:
           type: string
         message:
           type: string
-        sourceService:
+        responseCode:
           type: string
+    payment.PaymentPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/payment.PaymentResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0-based, i.e first page = 0, second page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
+    payment.PaymentApproval:
+      type: object
+      description: A single approval against a batch payment request
+      properties:
+        approvedBy:
+          type: string
+          description: ID of user who approved this batch payment request
+          example: U2100021
+        approvedOn:
+          type: string
+          format: date
+          description: Date this approval was applied
+          example: '2022-06-25'
     payment.PaymentsSummary:
       type: object
       description: Summary of payments and approvals
@@ -2387,6 +1659,347 @@ components:
           type: number
           description: Sum total of payment amounts currently pending approval
           example: '50.00'
+    payment.BatchPaymentDetailsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id for the Batch Payment. 10 characters long
+          example: D920000001
+        externalReference:
+          type: string
+          description: External reference, if provided
+          example: aReference_00001
+        status:
+          type: string
+          description: Current status of batch.
+          enum:
+          - ACCEPTED
+          - REJECTED
+          - SUBMITTED
+          - CANCELLED
+          example: ACCEPTED
+        totalPayments:
+          type: integer
+          format: int32
+          description: Total count of payments in this batch
+          example: 9123
+        currentUserCanApprove:
+          type: boolean
+          description: Whether the user is allowed to approve this batch, based on their approval limits, and applicable configuration
+          example: true
+        paymentDetails:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/payment.PaymentsSummary'
+          description: Summary of payments and approvals, per currency (as a 3-alpha currency code)
+        approvals:
+          type: array
+          description: List of batch-level approvals
+          items:
+            $ref: '#/components/schemas/payment.PaymentApproval'
+        currentUserCanCancel:
+          type: boolean
+          description: Whether the user is allowed and currently able to cancel at least one of the payments in this batch
+        createdDate:
+          type: string
+          format: date-time
+          description: Datetime when the batch payment was created. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
+          example: 2017-01-28T01:01:01+0000
+        createdBy:
+          type: string
+          description: ID of the user that created the payment
+        processingDateFrom:
+          type: string
+          format: date
+          description: Earliest processing date in the batch file or the batch creation date if the file does not have any dates. Date format 'yyyy-MM-dd'
+          example: '2017-01-28'
+        processingDateTo:
+          type: string
+          format: date
+          description: Last processing date in the batch file or empty if the file does not have any dates. Date format 'Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000'
+          example: '2017-01-28'
+        earliestScheduledPaymentDate:
+          type: string
+          format: date
+          description: Earliest processing date in the batch file or empty if the file does not have any dates. Date format 'Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000'
+          example: '2017-01-28'
+        requiredApprovalCount:
+          type: integer
+          format: int32
+          description: The number of required approvals for the batch.  Applicable to batch payments of submissionType BATCH
+        batchSummary:
+          $ref: '#/components/schemas/payment.BatchSummary'
+          description: Summary of the state of payment requests in this batch
+        strict:
+          type: boolean
+          description: Strict processing flag. Whether the entire batch should fail on any individual payment validation failure
+        summary:
+          $ref: '#/components/schemas/payment.BatchPaymentSummary'
+          description: Summary of the state of payment requests in this batch
+    payment.PaymentDetails:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Amount of currency that the payment is in
+          example: '1000.45'
+        exchangeRate:
+          type: number
+          description: Exchange rate
+          example: '1.45'
+        currency:
+          type: string
+          description: ISO 4217 currency code that the amount is in
+          enum:
+          - GBP
+          - EUR
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - FKP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SLE
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - SHP
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - UYI
+          - UYU
+          - UYW
+          - UZS
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+      required:
+      - amount
+      - currency
+      - exchangeRate
+    payment.Destination:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Indicates the type of destination. IBAN type is required for international payments.
+          enum:
+          - BENEFICIARY
+          - ACCOUNT
+          - IBAN
+          - SCAN
+          - INTL
+          - ANBRN
+          - AN
+          example: SCAN
+        id:
+          type: string
+          description: 'Identifier for the Payment destination if using ACCOUNT or BENEFICIARY type. Can be either: a) Beneficiary id for an external Payment, b) Account id for a transfer to another Account'
+        iban:
+          type: string
+          description: International Bank Account Number (IBAN). To be used as the destination identifier when sending ‘IBAN’ type payments
+          example: GB20MODR00000000000001
+          pattern: ^[a-zA-Z]{2}[0-9]{2}([a-zA-Z0-9]){11,30}$
+        accountNumber:
+          type: string
+          description: Account Number of destination account if using SCAN type.
+          example: '12345678'
+        sortCode:
+          type: string
+          description: Sort Code of destination account if using SCAN type.
+          example: '000000'
+          pattern: ^[0-9]{6}$
+        name:
+          type: string
+          description: Name to use if a new beneficiary is created, and for using as the payee name if SCAN or IBAN types are specified for the destination
+          example: Test
+          maxLength: 100
+          minLength: 0
+        address:
+          $ref: '#/components/schemas/payment.AddressRequest'
+          description: Optional address. Mandatory for international payments.
+        birthdate:
+          type: string
+          format: date
+          description: 'The destination beneficiary''s date of birth. Format: yyyy-MM-dd'
+          example: '2000-01-01'
+        emailAddress:
+          type: string
+          description: The destination beneficiary's email address
+          pattern: '[^\s@]+@[^\s@]+\.[^\s@]+'
+        phoneNumber:
+          type: string
+          description: The destination beneficiary's phone number
+        bic:
+          type: string
+          description: The destination beneficiary's SWIFT BIC (Bank Identifier Code). Only to be used for international payments.
+        countrySpecificDetails:
+          $ref: '#/components/schemas/payment.DestinationCountrySpecificDetails'
+          description: Further details required, depending on the destination's country
+        legalEntityIdentifier:
+          type: string
+          description: The destination beneficiary's Legal entity Identifier
+      required:
+      - type
     payment.currency:
       type: array
       items:
@@ -2573,18 +2186,540 @@ components:
         - ZAR
         - ZMW
         - ZWL
-    payment.approvalStatus:
+    payment.AddressRequest:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+          maxLength: 50
+          minLength: 0
+        addressLine2:
+          type: string
+          maxLength: 50
+          minLength: 0
+        postTown:
+          type: string
+          maxLength: 50
+          minLength: 0
+        postCode:
+          type: string
+          maxLength: 10
+        country:
+          type: string
+          description: Mandatory for international payments.
+        countrySubDivision:
+          type: string
+          maxLength: 35
+          minLength: 0
+      required:
+      - addressLine1
+      - postTown
+    payment.customerId:
       type: array
-      description: Payment approval status, multiple statuses can be specified by repeating the parameter
+      description: Filter on customer ID
+      example: C1234567
       items:
         type: string
-        description: Payment approval status, multiple statuses can be specified by repeating the parameter
-        enum:
-        - NOTNEEDED
-        - PENDING
-        - APPROVED
-        - REJECTED
-        - DELETED
+        description: Filter on customer ID
+        example: C1234567
+    payment.Charge:
+      type: object
+      properties:
+        bearer:
+          type: string
+          description: Information about bearer of the charges. Its can be Creditor, Debtor or shared between both
+          enum:
+          - CRED
+          - DEBT
+          - SHAR
+          example: CRED
+        amount:
+          type: number
+          description: Amount of the charges. Max allowed is 999999999999.99
+          example: '100.00'
+        currency:
+          type: string
+          description: Currency of charge. Should be ISO Standard currency
+          enum:
+          - GBP
+          - EUR
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - FKP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SLE
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - SHP
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - UYI
+          - UYU
+          - UYW
+          - UZS
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+          example: GBP
+      required:
+      - amount
+      - bearer
+      - currency
+    payment.RegulatoryAuthority:
+      type: object
+      properties:
+        authorityName:
+          type: string
+          description: Authority name. Maximum of 70 characters.
+          example: Financial Conduct Authority
+          maxLength: 70
+          minLength: 0
+        authorityCountry:
+          type: string
+          description: ISO 3166 country code of the ultimate payers address
+          enum:
+          - AT
+          - BE
+          - BG
+          - CY
+          - CZ
+          - DK
+          - EE
+          - FI
+          - FR
+          - DE
+          - GR
+          - HR
+          - HU
+          - IS
+          - IE
+          - IT
+          - LV
+          - LI
+          - LT
+          - LU
+          - MT
+          - NL
+          - 'NO'
+          - PL
+          - PT
+          - RO
+          - SK
+          - SI
+          - ES
+          - SE
+          - GB
+          - MQ
+          - YT
+          - GP
+          - GF
+          - RE
+          - MF
+          - GI
+          - GG
+          - IM
+          - JE
+          - MC
+          - CH
+          - AD
+          - SM
+          - VA
+          - AX
+          - PM
+          - BL
+          - AL
+          - MD
+          - ME
+          - MK
+          - RS
+          - AF
+          - DZ
+          - AS
+          - AO
+          - AI
+          - AQ
+          - AG
+          - AR
+          - AM
+          - AW
+          - AU
+          - AZ
+          - BS
+          - BH
+          - BD
+          - BB
+          - BY
+          - BZ
+          - BJ
+          - BM
+          - BT
+          - BO
+          - BQ
+          - BA
+          - BW
+          - BV
+          - BR
+          - IO
+          - VG
+          - BN
+          - BF
+          - BI
+          - KH
+          - CM
+          - CA
+          - CV
+          - KY
+          - CF
+          - TD
+          - CL
+          - CN
+          - CX
+          - CC
+          - CO
+          - KM
+          - CK
+          - CR
+          - CU
+          - CW
+          - CD
+          - DJ
+          - DM
+          - DO
+          - TL
+          - EC
+          - EG
+          - SV
+          - GQ
+          - ER
+          - SZ
+          - ET
+          - FK
+          - FO
+          - FJ
+          - PF
+          - TF
+          - GA
+          - GM
+          - GE
+          - GH
+          - GL
+          - GD
+          - GU
+          - GT
+          - GN
+          - GW
+          - GY
+          - HT
+          - HM
+          - HN
+          - HK
+          - IN
+          - ID
+          - IR
+          - IQ
+          - IL
+          - CI
+          - JM
+          - JP
+          - JO
+          - KZ
+          - KE
+          - KI
+          - XK
+          - KW
+          - KG
+          - LA
+          - LB
+          - LS
+          - LR
+          - LY
+          - MO
+          - MG
+          - MW
+          - MY
+          - MV
+          - ML
+          - MH
+          - MR
+          - MU
+          - MX
+          - FM
+          - MN
+          - MS
+          - MA
+          - MZ
+          - MM
+          - NA
+          - NR
+          - NP
+          - AN
+          - NC
+          - NZ
+          - NI
+          - NE
+          - NG
+          - NU
+          - NF
+          - KP
+          - MP
+          - OM
+          - PK
+          - PW
+          - PS
+          - PA
+          - PG
+          - PY
+          - PE
+          - PH
+          - PN
+          - PR
+          - QA
+          - CG
+          - RU
+          - RW
+          - SH
+          - KN
+          - LC
+          - VC
+          - WS
+          - ST
+          - SA
+          - SN
+          - SC
+          - SL
+          - SG
+          - SX
+          - SB
+          - SO
+          - ZA
+          - KR
+          - GS
+          - SS
+          - LK
+          - SD
+          - SR
+          - SY
+          - SJ
+          - TW
+          - TJ
+          - TZ
+          - TH
+          - TG
+          - TK
+          - TO
+          - TT
+          - TN
+          - TR
+          - TM
+          - TC
+          - TV
+          - UG
+          - UA
+          - AE
+          - UM
+          - US
+          - UY
+          - UZ
+          - VU
+          - VE
+          - VN
+          - VI
+          - WF
+          - EH
+          - YE
+          - ZM
+          - ZW
+          example: GB
+    payment.UltimatePayer:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the ultimate payer
+          maxLength: 70
+          minLength: 0
+        address:
+          $ref: '#/components/schemas/payment.Address'
+        birthDetails:
+          $ref: '#/components/schemas/payment.BirthDetails'
+          description: Birth details of a person. Official identification details. Property 'birthDetails' and/or 'officialIdentification' Or 'officialIdDetailOrgs' is mandatory
+        officialIdentification:
+          $ref: '#/components/schemas/payment.OfficialIdDetails'
+          description: Official identification for a person. Property 'birthDetails' and/or 'officialIdentification' Or 'officialIdDetailOrgs' is mandatory
+        officialIdDetailOrgs:
+          $ref: '#/components/schemas/payment.OfficialOrganisationIdentity'
+          description: Organisation's official identification. Official identification details. Property 'birthDetails' and/or 'officialIdentification' Or 'officialIdDetailOrgs' is mandatory
+        overseasAccountIdentifier:
+          $ref: '#/components/schemas/payment.OverseasAccountIdentifier'
+        bic:
+          type: string
+          description: Destination beneficiary's BIC/Swift Code.
+          example: MODRDEFF123
+          pattern: ^[A-Z]{6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3})?$
+      required:
+      - address
+      - name
     payment.BatchPayment:
       type: object
       properties:
@@ -2660,232 +2795,6 @@ components:
         strict:
           type: boolean
           description: Strict processing flag. Whether the entire batch should fail on any individual payment validation failure
-    payment.customerId:
-      type: array
-      description: Filter on customer ID
-      example: C1234567
-      items:
-        type: string
-        description: Filter on customer ID
-        example: C1234567
-    payment.BatchPaymentDetailsResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique id for the Batch Payment. 10 characters long
-          example: D920000001
-        externalReference:
-          type: string
-          description: External reference, if provided
-          example: aReference_00001
-        status:
-          type: string
-          description: Current status of batch.
-          enum:
-          - ACCEPTED
-          - REJECTED
-          - SUBMITTED
-          - CANCELLED
-          example: ACCEPTED
-        totalPayments:
-          type: integer
-          format: int32
-          description: Total count of payments in this batch
-          example: 9123
-        currentUserCanApprove:
-          type: boolean
-          description: Whether the user is allowed to approve this batch, based on their approval limits, and applicable configuration
-          example: true
-        paymentDetails:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/payment.PaymentsSummary'
-          description: Summary of payments and approvals, per currency (as a 3-alpha currency code)
-        approvals:
-          type: array
-          description: List of batch-level approvals
-          items:
-            $ref: '#/components/schemas/payment.PaymentApproval'
-        currentUserCanCancel:
-          type: boolean
-          description: Whether the user is allowed and currently able to cancel at least one of the payments in this batch
-        createdDate:
-          type: string
-          format: date-time
-          description: Datetime when the batch payment was created. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
-          example: 2017-01-28T01:01:01+0000
-        createdBy:
-          type: string
-          description: ID of the user that created the payment
-        processingDateFrom:
-          type: string
-          format: date
-          description: Earliest processing date in the batch file or the batch creation date if the file does not have any dates. Date format 'yyyy-MM-dd'
-          example: '2017-01-28'
-        processingDateTo:
-          type: string
-          format: date
-          description: Last processing date in the batch file or empty if the file does not have any dates. Date format 'Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000'
-          example: '2017-01-28'
-        earliestScheduledPaymentDate:
-          type: string
-          format: date
-          description: Earliest processing date in the batch file or empty if the file does not have any dates. Date format 'Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000'
-          example: '2017-01-28'
-        requiredApprovalCount:
-          type: integer
-          format: int32
-          description: The number of required approvals for the batch.  Applicable to batch payments of submissionType BATCH
-        batchSummary:
-          $ref: '#/components/schemas/payment.BatchSummary'
-          description: Summary of the state of payment requests in this batch
-        strict:
-          type: boolean
-          description: Strict processing flag. Whether the entire batch should fail on any individual payment validation failure
-        summary:
-          $ref: '#/components/schemas/payment.BatchPaymentSummary'
-          description: Summary of the state of payment requests in this batch
-    payment.SchemeInfo:
-      type: object
-      properties:
-        name:
-          type: string
-        id:
-          type: string
-        message:
-          type: string
-        responseCode:
-          type: string
-    payment.FxDetails:
-      type: object
-      properties:
-        quoteId:
-          type: string
-          description: Quote Id for foreign exchange trade
-      required:
-      - quoteId
-    payment.batchPaymentStatuses:
-      type: array
-      items:
-        type: string
-        description: Current status of batch. Multiple statuses can be specified by repeating the parameter.
-        enum:
-        - ACCEPTED
-        - REJECTED
-        - SUBMITTED
-        - CANCELLED
-    payment.OfficialOrganisationIdentity:
-      type: object
-      properties:
-        bankPartyIdentification:
-          type: string
-          description: Bank party identification
-          example: '12345'
-          maxLength: 35
-          minLength: 0
-        centralBankIdNumber:
-          type: string
-          description: Central bank identification number
-          example: '678910'
-          maxLength: 35
-          minLength: 0
-        clearingIdNumber:
-          type: string
-          description: Clearing identification Number
-          example: xx15402
-          maxLength: 35
-          minLength: 0
-        certificateOfIncorporationNumber:
-          type: string
-          description: Certification of the incorporation number
-          example: '1100010'
-          maxLength: 35
-          minLength: 0
-        countryIdCode:
-          type: string
-          description: Country identification code
-          example: '111111'
-          maxLength: 35
-          minLength: 0
-        customerNumber:
-          type: string
-          description: Customer number
-          example: '00221133'
-          maxLength: 35
-          minLength: 0
-        dataUniversalNumberingSystem:
-          type: string
-          description: Data universal numbering system
-          example: '002211330'
-          pattern: ^[0-9]{9,9}?$
-        employerIdNumber:
-          type: string
-          description: Employer identification number
-          example: '00221133'
-          maxLength: 35
-          minLength: 0
-        gs1glnIdentifier:
-          type: string
-          description: GS1GLN identifier
-          example: '00221133'
-          maxLength: 35
-          minLength: 0
-        sirenCode:
-          type: string
-          description: SIREN code
-          example: '00221133'
-          maxLength: 35
-          minLength: 0
-        siretCode:
-          type: string
-          description: SIRET code
-          example: '00221133'
-          maxLength: 35
-          minLength: 0
-        taxIdNumber:
-          type: string
-          description: Tax identification number
-          example: '00221133'
-          maxLength: 35
-          minLength: 0
-        bicIdentifier:
-          type: string
-          description: BICI identification
-          example: MGALODJAO7A
-          pattern: ^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}?$
-        ibeiIdentifier:
-          type: string
-          description: IBEI identification
-          example: HIZFTMTT59
-          pattern: ^[A-Z]{2,2}[B-DF-HJ-NP-TV-XZ0-9]{7,7}[0-9]{1,1}?$
-        beiIdentifier:
-          type: string
-          description: BEI identification
-          example: MHIHISVZUMH
-          pattern: ^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}?$
-        eanglnIdentifier:
-          type: string
-          description: EANGLN identification
-          example: '7516164953429'
-          pattern: ^[0-9]{13,13}?$
-        chipsUniversalIdentifier:
-          type: string
-          description: CHIPS universal identification
-          example: CH157373
-          pattern: ^CH[0-9]{6,6}?$
-        genericIdentification3:
-          type: string
-          description: Generic identification 3
-          example: '123456788'
-          maxLength: 35
-          minLength: 0
-        genericIdentificationIssr:
-          type: string
-          description: Generic identification issr
-          example: '13143225'
-          maxLength: 35
-          minLength: 0
     payment.OverseasAccountIdentifier:
       type: object
       properties:
@@ -2941,111 +2850,173 @@ components:
           description: Additional information or error message regarding this batch payment request
         strict:
           type: boolean
-    payment.BatchSummary:
+    payment.NameCheck:
       type: object
       properties:
-        total:
-          type: integer
-          format: int64
-          description: Total count of payment requests in this batch
-        inprogress:
-          type: integer
-          format: int64
-          description: Count of payment requests in progress
-        invalid:
-          type: integer
-          format: int64
-          description: Count of invalid payment requests
-        errors:
-          type: integer
-          format: int64
-          description: Count of failed payment requests
-        cancelled:
-          type: integer
-          format: int64
-          description: Count of cancelled payment requests
-        completed:
-          type: integer
-          format: int64
-          description: Count of completed payments
-        info:
+        id:
           type: string
-          description: Additional information or error message regarding this batch payment request
-    payment.Address:
+          description: Identifier of name check result
+          example: PAV2322342
+        source:
+          type: string
+          description: Origin of the name check result, could be MODULR or EXTERNAL
+          enum:
+          - MODULR
+          - EXTERNAL
+          example: MODULR
+      required:
+      - id
+    payment.RegulatoryReporting:
       type: object
       properties:
-        addressLine1:
+        type:
           type: string
-          description: First line of the ultimate payers address
-          example: 2nd Floor
-          maxLength: 70
-          minLength: 0
-        addressLine2:
+          description: Regulatory Reporting Type
+          enum:
+          - CRED
+          - DEBT
+          - BOTH
+          example: CRED
+        regulatoryAuthority:
+          $ref: '#/components/schemas/payment.RegulatoryAuthority'
+          description: Regulatory authority
+        structuredRegulatoryReporting:
+          $ref: '#/components/schemas/payment.StructuredRegulatoryReporting'
+          description: Structured regulatory reporting
+    payment.OfficialIdDetails:
+      type: object
+      properties:
+        drivingLicenceNumber:
           type: string
-          description: Second line of the ultimate payers address
-          example: 123 High Street
-          maxLength: 70
-          minLength: 0
-        postTown:
-          type: string
-          description: Postal town of the ultimate payers address
-          example: Edinburgh
+          description: Driving licence number
+          example: JONES849339TS8AD
           maxLength: 35
           minLength: 0
-        postCode:
+        customerNumber:
           type: string
-          description: Post code of the ultimate payers address
-          example: AB12 3XX
-          maxLength: 16
+          description: Customer number
+          example: '23547326547632'
+          maxLength: 35
           minLength: 0
-        country:
+        socialSecurityNumber:
           type: string
-          description: ISO 3166 country code of the ultimate payers address
-          example: GB
-      required:
-      - country
-    payment.PaymentApproval:
+          description: Social security number or equivalent
+          example: 1110000000022AB
+          maxLength: 35
+          minLength: 0
+        passportNumber:
+          type: string
+          description: Passport number
+          example: '123456789'
+          maxLength: 35
+          minLength: 0
+        idCardNumber:
+          type: string
+          description: National ID card number
+          example: '123456789'
+          maxLength: 35
+          minLength: 0
+        otherIdNumber:
+          type: string
+          description: Other ID number
+          example: '123456789'
+          maxLength: 35
+          minLength: 0
+    payment.PaymentResponse:
       type: object
-      description: A single approval against a batch payment request
       properties:
-        approvedBy:
+        id:
           type: string
-          description: ID of user who approved this batch payment request
-          example: U2100021
-        approvedOn:
+          description: Unique id for the Payment request. 10 characters long
+          example: P000001ABC
+        status:
           type: string
-          format: date
-          description: Date this approval was applied
-          example: '2022-06-25'
-    payment.BatchPaymentOutRequest:
-      type: object
-      description: Details of Batch request
-      properties:
+          description: Current status of payment.
+          enum:
+          - SUBMITTED
+          - SCREENING_REQ
+          - VALIDATED
+          - PENDING_FOR_DATE
+          - PENDING_FOR_FUNDS
+          - EXT_PROC
+          - PROCESSED
+          - RECONCILED
+          - ER_INVALID
+          - ER_EXTCONN
+          - ER_EXTSYS
+          - ER_EXPIRED
+          - ER_GENERAL
+          - ER_BATCH
+          - EXT_SENT
+          - UNALLOCATED
+          - HELD
+          - RETURNED
+          - CANCELLED
+          - REPROCESSING
+          - VOID
+          - CLEARING
+          - HELD_IN_SUSPENSE
+        createdDate:
+          type: string
+          format: date-time
+          description: Datetime the request was created. Format is 'yyyy-MM-dd'T'HH:mm:ss.sssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01.010+0000'
+          example: 2017-01-28T01:01:01.010+0000
         externalReference:
           type: string
-          description: Your reference for this Batch of payments
+          description: external reference if provided
           example: aReference_00001
-          maxLength: 50
-          minLength: 0
-          pattern: '[\w-\s]*'
-        strictProcessing:
-          type: boolean
-          description: Flag to control if the entire batch fails for any individual payment validation failure
-        submissionType:
+        details:
+          description: All the details of the payment from the original request
+        approvalStatus:
           type: string
-          description: BATCH restricts operations to batch level.  BULK (default) allows payment level operations such as approval
+          description: Current approval status of payment
           enum:
-          - BATCH
-          - BULK
-        payments:
+          - NOTNEEDED
+          - PENDING
+          - APPROVED
+          - REJECTED
+          - DELETED
+        message:
+          type: string
+          description: Information about payment (if available)
+        schemeInfo:
+          $ref: '#/components/schemas/payment.SchemeInfo'
+          description: Information with regards to the payment scheme
+        createdBy:
+          type: string
+          description: ID of the user that created the payment
+        type:
+          type: string
+          enum:
+          - PAYIN
+          - PAYOUT
+          - RETURN
+        paymentScheduledDate:
+          type: string
+          format: date-time
+          description: Datetime of the payment scheduled at. Format is 'yyyy-MM-dd'T'HH:mm:ss.sssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01.010+0000'
+          example: 2017-01-28T01:01:01.010+0000
+        currentUserCanApprove:
+          type: boolean
+          description: Indicates if current user can approve the payment
+        approvals:
           type: array
-          description: List of payments.
+          description: List of approvals performed on the payment
           items:
-            $ref: '#/components/schemas/payment.PaymentOutRequest'
-          maxItems: 10000
-          minItems: 1
+            $ref: '#/components/schemas/payment.PaymentApproval'
       required:
-      - payments
+      - details
+      - externalReference
+      - id
+      - status
+    payment.FxDetails:
+      type: object
+      properties:
+        quoteId:
+          type: string
+          description: Quote Id for foreign exchange trade
+      required:
+      - quoteId
     payment.DestinationCountrySpecificDetails:
       type: object
       properties:
@@ -3354,6 +3325,35 @@ components:
           - ZM
           - ZW
           example: US
+    payment.status:
+      type: array
+      items:
+        type: string
+        description: Payment status, multiple statuses can be specified by repeating the parameter
+        enum:
+        - SUBMITTED
+        - SCREENING_REQ
+        - VALIDATED
+        - PENDING_FOR_DATE
+        - PENDING_FOR_FUNDS
+        - EXT_PROC
+        - PROCESSED
+        - RECONCILED
+        - ER_INVALID
+        - ER_EXTCONN
+        - ER_EXTSYS
+        - ER_EXPIRED
+        - ER_GENERAL
+        - ER_BATCH
+        - EXT_SENT
+        - UNALLOCATED
+        - HELD
+        - RETURNED
+        - CANCELLED
+        - REPROCESSING
+        - VOID
+        - CLEARING
+        - HELD_IN_SUSPENSE
   securitySchemes:
     modulo_security:
       type: apiKey

@@ -416,66 +416,28 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    notification.WebHookFailureResponse:
+    notification.UpdateNotificationRequest:
       type: object
       properties:
-        url:
+        status:
           type: string
-          description: Endpoint URL for receiving webhook data
-        eventName:
-          type: string
-          description: Event which would trigger the webhook
+          description: Status of the notification.
           enum:
-          - PAYIN
-          - PAYOUT
-          - BALANCE_LOW
-          - BALANCE_HIGH
-          - BALANCE
-          - DDMANDATE
-          - CUSTVSTAT
-          - ACCOUNT_STATEMENT
-          - PENDING_PAYMENTS
-          - DD_INCOMING_DEBIT
-          - DD_FAILED_CLAIM
-          - DD_FUNDS_RETURNED
-          - CARD_AUTH
-          - CARD_AUTH_OFFLINE
-          - CARD_CREATION
-          - UPCOMING_CREDIT
-          - UPCOMING_COLLECTION_CREDIT
-          - UPCOMING_COLLECTION_DEBIT
-          - CARD_STATUS_UPDATE
-          - CARD_TOKEN_PROVISIONING
-          - PAYMENT_COMPLIANCE_STATUS
-          - DD_COLLECTION_STATUS
-          - ACCOUNT_SWITCH_UPDATE
-          - PAYMENT_FILE_UPLOAD
-          - ACCOUNT_STATUS_CHANGE
-          - PAYMENT_APPROVAL_STATUS_CHANGE
-          - CUSTOMER_BATCH_PAYMENT_APPROVAL_STATUS_CHANGE
-          - CARD_BULK_OPS_COMPLETED
-          - CUSTOMER_STATUS
-          - CREDIT_AUTH
-          - DD_INDEMNITY_CLAIM_STATUS
-          - APPLICATION_STATUS_CHANGE
-          - CUSTOMER_CREATED
-        customerBid:
-          type: string
-          description: Unique Identifier for the customer of this webhook.
-        retry:
-          type: boolean
-          description: Turn webhook retry mechanism on/off
-        lastFailedTime:
-          type: string
-          format: date-time
-          description: Last failure time. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01+0000'
-        data: {}
+          - ACTIVE
+          - INACTIVE
+        destinations:
+          type: array
+          description: The list of emails or url(webhook) used for sending the notification. For 'EMAIL' channel this can be a list of comma separated email addresses. For 'WEBHOOK' channel this should be a single URL.
+          items:
+            type: string
+          minItems: 1
+        config:
+          $ref: '#/components/schemas/notification.NotificationConfig'
+          description: Configuration information for this Notification entity.
       required:
-      - customerBid
-      - eventName
-      - lastFailedTime
-      - retry
-      - url
+      - config
+      - destinations
+      - status
     notification.NotificationResponse:
       type: object
       properties:
@@ -581,6 +543,110 @@ components:
           type: string
         sourceService:
           type: string
+    notification.NotificationConfig:
+      type: object
+      properties:
+        threshold:
+          type: number
+          description: Amount threshold which triggers the notification. This attribute only applies to 'EMAIL' notifications channel, of type 'PAYIN', 'PAYOUT'.
+          minimum: 0
+        timesToRun:
+          type: array
+          description: Times of the day when to trigger the notification. This attribute applies only to 'EMAIL' notifications channel, of type 'BALANCE'.
+          items:
+            type: string
+            enum:
+            - AM
+            - PM
+        daysToRun:
+          type: array
+          description: Days of the week when to trigger the notification. This attribute applies only to 'EMAIL' notifications channel, of type 'BALANCE'.
+          items:
+            type: string
+            enum:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+            - SATURDAY
+            - SUNDAY
+        retry:
+          type: boolean
+          description: Flag indicating whether failed webhooks should be retried. This attribute applies only to 'WEBHOOK' notifications channel.
+        secret:
+          type: string
+          description: Mandatory for webhook. Secret that is used in HMAC calculation, for webhooks. This attribute applies only to 'WEBHOOK' notifications channel.
+          maxLength: 32
+          minLength: 32
+        hmacAlgorithm:
+          type: string
+          description: Signing algorithm that is used in Webhook HMAC calculation. This attribute only applies to 'WEBHOOK' notifications channel.
+          enum:
+          - hmac-sha1
+          - hmac-sha256
+          - hmac-sha384
+          - hmac-sha512
+    notification.WebHookFailureResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Endpoint URL for receiving webhook data
+        eventName:
+          type: string
+          description: Event which would trigger the webhook
+          enum:
+          - PAYIN
+          - PAYOUT
+          - BALANCE_LOW
+          - BALANCE_HIGH
+          - BALANCE
+          - DDMANDATE
+          - CUSTVSTAT
+          - ACCOUNT_STATEMENT
+          - PENDING_PAYMENTS
+          - DD_INCOMING_DEBIT
+          - DD_FAILED_CLAIM
+          - DD_FUNDS_RETURNED
+          - CARD_AUTH
+          - CARD_AUTH_OFFLINE
+          - CARD_CREATION
+          - UPCOMING_CREDIT
+          - UPCOMING_COLLECTION_CREDIT
+          - UPCOMING_COLLECTION_DEBIT
+          - CARD_STATUS_UPDATE
+          - CARD_TOKEN_PROVISIONING
+          - PAYMENT_COMPLIANCE_STATUS
+          - DD_COLLECTION_STATUS
+          - ACCOUNT_SWITCH_UPDATE
+          - PAYMENT_FILE_UPLOAD
+          - ACCOUNT_STATUS_CHANGE
+          - PAYMENT_APPROVAL_STATUS_CHANGE
+          - CUSTOMER_BATCH_PAYMENT_APPROVAL_STATUS_CHANGE
+          - CARD_BULK_OPS_COMPLETED
+          - CUSTOMER_STATUS
+          - CREDIT_AUTH
+          - DD_INDEMNITY_CLAIM_STATUS
+          - APPLICATION_STATUS_CHANGE
+          - CUSTOMER_CREATED
+        customerBid:
+          type: string
+          description: Unique Identifier for the customer of this webhook.
+        retry:
+          type: boolean
+          description: Turn webhook retry mechanism on/off
+        lastFailedTime:
+          type: string
+          format: date-time
+          description: Last failure time. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01+0000'
+        data: {}
+      required:
+      - customerBid
+      - eventName
+      - lastFailedTime
+      - retry
+      - url
     notification.NotificationRequest:
       type: object
       properties:
@@ -641,72 +707,6 @@ components:
       - config
       - destinations
       - type
-    notification.UpdateNotificationRequest:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the notification.
-          enum:
-          - ACTIVE
-          - INACTIVE
-        destinations:
-          type: array
-          description: The list of emails or url(webhook) used for sending the notification. For 'EMAIL' channel this can be a list of comma separated email addresses. For 'WEBHOOK' channel this should be a single URL.
-          items:
-            type: string
-          minItems: 1
-        config:
-          $ref: '#/components/schemas/notification.NotificationConfig'
-          description: Configuration information for this Notification entity.
-      required:
-      - config
-      - destinations
-      - status
-    notification.NotificationConfig:
-      type: object
-      properties:
-        threshold:
-          type: number
-          description: Amount threshold which triggers the notification. This attribute only applies to 'EMAIL' notifications channel, of type 'PAYIN', 'PAYOUT'.
-          minimum: 0
-        timesToRun:
-          type: array
-          description: Times of the day when to trigger the notification. This attribute applies only to 'EMAIL' notifications channel, of type 'BALANCE'.
-          items:
-            type: string
-            enum:
-            - AM
-            - PM
-        daysToRun:
-          type: array
-          description: Days of the week when to trigger the notification. This attribute applies only to 'EMAIL' notifications channel, of type 'BALANCE'.
-          items:
-            type: string
-            enum:
-            - MONDAY
-            - TUESDAY
-            - WEDNESDAY
-            - THURSDAY
-            - FRIDAY
-            - SATURDAY
-            - SUNDAY
-        retry:
-          type: boolean
-          description: Flag indicating whether failed webhooks should be retried. This attribute applies only to 'WEBHOOK' notifications channel.
-        secret:
-          type: string
-          description: Mandatory for webhook. Secret that is used in HMAC calculation, for webhooks. This attribute applies only to 'WEBHOOK' notifications channel.
-          maxLength: 32
-          minLength: 32
-        hmacAlgorithm:
-          type: string
-          description: Signing algorithm that is used in Webhook HMAC calculation. This attribute only applies to 'WEBHOOK' notifications channel.
-          enum:
-          - hmac-sha1
-          - hmac-sha256
-          - hmac-sha384
-          - hmac-sha512
   securitySchemes:
     modulo_security:
       type: apiKey

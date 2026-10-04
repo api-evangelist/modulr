@@ -262,36 +262,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    card.BulkRequestPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/card.BulkRequestResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
     card.BulkCardsInfoResponse:
       type: object
       properties:
@@ -339,6 +309,100 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/card.Error'
+    card.BulkCardsOperation:
+      type: object
+      properties:
+        id:
+          type: string
+        operationType:
+          type: string
+          enum:
+          - CREATE
+          - UPDATE
+          - PATCH
+          - CANCEL
+        payload: {}
+        cardId:
+          type: string
+        accountId:
+          type: string
+      required:
+      - operationType
+      - payload
+    card.BulkCardsOpsRequest:
+      type: object
+      properties:
+        externalRef:
+          type: string
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/card.BulkCardsOperation'
+          minItems: 1
+      required:
+      - operations
+    card.Error:
+      type: object
+      properties:
+        operationIndex:
+          type: integer
+          format: int64
+        operationId:
+          type: string
+        field:
+          type: string
+        description:
+          type: string
+    card.BulkRequestPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/card.BulkRequestResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
+    card.BulkCardsOpsResponse:
+      type: object
+      properties:
+        bulkRequestId:
+          type: string
+        submissionTimestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+          - SUBMITTED
+          - VALIDATED
+          - VALIDATED_WITH_ERRORS
+          - PROCESSING
+          - PARTIALLY_PROCESSED_WITH_ERRORS
+          - PARTIALLY_PROCESSED
+          - PROCESSED
+          - ARCHIVED
+          - DELETED
     card.MessageResponse:
       type: object
       properties:
@@ -370,26 +434,6 @@ components:
           type: string
         sourceService:
           type: string
-    card.BulkCardsOpsResponse:
-      type: object
-      properties:
-        bulkRequestId:
-          type: string
-        submissionTimestamp:
-          type: string
-          format: date-time
-        status:
-          type: string
-          enum:
-          - SUBMITTED
-          - VALIDATED
-          - VALIDATED_WITH_ERRORS
-          - PROCESSING
-          - PARTIALLY_PROCESSED_WITH_ERRORS
-          - PARTIALLY_PROCESSED
-          - PROCESSED
-          - ARCHIVED
-          - DELETED
     card.BulkRequestResponse:
       type: object
       description: Bulk card request details
@@ -446,50 +490,6 @@ components:
       - status
       - successfulOperations
       - totalOperations
-    card.BulkCardsOpsRequest:
-      type: object
-      properties:
-        externalRef:
-          type: string
-        operations:
-          type: array
-          items:
-            $ref: '#/components/schemas/card.BulkCardsOperation'
-          minItems: 1
-      required:
-      - operations
-    card.Error:
-      type: object
-      properties:
-        operationIndex:
-          type: integer
-          format: int64
-        operationId:
-          type: string
-        field:
-          type: string
-        description:
-          type: string
-    card.BulkCardsOperation:
-      type: object
-      properties:
-        id:
-          type: string
-        operationType:
-          type: string
-          enum:
-          - CREATE
-          - UPDATE
-          - PATCH
-          - CANCEL
-        payload: {}
-        cardId:
-          type: string
-        accountId:
-          type: string
-      required:
-      - operationType
-      - payload
   securitySchemes:
     modulo_security:
       type: apiKey

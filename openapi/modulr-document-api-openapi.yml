@@ -115,13 +115,6 @@ components:
           type: string
         sourceService:
           type: string
-    document.DocumentResponse:
-      type: object
-      properties:
-        path:
-          type: string
-        fileName:
-          type: string
     document.CustomerDocumentUploadRequest:
       type: object
       properties:
@@ -145,6 +138,13 @@ components:
       - content
       - fileName
       - type
+    document.DocumentResponse:
+      type: object
+      properties:
+        path:
+          type: string
+        fileName:
+          type: string
     document.DocumentUploadRequest:
       type: object
       properties:

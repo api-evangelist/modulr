@@ -100,6 +100,20 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    directdebitoutbound.EnquiryMandatesResponse:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: Account Id
+        mandatesList:
+          type: array
+          description: List of Mandates
+          items:
+            $ref: '#/components/schemas/directdebitoutbound.EnquiryMandateResponse'
+      required:
+      - accountId
+      - mandatesList
     directdebitoutbound.MessageResponse:
       type: object
       properties:
@@ -131,26 +145,6 @@ components:
           type: string
         sourceService:
           type: string
-    directdebitoutbound.CollectionRejectRequest:
-      type: object
-      description: Collection reject request
-      properties:
-        claimBId:
-          type: string
-          description: Collection Claim Business ID
-          example: A123456B
-          pattern: '[A-Za-z]{1}[0-9]{2}([A-Za-z0-9]){5}'
-        rejectCode:
-          type: string
-          enum:
-          - ADVANCE_NOTICE_DISPUTED
-          - AMOUNT_DIFFERS
-          - AMOUNT_NOT_YET_DUE
-          - PRESENTATION_OVERDUE
-          - SKIP_DEBIT_ATTEMPT
-      required:
-      - claimBId
-      - rejectCode
     directdebitoutbound.MandateCancelRequest:
       type: object
       description: Details of the Mandate Cancel Request
@@ -229,20 +223,26 @@ components:
       - merchantNumber
       - merchantSortCode
       - setupDate
-    directdebitoutbound.EnquiryMandatesResponse:
+    directdebitoutbound.CollectionRejectRequest:
       type: object
+      description: Collection reject request
       properties:
-        accountId:
+        claimBId:
           type: string
-          description: Account Id
-        mandatesList:
-          type: array
-          description: List of Mandates
-          items:
-            $ref: '#/components/schemas/directdebitoutbound.EnquiryMandateResponse'
+          description: Collection Claim Business ID
+          example: A123456B
+          pattern: '[A-Za-z]{1}[0-9]{2}([A-Za-z0-9]){5}'
+        rejectCode:
+          type: string
+          enum:
+          - ADVANCE_NOTICE_DISPUTED
+          - AMOUNT_DIFFERS
+          - AMOUNT_NOT_YET_DUE
+          - PRESENTATION_OVERDUE
+          - SKIP_DEBIT_ATTEMPT
       required:
-      - accountId
-      - mandatesList
+      - claimBId
+      - rejectCode
   securitySchemes:
     modulo_security:
       type: apiKey

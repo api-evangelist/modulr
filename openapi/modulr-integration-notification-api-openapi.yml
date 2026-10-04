@@ -316,22 +316,30 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    integrationnotification.WebhookFailureResponse:
+    integrationnotification.PaginatedWebhookFailureResponse:
       type: object
       properties:
-        id:
-          type: string
-          description: Notification bid for which the webhook delivery failed
-        failureDateTime:
-          type: string
-          format: date-time
-          description: Failure time. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01+0000'
-        data:
-          description: Payload data that was attempted to be sent to the webhook URL
-      required:
-      - data
-      - failureDateTime
-      - id
+        content:
+          type: array
+          description: List of failed webhook delivery records
+          items:
+            $ref: '#/components/schemas/integrationnotification.WebhookFailureResponse'
+        size:
+          type: integer
+          format: int32
+          description: Number of records returned in the current page
+        totalSize:
+          type: integer
+          format: int64
+          description: Total number of matching failure records
+        page:
+          type: integer
+          format: int32
+          description: Current page number (0-based)
+        totalPages:
+          type: integer
+          format: int32
+          description: Total number of pages available
     integrationnotification.WebhookNotificationRequest:
       type: object
       description: Request object used to create/update a new integration notification.
@@ -375,30 +383,53 @@ components:
       - secret
       - type
       - url
-    integrationnotification.PaginatedWebhookFailureResponse:
+    integrationnotification.MessageResponse:
       type: object
       properties:
-        content:
-          type: array
-          description: List of failed webhook delivery records
-          items:
-            $ref: '#/components/schemas/integrationnotification.WebhookFailureResponse'
-        size:
-          type: integer
-          format: int32
-          description: Number of records returned in the current page
-        totalSize:
-          type: integer
-          format: int64
-          description: Total number of matching failure records
-        page:
-          type: integer
-          format: int32
-          description: Current page number (0-based)
-        totalPages:
-          type: integer
-          format: int32
-          description: Total number of pages available
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    integrationnotification.WebhookFailureResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Notification bid for which the webhook delivery failed
+        failureDateTime:
+          type: string
+          format: date-time
+          description: Failure time. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01+0000'
+        data:
+          description: Payload data that was attempted to be sent to the webhook URL
+      required:
+      - data
+      - failureDateTime
+      - id
     integrationnotification.PaginatedWebhookNotificationResponse:
       type: object
       properties:
@@ -478,37 +509,6 @@ components:
       - secret
       - type
       - url
-    integrationnotification.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
   securitySchemes:
     modulo_security:
       type: apiKey

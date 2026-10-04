@@ -1176,6 +1176,39 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    account.customerStatuses:
+      type: array
+      items:
+        type: string
+        default: ACTIVE
+        description: Customer statuses
+        enum:
+        - ACTIVE
+        - CLOSED
+        - BLOCKED
+    account.id:
+      type: array
+      description: ID of Customer(s) to fetch
+      items:
+        type: string
+        description: ID of Customer(s) to fetch
+    account.CreateAccountIdentifier:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - SCAN
+        sortCode:
+          type: string
+          pattern: ^\d{6}$
+        accountNumber:
+          type: string
+          pattern: ^\d{8}$
+      required:
+      - accountNumber
+      - sortCode
+      - type
     account.AccountPageResponse:
       type: object
       properties:
@@ -1507,26 +1540,14 @@ components:
           type: string
           description: The 9 digit identification code of the beneficiary. Applies to US beneficiaries only.
           example: '123456789'
-    account.AccountSecuredFundingRequest:
-      type: object
-      properties:
-        limit:
-          type: number
-          description: Secured funding limit
-          minimum: 0
-      required:
-      - limit
-    account.statuses:
+    account.customerId:
       type: array
+      description: The customer ID for getting account by customer ID
+      example: C1234567
       items:
         type: string
-        default: ACTIVE
-        description: Account statuses
-        enum:
-        - ACTIVE
-        - BLOCKED
-        - CLOSED
-        - CLIENT_BLOCKED
+        description: The customer ID for getting account by customer ID
+        example: C1234567
     account.MessageResponse:
       type: object
       properties:
@@ -1558,6 +1579,30 @@ components:
           type: string
         sourceService:
           type: string
+    account.AccountSecuredFundingRequest:
+      type: object
+      properties:
+        limit:
+          type: number
+          description: Secured funding limit
+          minimum: 0
+      required:
+      - limit
+    account.UpdateAccountRequest:
+      type: object
+      description: Details of account to edit
+      properties:
+        externalReference:
+          type: string
+          description: External Reference can only have alphanumeric characters plus underscore, hyphen and space up to 50 characters long
+          maxLength: 50
+          minLength: 0
+          pattern: '[\w \-]*'
+        name:
+          type: string
+          description: Name for the account, only applicable for 'PCM_INDIVIDUAL' and 'PCM_BUSINESS' customer types
+          maxLength: 40
+          minLength: 0
     account.AccountResponse:
       type: object
       description: Account
@@ -1616,98 +1661,17 @@ components:
         securedFundingLimit:
           type: string
           description: Limit of funds available below a balance of zero
-    account.customerId:
-      type: array
-      description: The customer ID for getting account by customer ID
-      example: C1234567
-      items:
-        type: string
-        description: The customer ID for getting account by customer ID
-        example: C1234567
-    account.CreateAccountIdentifier:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - SCAN
-        sortCode:
-          type: string
-          pattern: ^\d{6}$
-        accountNumber:
-          type: string
-          pattern: ^\d{8}$
-      required:
-      - accountNumber
-      - sortCode
-      - type
-    account.IdentifierResponse:
-      type: object
-      description: Account Identifier
-      properties:
-        type:
-          type: string
-        accountNumber:
-          type: string
-          description: Bank account Sort Code
-          example: '12345678'
-        accountType:
-          type: string
-          description: Bank account type like PERSONAL/BUSINESS
-          enum:
-          - PERSONAL
-          - BUSINESS
-        sortCode:
-          type: string
-          description: Bank account Sort Code
-          example: '000000'
-        iban:
-          type: string
-          example: GB20MODR04001401100000
-        bic:
-          type: string
-          example: MODRGB21
-        currency:
-          type: string
-          example: GBP
-        countrySpecificDetails:
-          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsResponse'
-          example:
-            branchCode: '123456789'
-        productId:
-          type: string
-          example: O2100001
-    account.customerStatuses:
+    account.statuses:
       type: array
       items:
         type: string
         default: ACTIVE
-        description: Customer statuses
+        description: Account statuses
         enum:
         - ACTIVE
-        - CLOSED
         - BLOCKED
-    account.UpdateAccountRequest:
-      type: object
-      description: Details of account to edit
-      properties:
-        externalReference:
-          type: string
-          description: External Reference can only have alphanumeric characters plus underscore, hyphen and space up to 50 characters long
-          maxLength: 50
-          minLength: 0
-          pattern: '[\w \-]*'
-        name:
-          type: string
-          description: Name for the account, only applicable for 'PCM_INDIVIDUAL' and 'PCM_BUSINESS' customer types
-          maxLength: 40
-          minLength: 0
-    account.id:
-      type: array
-      description: ID of Customer(s) to fetch
-      items:
-        type: string
-        description: ID of Customer(s) to fetch
+        - CLOSED
+        - CLIENT_BLOCKED
     account.CreateAccountRequest:
       type: object
       description: Details of account to create
@@ -1909,6 +1873,42 @@ components:
           description: The identifier to assign to the account. Only available to selected partners.
       required:
       - currency
+    account.IdentifierResponse:
+      type: object
+      description: Account Identifier
+      properties:
+        type:
+          type: string
+        accountNumber:
+          type: string
+          description: Bank account Sort Code
+          example: '12345678'
+        accountType:
+          type: string
+          description: Bank account type like PERSONAL/BUSINESS
+          enum:
+          - PERSONAL
+          - BUSINESS
+        sortCode:
+          type: string
+          description: Bank account Sort Code
+          example: '000000'
+        iban:
+          type: string
+          example: GB20MODR04001401100000
+        bic:
+          type: string
+          example: MODRGB21
+        currency:
+          type: string
+          example: GBP
+        countrySpecificDetails:
+          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsResponse'
+          example:
+            branchCode: '123456789'
+        productId:
+          type: string
+          example: O2100001
   securitySchemes:
     modulo_security:
       type: apiKey

@@ -215,6 +215,37 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    channelmanager.JsonNode: {}
+    channelmanager.WebhookNotificationPageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of responses on the current page
+          items:
+            $ref: '#/components/schemas/channelmanager.WebhookNotificationResponse'
+        size:
+          type: integer
+          format: int32
+          description: Page size
+        totalSize:
+          type: integer
+          format: int64
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+      required:
+      - content
+      - page
+      - size
+      - totalPages
+      - totalSize
     channelmanager.CreateWebhookNotificationRequest:
       type: object
       properties:
@@ -281,69 +312,6 @@ components:
           type: string
         sourceService:
           type: string
-    channelmanager.PatchOperation:
-      type: object
-      discriminator:
-        propertyName: op
-        mapping:
-          add: '#/components/schemas/channelmanager.Add'
-          move: '#/components/schemas/channelmanager.Move'
-          test: '#/components/schemas/channelmanager.Test'
-          replace: '#/components/schemas/channelmanager.Replace'
-          copy: '#/components/schemas/channelmanager.Copy'
-          remove: '#/components/schemas/channelmanager.Remove'
-      properties:
-        op:
-          type: string
-        path:
-          type: string
-          example: /path/to/field
-      required:
-      - op
-      - path
-    channelmanager.JsonNode: {}
-    channelmanager.Replace:
-      allOf:
-      - $ref: '#/components/schemas/channelmanager.PatchOperation'
-      - type: object
-        properties:
-          value:
-            $ref: '#/components/schemas/channelmanager.JsonNode'
-      description: Replace field
-      required:
-      - op
-      - path
-      - value
-    channelmanager.WebhookNotificationPageResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          description: List of responses on the current page
-          items:
-            $ref: '#/components/schemas/channelmanager.WebhookNotificationResponse'
-        size:
-          type: integer
-          format: int32
-          description: Page size
-        totalSize:
-          type: integer
-          format: int64
-          description: Total count
-        page:
-          type: integer
-          format: int32
-          description: Current page number, 0 based; i.e first-page = 0, second-page = 1
-        totalPages:
-          type: integer
-          format: int32
-          description: Total pages
-      required:
-      - content
-      - page
-      - size
-      - totalPages
-      - totalSize
     channelmanager.WebhookNotificationResponse:
       type: object
       properties:
@@ -381,6 +349,38 @@ components:
           - hmac-sha256
           - hmac-sha384
           - hmac-sha512
+    channelmanager.Replace:
+      allOf:
+      - $ref: '#/components/schemas/channelmanager.PatchOperation'
+      - type: object
+        properties:
+          value:
+            $ref: '#/components/schemas/channelmanager.JsonNode'
+      description: Replace field
+      required:
+      - op
+      - path
+      - value
+    channelmanager.PatchOperation:
+      type: object
+      discriminator:
+        propertyName: op
+        mapping:
+          add: '#/components/schemas/channelmanager.Add'
+          move: '#/components/schemas/channelmanager.Move'
+          test: '#/components/schemas/channelmanager.Test'
+          replace: '#/components/schemas/channelmanager.Replace'
+          copy: '#/components/schemas/channelmanager.Copy'
+          remove: '#/components/schemas/channelmanager.Remove'
+      properties:
+        op:
+          type: string
+        path:
+          type: string
+          example: /path/to/field
+      required:
+      - op
+      - path
   securitySchemes:
     modulo_security:
       type: apiKey

@@ -211,6 +211,98 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    confirmationofpayee.JsonOutboundCopRequest:
+      type: object
+      description: Details of Account Name Check Request
+      properties:
+        paymentAccountId:
+          type: string
+          description: The identifier of the account that a subsequent payment will be initiated from.
+          example: A123AAA4
+        sortCode:
+          type: string
+          description: The sort code of the account.
+          example: '000000'
+          pattern: ^[0-9]{6}$
+        accountNumber:
+          type: string
+          description: The account number.
+          example: '12345678'
+          pattern: ^[0-9]{8}$
+        secondaryAccountId:
+          type: string
+          description: Additional information used in conjunction with the Sort Code and Account Number to identify the account (such as a Building Society roll number).
+          example: A-1234567890
+          maxLength: 140
+          minLength: 1
+          pattern: ^.{0}$|^$|^([^])+$
+        accountType:
+          type: string
+          description: The type of account, either a personal or business account.
+          enum:
+          - PERSONAL
+          - BUSINESS
+          example: PERSONAL
+        name:
+          type: string
+          description: The name to match the account name against.
+          example: Joe Bloggs
+          maxLength: 140
+          minLength: 1
+      required:
+      - accountNumber
+      - accountType
+      - name
+      - paymentAccountId
+      - sortCode
+    confirmationofpayee.JsonOutboundCopErrorResponse:
+      type: object
+      description: Account Name Check Error Response
+      properties:
+        id:
+          type: string
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+        errorCode:
+          type: string
+      required:
+      - code
+      - message
+    confirmationofpayee.JsonOutboundCopResult:
+      type: object
+      description: Account Name Check Result
+      properties:
+        code:
+          type: string
+          description: The result of the account name check.
+          enum:
+          - MATCHED
+          - NOT_MATCHED
+          - CLOSE_MATCH
+          - BUSINESS_ACCOUNT_NAME_MATCHED
+          - PERSONAL_ACCOUNT_NAME_MATCHED
+          - BUSINESS_ACCOUNT_CLOSE_MATCH
+          - PERSONAL_ACCOUNT_CLOSE_MATCH
+          - ACCOUNT_DOES_NOT_EXIST
+          - SECONDARY_ACCOUNT_ID_NOT_FOUND
+          - ACCOUNT_NOT_SUPPORTED
+          - ACCOUNT_SWITCHED
+          - WRONG_PARTICIPANT
+          - NO_RESPONSE
+          - NOT_ENROLLED
+          example: MATCHED
+        name:
+          type: string
+          description: The actual name on the account (as provided by the participating organisation).
+          example: Joseph Bloggs
+      required:
+      - code
     confirmationofpayee.JsonOutboundCopResponse:
       type: object
       description: Account Name Check Response
@@ -225,6 +317,37 @@ components:
       required:
       - id
       - result
+    confirmationofpayee.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
     confirmationofpayee.JsonSrdAccount:
       type: object
       properties:
@@ -273,129 +396,6 @@ components:
       - size
       - totalPages
       - totalSize
-    confirmationofpayee.JsonOutboundCopResult:
-      type: object
-      description: Account Name Check Result
-      properties:
-        code:
-          type: string
-          description: The result of the account name check.
-          enum:
-          - MATCHED
-          - NOT_MATCHED
-          - CLOSE_MATCH
-          - BUSINESS_ACCOUNT_NAME_MATCHED
-          - PERSONAL_ACCOUNT_NAME_MATCHED
-          - BUSINESS_ACCOUNT_CLOSE_MATCH
-          - PERSONAL_ACCOUNT_CLOSE_MATCH
-          - ACCOUNT_DOES_NOT_EXIST
-          - SECONDARY_ACCOUNT_ID_NOT_FOUND
-          - ACCOUNT_NOT_SUPPORTED
-          - ACCOUNT_SWITCHED
-          - WRONG_PARTICIPANT
-          - NO_RESPONSE
-          - NOT_ENROLLED
-          example: MATCHED
-        name:
-          type: string
-          description: The actual name on the account (as provided by the participating organisation).
-          example: Joseph Bloggs
-      required:
-      - code
-    confirmationofpayee.JsonOutboundCopErrorResponse:
-      type: object
-      description: Account Name Check Error Response
-      properties:
-        id:
-          type: string
-        field:
-          type: string
-        code:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-        errorCode:
-          type: string
-      required:
-      - code
-      - message
-    confirmationofpayee.JsonOutboundCopRequest:
-      type: object
-      description: Details of Account Name Check Request
-      properties:
-        paymentAccountId:
-          type: string
-          description: The identifier of the account that a subsequent payment will be initiated from.
-          example: A123AAA4
-        sortCode:
-          type: string
-          description: The sort code of the account.
-          example: '000000'
-          pattern: ^[0-9]{6}$
-        accountNumber:
-          type: string
-          description: The account number.
-          example: '12345678'
-          pattern: ^[0-9]{8}$
-        secondaryAccountId:
-          type: string
-          description: Additional information used in conjunction with the Sort Code and Account Number to identify the account (such as a Building Society roll number).
-          example: A-1234567890
-          maxLength: 140
-          minLength: 1
-          pattern: ^.{0}$|^$|^([^])+$
-        accountType:
-          type: string
-          description: The type of account, either a personal or business account.
-          enum:
-          - PERSONAL
-          - BUSINESS
-          example: PERSONAL
-        name:
-          type: string
-          description: The name to match the account name against.
-          example: Joe Bloggs
-          maxLength: 140
-          minLength: 1
-      required:
-      - accountNumber
-      - accountType
-      - name
-      - paymentAccountId
-      - sortCode
-    confirmationofpayee.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
   securitySchemes:
     modulo_security:
       type: apiKey

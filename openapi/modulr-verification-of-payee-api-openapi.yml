@@ -70,6 +70,32 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    verificationofpayee.OutboundVopRequest:
+      type: object
+      description: Verify Payee Request
+      properties:
+        name:
+          type: string
+          description: The name of the payee.
+          example: John Smith
+          maxLength: 140
+          minLength: 1
+        iban:
+          type: string
+          description: The IBAN of the payee.
+          example: AD1200012030200359100100
+        paymentAccountId:
+          type: string
+          description: The bid of the account the payment will be initiated from.
+          example: A123AAA4
+        customerId:
+          type: string
+          description: The bid of the customer that is making this request.
+          example: C1100001
+      required:
+      - iban
+      - name
+      - paymentAccountId
     verificationofpayee.OutboundVopErrorResponse:
       type: object
       description: Verify Payee Error Response
@@ -106,32 +132,6 @@ components:
           example: Joseph Bloggs
       required:
       - code
-    verificationofpayee.OutboundVopRequest:
-      type: object
-      description: Verify Payee Request
-      properties:
-        name:
-          type: string
-          description: The name of the payee.
-          example: John Smith
-          maxLength: 140
-          minLength: 1
-        iban:
-          type: string
-          description: The IBAN of the payee.
-          example: AD1200012030200359100100
-        paymentAccountId:
-          type: string
-          description: The bid of the account the payment will be initiated from.
-          example: A123AAA4
-        customerId:
-          type: string
-          description: The bid of the customer that is making this request.
-          example: C1100001
-      required:
-      - iban
-      - name
-      - paymentAccountId
     verificationofpayee.OutboundVopResponse:
       type: object
       description: Verify Payee Response
