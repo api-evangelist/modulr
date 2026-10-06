@@ -68,7 +68,7 @@ tags_raw:
 - Confirmation of Payee
 - Variable Recurring Payments
 created: '2026-07-24'
-modified: '2026-09-16'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: modulr:modulr-access-group-api
@@ -601,6 +601,10 @@ apis:
   - type: Documentation
     url: https://modulr.readme.io/docs/notifications-1
 common:
+- url: https://www.modulrfinance.com/newsroom
+  type: Blog
+- url: https://www.modulrfinance.com/newsroom/rss.xml
+  type: BlogRSS
 - type: Plans
   url: plans/modulr-plans-pricing.yml
 - type: CapabilityMap
