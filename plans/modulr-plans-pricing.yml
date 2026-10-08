@@ -111,3 +111,106 @@ rate_limit_statements:
 - CHAPS payments incur additional £17.50 fee.
 - Intended usage of accounts is for supplier, payroll, tax, expenses and related payments. Usage restrictions
   may apply.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - hybrid
+  units:
+  - transaction
+  plans:
+  - name: Bundle Bronze (Accounts Payable, Spend Management, Payroll Payments)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Bundle Silver
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Bundle Platinum
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Accounts Payable & Spend Management Bronze
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Accounts Payable & Spend Management Silver
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Accounts Payable & Spend Management Platinum
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Payroll Payments Bronze
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Payroll Payments Silver
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Payroll Payments Platinum
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: International payments (other currencies)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: FX
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Enterprise / Partner Packages
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
