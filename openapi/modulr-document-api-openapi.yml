@@ -84,6 +84,57 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    document.CustomerDocumentUploadRequest:
+      type: object
+      properties:
+        fileName:
+          type: string
+          maxLength: 100
+          minLength: 0
+          pattern: ^[\w\s-.]+\.(\w){3,4}$
+        content:
+          type: string
+          description: Needs to be Base64 encoded
+          minLength: 1
+        type:
+          type: string
+          description: Document type uploaded for customer
+          enum:
+          - ID_DOCUMENT
+          - PROOF_OF_ADDRESS
+          - BUSINESS_DOCUMENTATION
+      required:
+      - content
+      - fileName
+      - type
+    document.DocumentUploadRequest:
+      type: object
+      properties:
+        fileName:
+          type: string
+          maxLength: 100
+          minLength: 0
+          pattern: ^[\w,\s-.]+\.(\w){3,4}$
+        content:
+          type: string
+          description: Needs to be Base64 encoded
+          minLength: 1
+        group:
+          type: string
+          description: Use to group documents together. Combination of group+filename should be unique else the files will be overwritten
+          maxLength: 100
+          minLength: 0
+      required:
+      - content
+      - fileName
+      - group
+    document.DocumentResponse:
+      type: object
+      properties:
+        path:
+          type: string
+        fileName:
+          type: string
     document.MessageResponse:
       type: object
       properties:
@@ -115,57 +166,6 @@ components:
           type: string
         sourceService:
           type: string
-    document.CustomerDocumentUploadRequest:
-      type: object
-      properties:
-        fileName:
-          type: string
-          maxLength: 100
-          minLength: 0
-          pattern: ^[\w\s-.]+\.(\w){3,4}$
-        content:
-          type: string
-          description: Needs to be Base64 encoded
-          minLength: 1
-        type:
-          type: string
-          description: Document type uploaded for customer
-          enum:
-          - ID_DOCUMENT
-          - PROOF_OF_ADDRESS
-          - BUSINESS_DOCUMENTATION
-      required:
-      - content
-      - fileName
-      - type
-    document.DocumentResponse:
-      type: object
-      properties:
-        path:
-          type: string
-        fileName:
-          type: string
-    document.DocumentUploadRequest:
-      type: object
-      properties:
-        fileName:
-          type: string
-          maxLength: 100
-          minLength: 0
-          pattern: ^[\w,\s-.]+\.(\w){3,4}$
-        content:
-          type: string
-          description: Needs to be Base64 encoded
-          minLength: 1
-        group:
-          type: string
-          description: Use to group documents together. Combination of group+filename should be unique else the files will be overwritten
-          maxLength: 100
-          minLength: 0
-      required:
-      - content
-      - fileName
-      - group
   securitySchemes:
     modulo_security:
       type: apiKey

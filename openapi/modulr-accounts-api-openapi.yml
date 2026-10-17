@@ -1176,22 +1176,6 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    account.customerStatuses:
-      type: array
-      items:
-        type: string
-        default: ACTIVE
-        description: Customer statuses
-        enum:
-        - ACTIVE
-        - CLOSED
-        - BLOCKED
-    account.id:
-      type: array
-      description: ID of Customer(s) to fetch
-      items:
-        type: string
-        description: ID of Customer(s) to fetch
     account.CreateAccountIdentifier:
       type: object
       properties:
@@ -1209,6 +1193,312 @@ components:
       - accountNumber
       - sortCode
       - type
+    account.IdentifierResponse:
+      type: object
+      description: Account Identifier
+      properties:
+        type:
+          type: string
+        accountNumber:
+          type: string
+          description: Bank account Sort Code
+          example: '12345678'
+        accountType:
+          type: string
+          description: Bank account type like PERSONAL/BUSINESS
+          enum:
+          - PERSONAL
+          - BUSINESS
+        sortCode:
+          type: string
+          description: Bank account Sort Code
+          example: '000000'
+        iban:
+          type: string
+          example: GB20MODR04001401100000
+        bic:
+          type: string
+          example: MODRGB21
+        currency:
+          type: string
+          example: GBP
+        countrySpecificDetails:
+          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsResponse'
+          example:
+            branchCode: '123456789'
+        productId:
+          type: string
+          example: O2100001
+    account.statuses:
+      type: array
+      items:
+        type: string
+        default: ACTIVE
+        description: Account statuses
+        enum:
+        - ACTIVE
+        - BLOCKED
+        - CLOSED
+        - CLIENT_BLOCKED
+    account.CreateAccountRequest:
+      type: object
+      description: Details of account to create
+      properties:
+        externalReference:
+          type: string
+          description: External Reference can only have alphanumeric characters plus underscore, hyphen and space up to 50 characters long
+          maxLength: 50
+          minLength: 0
+          pattern: '[\w \-]*'
+        currency:
+          type: string
+          enum:
+          - GBP
+          - EUR
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - FJD
+          - FKP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SLE
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - SHP
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - UYI
+          - UYU
+          - UYW
+          - UZS
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        productCode:
+          type: string
+          description: Product associated with the account. Contact your account manager for correct code to use.
+        identifier:
+          $ref: '#/components/schemas/account.CreateAccountIdentifier'
+          description: The identifier to assign to the account. Only available to selected partners.
+      required:
+      - currency
+    account.AccountResponse:
+      type: object
+      description: Account
+      properties:
+        id:
+          type: string
+          description: Unique id for the account
+          example: A0000001
+        name:
+          type: string
+          description: Name for the account
+        balance:
+          type: string
+          description: Balance of the account in format 'NN.NN'
+          example: '10000.00'
+        availableBalance:
+          type: string
+          description: The current available balance of the Account. Calculated by subtracting any pending payments from the current balance
+          example: '10000.00'
+        currency:
+          type: string
+          description: Currency of the account in ISO 4217 format
+          example: GBP
+        status:
+          type: string
+          description: 'Status of the account. Accounts must be ''ACTIVE'' to make and receive payments. Can be one of '
+          example: ACTIVE
+        identifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/account.IdentifierResponse'
+        customerId:
+          type: string
+          description: Unique id of the Customer
+          example: C0000001
+        customerName:
+          type: string
+          description: Customer Name
+        externalReference:
+          type: string
+          description: Your reference for an account
+          example: aReference_00001
+        accessGroups:
+          type: array
+          description: Ids of Access Groups this account belongs to
+          items:
+            type: string
+        createdDate:
+          type: string
+          format: date-time
+          description: Datetime when the account was created. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
+          example: 2017-01-28T01:01:01+0000
+        directDebit:
+          type: boolean
+          description: Direct Debit Enabled
+        securedFundingLimit:
+          type: string
+          description: Limit of funds available below a balance of zero
     account.AccountPageResponse:
       type: object
       properties:
@@ -1233,6 +1523,68 @@ components:
           type: integer
           format: int32
           description: Total pages
+    account.customerStatuses:
+      type: array
+      items:
+        type: string
+        default: ACTIVE
+        description: Customer statuses
+        enum:
+        - ACTIVE
+        - CLOSED
+        - BLOCKED
+    account.id:
+      type: array
+      description: ID of Customer(s) to fetch
+      items:
+        type: string
+        description: ID of Customer(s) to fetch
+    account.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    account.UpdateAccountRequest:
+      type: object
+      description: Details of account to edit
+      properties:
+        externalReference:
+          type: string
+          description: External Reference can only have alphanumeric characters plus underscore, hyphen and space up to 50 characters long
+          maxLength: 50
+          minLength: 0
+          pattern: '[\w \-]*'
+        name:
+          type: string
+          description: Name for the account, only applicable for 'PCM_INDIVIDUAL' and 'PCM_BUSINESS' customer types
+          maxLength: 40
+          minLength: 0
     account.IdentifierCountrySpecificDetailsResponse:
       type: object
       properties:
@@ -1548,37 +1900,6 @@ components:
         type: string
         description: The customer ID for getting account by customer ID
         example: C1234567
-    account.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
     account.AccountSecuredFundingRequest:
       type: object
       properties:
@@ -1588,327 +1909,6 @@ components:
           minimum: 0
       required:
       - limit
-    account.UpdateAccountRequest:
-      type: object
-      description: Details of account to edit
-      properties:
-        externalReference:
-          type: string
-          description: External Reference can only have alphanumeric characters plus underscore, hyphen and space up to 50 characters long
-          maxLength: 50
-          minLength: 0
-          pattern: '[\w \-]*'
-        name:
-          type: string
-          description: Name for the account, only applicable for 'PCM_INDIVIDUAL' and 'PCM_BUSINESS' customer types
-          maxLength: 40
-          minLength: 0
-    account.AccountResponse:
-      type: object
-      description: Account
-      properties:
-        id:
-          type: string
-          description: Unique id for the account
-          example: A0000001
-        name:
-          type: string
-          description: Name for the account
-        balance:
-          type: string
-          description: Balance of the account in format 'NN.NN'
-          example: '10000.00'
-        availableBalance:
-          type: string
-          description: The current available balance of the Account. Calculated by subtracting any pending payments from the current balance
-          example: '10000.00'
-        currency:
-          type: string
-          description: Currency of the account in ISO 4217 format
-          example: GBP
-        status:
-          type: string
-          description: 'Status of the account. Accounts must be ''ACTIVE'' to make and receive payments. Can be one of '
-          example: ACTIVE
-        identifiers:
-          type: array
-          items:
-            $ref: '#/components/schemas/account.IdentifierResponse'
-        customerId:
-          type: string
-          description: Unique id of the Customer
-          example: C0000001
-        customerName:
-          type: string
-          description: Customer Name
-        externalReference:
-          type: string
-          description: Your reference for an account
-          example: aReference_00001
-        accessGroups:
-          type: array
-          description: Ids of Access Groups this account belongs to
-          items:
-            type: string
-        createdDate:
-          type: string
-          format: date-time
-          description: Datetime when the account was created. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g 2017-01-28T01:01:01+0000
-          example: 2017-01-28T01:01:01+0000
-        directDebit:
-          type: boolean
-          description: Direct Debit Enabled
-        securedFundingLimit:
-          type: string
-          description: Limit of funds available below a balance of zero
-    account.statuses:
-      type: array
-      items:
-        type: string
-        default: ACTIVE
-        description: Account statuses
-        enum:
-        - ACTIVE
-        - BLOCKED
-        - CLOSED
-        - CLIENT_BLOCKED
-    account.CreateAccountRequest:
-      type: object
-      description: Details of account to create
-      properties:
-        externalReference:
-          type: string
-          description: External Reference can only have alphanumeric characters plus underscore, hyphen and space up to 50 characters long
-          maxLength: 50
-          minLength: 0
-          pattern: '[\w \-]*'
-        currency:
-          type: string
-          enum:
-          - GBP
-          - EUR
-          - AED
-          - AFN
-          - ALL
-          - AMD
-          - ANG
-          - AOA
-          - ARS
-          - AUD
-          - AWG
-          - AZN
-          - BAM
-          - BBD
-          - BDT
-          - BGN
-          - BHD
-          - BIF
-          - BMD
-          - BND
-          - BOB
-          - BOV
-          - BRL
-          - BSD
-          - BTN
-          - BWP
-          - BYN
-          - BZD
-          - CAD
-          - CDF
-          - CHE
-          - CHF
-          - CHW
-          - CLF
-          - CLP
-          - CNY
-          - COP
-          - COU
-          - CRC
-          - CUC
-          - CUP
-          - CVE
-          - CZK
-          - DJF
-          - DKK
-          - DOP
-          - DZD
-          - EGP
-          - ERN
-          - ETB
-          - FJD
-          - FKP
-          - GEL
-          - GHS
-          - GIP
-          - GMD
-          - GNF
-          - GTQ
-          - GYD
-          - HKD
-          - HNL
-          - HRK
-          - HTG
-          - HUF
-          - IDR
-          - ILS
-          - INR
-          - IQD
-          - IRR
-          - ISK
-          - JMD
-          - JOD
-          - JPY
-          - KES
-          - KGS
-          - KHR
-          - KMF
-          - KPW
-          - KRW
-          - KWD
-          - KYD
-          - KZT
-          - LAK
-          - LBP
-          - LKR
-          - LRD
-          - LSL
-          - LYD
-          - MAD
-          - MDL
-          - MGA
-          - MKD
-          - MMK
-          - MNT
-          - MOP
-          - MRU
-          - MUR
-          - MVR
-          - MWK
-          - MXN
-          - MXV
-          - MYR
-          - MZN
-          - NAD
-          - NGN
-          - NIO
-          - NOK
-          - NPR
-          - NZD
-          - OMR
-          - PAB
-          - PEN
-          - PGK
-          - PHP
-          - PKR
-          - PLN
-          - PYG
-          - QAR
-          - RON
-          - RSD
-          - RUB
-          - RWF
-          - SAR
-          - SBD
-          - SCR
-          - SDG
-          - SEK
-          - SGD
-          - SLE
-          - SLL
-          - SOS
-          - SRD
-          - SSP
-          - STN
-          - SVC
-          - SYP
-          - SZL
-          - SHP
-          - THB
-          - TJS
-          - TMT
-          - TND
-          - TOP
-          - TRY
-          - TTD
-          - TWD
-          - TZS
-          - UAH
-          - UGX
-          - USD
-          - USN
-          - UYI
-          - UYU
-          - UYW
-          - UZS
-          - VES
-          - VND
-          - VUV
-          - WST
-          - XAF
-          - XAG
-          - XAU
-          - XBA
-          - XBB
-          - XBC
-          - XBD
-          - XCD
-          - XDR
-          - XOF
-          - XPD
-          - XPF
-          - XPT
-          - XSU
-          - XTS
-          - XUA
-          - XXX
-          - YER
-          - ZAR
-          - ZMW
-          - ZWL
-        productCode:
-          type: string
-          description: Product associated with the account. Contact your account manager for correct code to use.
-        identifier:
-          $ref: '#/components/schemas/account.CreateAccountIdentifier'
-          description: The identifier to assign to the account. Only available to selected partners.
-      required:
-      - currency
-    account.IdentifierResponse:
-      type: object
-      description: Account Identifier
-      properties:
-        type:
-          type: string
-        accountNumber:
-          type: string
-          description: Bank account Sort Code
-          example: '12345678'
-        accountType:
-          type: string
-          description: Bank account type like PERSONAL/BUSINESS
-          enum:
-          - PERSONAL
-          - BUSINESS
-        sortCode:
-          type: string
-          description: Bank account Sort Code
-          example: '000000'
-        iban:
-          type: string
-          example: GB20MODR04001401100000
-        bic:
-          type: string
-          example: MODRGB21
-        currency:
-          type: string
-          example: GBP
-        countrySpecificDetails:
-          $ref: '#/components/schemas/account.IdentifierCountrySpecificDetailsResponse'
-          example:
-            branchCode: '123456789'
-        productId:
-          type: string
-          example: O2100001
   securitySchemes:
     modulo_security:
       type: apiKey

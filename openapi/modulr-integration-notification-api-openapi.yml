@@ -316,14 +316,116 @@ paths:
       - TOKEN: []
 components:
   schemas:
-    integrationnotification.PaginatedWebhookFailureResponse:
+    integrationnotification.WebhookNotificationResponse:
+      type: object
+      description: Response object for integration notification operations. Contains all common fields from WebhookNotificationRequestBase, along with the notification ID and type.
+      properties:
+        id:
+          type: string
+          description: Unique Identifier for the notification
+        url:
+          type: string
+          description: The URL used for sending the notification.
+          minLength: 1
+        retry:
+          type: boolean
+          description: Flag indicating whether failed webhooks should be retried.
+        secret:
+          type: string
+          description: Secret that is used in HMAC calculation for webhooks.
+          maxLength: 32
+          minLength: 32
+        hmacAlgorithm:
+          type: string
+          description: HMAC signing algorithm used to calculate the webhook signature.
+          enum:
+          - hmac-sha1
+          - hmac-sha256
+          - hmac-sha384
+          - hmac-sha512
+        type:
+          type: string
+          description: Type of the notification.
+          enum:
+          - PAYOUT
+          - PAYIN
+          - CARD_AUTH
+          - CARD_AUTH_OFFLINE
+          - CARD_STATUS_UPDATE
+          - PAYMENT_COMPLIANCE_STATUS
+        webhookTypeConfiguration:
+          $ref: '#/components/schemas/integrationnotification.WebhookTypeConfiguration'
+          description: Value used to determine whether payin webhooks should be sent or not.
+      required:
+      - hmacAlgorithm
+      - id
+      - retry
+      - secret
+      - type
+      - url
+    integrationnotification.WebhookFailureResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Notification bid for which the webhook delivery failed
+        failureDateTime:
+          type: string
+          format: date-time
+          description: Failure time. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01+0000'
+        data:
+          description: Payload data that was attempted to be sent to the webhook URL
+      required:
+      - data
+      - failureDateTime
+      - id
+    integrationnotification.WebhookTypeConfiguration:
+      type: object
+      description: Optional webhook type specific configuration
+      properties:
+        amountThreshold:
+          type: number
+          description: Amount threshold used to determine whether PAYIN webhooks should be sent.
+          minimum: 0
+    integrationnotification.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
+    integrationnotification.PaginatedWebhookNotificationResponse:
       type: object
       properties:
         content:
           type: array
-          description: List of failed webhook delivery records
+          description: List of Webhook Notification records
           items:
-            $ref: '#/components/schemas/integrationnotification.WebhookFailureResponse'
+            $ref: '#/components/schemas/integrationnotification.WebhookNotificationResponse'
         size:
           type: integer
           format: int32
@@ -383,61 +485,14 @@ components:
       - secret
       - type
       - url
-    integrationnotification.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    integrationnotification.WebhookFailureResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Notification bid for which the webhook delivery failed
-        failureDateTime:
-          type: string
-          format: date-time
-          description: Failure time. Format is 'yyyy-MM-dd'T'HH:mm:ssZ' where Z is UTC offset. e.g '2017-01-28T01:01:01+0000'
-        data:
-          description: Payload data that was attempted to be sent to the webhook URL
-      required:
-      - data
-      - failureDateTime
-      - id
-    integrationnotification.PaginatedWebhookNotificationResponse:
+    integrationnotification.PaginatedWebhookFailureResponse:
       type: object
       properties:
         content:
           type: array
-          description: List of Webhook Notification records
+          description: List of failed webhook delivery records
           items:
-            $ref: '#/components/schemas/integrationnotification.WebhookNotificationResponse'
+            $ref: '#/components/schemas/integrationnotification.WebhookFailureResponse'
         size:
           type: integer
           format: int32
@@ -454,61 +509,6 @@ components:
           type: integer
           format: int32
           description: Total number of pages available
-    integrationnotification.WebhookTypeConfiguration:
-      type: object
-      description: Optional webhook type specific configuration
-      properties:
-        amountThreshold:
-          type: number
-          description: Amount threshold used to determine whether PAYIN webhooks should be sent.
-          minimum: 0
-    integrationnotification.WebhookNotificationResponse:
-      type: object
-      description: Response object for integration notification operations. Contains all common fields from WebhookNotificationRequestBase, along with the notification ID and type.
-      properties:
-        id:
-          type: string
-          description: Unique Identifier for the notification
-        url:
-          type: string
-          description: The URL used for sending the notification.
-          minLength: 1
-        retry:
-          type: boolean
-          description: Flag indicating whether failed webhooks should be retried.
-        secret:
-          type: string
-          description: Secret that is used in HMAC calculation for webhooks.
-          maxLength: 32
-          minLength: 32
-        hmacAlgorithm:
-          type: string
-          description: HMAC signing algorithm used to calculate the webhook signature.
-          enum:
-          - hmac-sha1
-          - hmac-sha256
-          - hmac-sha384
-          - hmac-sha512
-        type:
-          type: string
-          description: Type of the notification.
-          enum:
-          - PAYOUT
-          - PAYIN
-          - CARD_AUTH
-          - CARD_AUTH_OFFLINE
-          - CARD_STATUS_UPDATE
-          - PAYMENT_COMPLIANCE_STATUS
-        webhookTypeConfiguration:
-          $ref: '#/components/schemas/integrationnotification.WebhookTypeConfiguration'
-          description: Value used to determine whether payin webhooks should be sent or not.
-      required:
-      - hmacAlgorithm
-      - id
-      - retry
-      - secret
-      - type
-      - url
   securitySchemes:
     modulo_security:
       type: apiKey

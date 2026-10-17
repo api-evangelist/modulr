@@ -235,6 +235,70 @@ paths:
       - TOKEN: []
 components:
   schemas:
+    account.AccessGroupResponse:
+      type: object
+      description: AccessGroup
+      properties:
+        id:
+          type: string
+          description: Unique ID for the access group
+          example: G0000001
+        name:
+          type: string
+          description: Access group name
+        type:
+          type: string
+          description: The type of access group
+          enum:
+          - SERVICE_PARTNER
+          - SERVICE_CUSTOMER
+          - DELEGATE
+          - USER_DEFINED
+        typeId:
+          type: string
+          description: The identifier of the linked entity implied by the type, e.g. the partner ID
+        status:
+          type: string
+          description: Status of the access group
+          enum:
+          - ACTIVE
+          - DELETED
+        countOfAccounts:
+          type: integer
+          format: int64
+          deprecated: true
+          description: The number of accounts in this group
+    account.MessageResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+          enum:
+          - GENERAL
+          - BUSINESSRULE
+          - MFASTATUS
+          - MFAERROR
+          - MFATIMEOUT
+          - MFADEVICEMM
+          - MFAMESSAGEINVALID
+          - NOTFOUND
+          - DUPLICATE
+          - INVALID
+          - CONNECTION
+          - RETRY
+          - RATELIMIT
+          - PERMISSION
+          - NOTACCEPTABLE
+          - MFAVERIFICATION
+          - TOKENEXPIRED
+        errorCode:
+          type: string
+        message:
+          type: string
+        sourceService:
+          type: string
     account.AccessGroupWithDetailsResponse:
       type: object
       description: AccessGroupWithDetails
@@ -305,70 +369,6 @@ components:
           maxLength: 50
           minLength: 0
           pattern: '[\w \-]*'
-    account.MessageResponse:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-          enum:
-          - GENERAL
-          - BUSINESSRULE
-          - MFASTATUS
-          - MFAERROR
-          - MFATIMEOUT
-          - MFADEVICEMM
-          - MFAMESSAGEINVALID
-          - NOTFOUND
-          - DUPLICATE
-          - INVALID
-          - CONNECTION
-          - RETRY
-          - RATELIMIT
-          - PERMISSION
-          - NOTACCEPTABLE
-          - MFAVERIFICATION
-          - TOKENEXPIRED
-        errorCode:
-          type: string
-        message:
-          type: string
-        sourceService:
-          type: string
-    account.AccessGroupResponse:
-      type: object
-      description: AccessGroup
-      properties:
-        id:
-          type: string
-          description: Unique ID for the access group
-          example: G0000001
-        name:
-          type: string
-          description: Access group name
-        type:
-          type: string
-          description: The type of access group
-          enum:
-          - SERVICE_PARTNER
-          - SERVICE_CUSTOMER
-          - DELEGATE
-          - USER_DEFINED
-        typeId:
-          type: string
-          description: The identifier of the linked entity implied by the type, e.g. the partner ID
-        status:
-          type: string
-          description: Status of the access group
-          enum:
-          - ACTIVE
-          - DELETED
-        countOfAccounts:
-          type: integer
-          format: int64
-          deprecated: true
-          description: The number of accounts in this group
   securitySchemes:
     modulo_security:
       type: apiKey
