@@ -1,0 +1,122 @@
+{
+  "endpoint": "https://modulr.readme.io/mcp",
+  "captured": "2026-10-20",
+  "method": "initialize + tools/list (anonymous, no tool called; roadmap#992)",
+  "protocol_version": "2025-06-18",
+  "server_info": {
+    "name": "Modulr",
+    "version": "2.2"
+  },
+  "result": {
+    "tools": [
+      {
+        "name": "list-endpoints",
+        "title": "List API Endpoints",
+        "description": "Lists all API paths and their HTTP methods with summaries, organized by path. Results can be passed directly into 'get-endpoint'.",
+        "inputSchema": {
+          "type": "object",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "properties": {}
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "get-endpoint",
+        "title": "Get Endpoint Details",
+        "description": "Gets detailed information about a specific API endpoint, including security schemes and servers",
+        "inputSchema": {
+          "type": "object",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The API endpoint path (e.g. /api/v1/users)."
+            },
+            "method": {
+              "type": "string",
+              "description": "The HTTP method (e.g. GET, POST, PUT, DELETE)."
+            }
+          },
+          "required": [
+            "path",
+            "method"
+          ]
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "search-endpoints",
+        "title": "Search API Endpoints",
+        "description": "Performs a deep search through paths, operations, and parameters to discover relevant API endpoints. Use this tool to find specific API capabilities, required parameters, or data models based on search keywords. Results can be passed directly into 'get-endpoint'.",
+        "inputSchema": {
+          "type": "object",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "properties": {
+            "pattern": {
+              "type": "string",
+              "description": "Search pattern (case-insensitive)"
+            }
+          },
+          "required": [
+            "pattern"
+          ]
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "direct-debit-collections-guide",
+        "title": "Direct Debit Collections Guide",
+        "description": "Returns the Direct Debit (DD) collections guide — call this when a developer asks about setting up mandates, scheduling recurring collections or repayments, checking collection or mandate status, understanding the Bacs processing cycle, handling failed payments, retrying via representment, or recovering payments via Pay by Bank (PIS)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "failed-payment-recovery-guide",
+        "title": "Failed Payment Recovery Guide",
+        "description": "Returns the failed payment recovery guide — call this when a developer asks about handling failed Direct Debit collections, ARUDD return reasons, retrying payments, representment, switching from Direct Debit to Pay by Bank, dunning flows, or recovering missed payments.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "pay-by-bank-pis-guide",
+        "title": "Pay By Bank Pis Guide",
+        "description": "Returns the Pay by Bank (PIS / Open Banking) guide — call this when a developer asks about one-off payments via Open Banking, payment initiation, ASPSP bank selection, customer consent redirects, Faster Payments settlement, or using PIS as a fallback for failed Direct Debits",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "openWorldHint": false
+        }
+      }
+    ]
+  }
+}
