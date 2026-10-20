@@ -17,36 +17,36 @@ server:
     vscode: '{"servers":{"modulr":{"type":"http","url":"https://modulr.readme.io/mcp"}}}'
 tools:
 - name: list-endpoints
-  description: Lists all API paths and their HTTP methods with summaries, organized by path.
+  description: Lists all API paths and their HTTP methods with summaries, organized by path. Results can
+    be passed directly into 'get-endpoint'.
   read_only: true
 - name: get-endpoint
   description: Gets detailed information about a specific API endpoint, including security schemes and
-    servers.
+    servers
   read_only: true
   inputs:
   - path
   - method
 - name: search-endpoints
-  description: Deep search through paths, operations and parameters to discover relevant API endpoints.
+  description: Performs a deep search through paths, operations, and parameters to discover relevant API
+    endpoints. Use this tool to find specific API capabilities, required parameters, or data models based
+    on search keywords. Results can be passed directly into 'get-endpoint'.
   read_only: true
   inputs:
   - pattern
-- name: execute-request
-  description: Executes an API request from a given HAR request object (sandbox calls; destructive).
-  read_only: false
-  destructive: true
-  inputs:
-  - harRequest
-- name: search
-  description: Searches Modulr documentation, returning results with ID, title and URL.
-  read_only: true
-  inputs:
-  - query
-- name: fetch
-  description: Gets detailed documentation content by ID returned from the search tool.
-  read_only: true
-  inputs:
-  - id
+- name: direct-debit-collections-guide
+  description: Returns the Direct Debit (DD) collections guide — call this when a developer asks about
+    setting up mandates, scheduling recurring collections or repayments, checking collection or mandate
+    status, understanding the Bacs processing cycle, handling failed payments, retrying via representment,
+    or recovering payments via Pay by Bank (PIS)
+- name: failed-payment-recovery-guide
+  description: Returns the failed payment recovery guide — call this when a developer asks about handling
+    failed Direct Debit collections, ARUDD return reasons, retrying payments, representment, switching
+    from Direct Debit to Pay by Bank, dunning flows, or recovering missed payments.
+- name: pay-by-bank-pis-guide
+  description: Returns the Pay by Bank (PIS / Open Banking) guide — call this when a developer asks about
+    one-off payments via Open Banking, payment initiation, ASPSP bank selection, customer consent redirects,
+    Faster Payments settlement, or using PIS as a fallback for failed Direct Debits
 deployment:
   mode: remote
   endpoint: https://modulr.readme.io/mcp
@@ -80,3 +80,4 @@ tool_quality:
   scored: false
   note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
     from Glimind's agent-readiness audit.
+tools_count: 6
