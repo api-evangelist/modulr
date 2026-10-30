@@ -1,4 +1,4 @@
-# Modulr (modulr)
+# Modulr
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,129 +64,163 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Modulr is a United Kingdom-based embedded payments and Banking-as-a-Service platform that lets businesses and software platforms open programmable eMoney accounts and move money automatically via a single API. As a licensed e-money institution and direct participant in the UK Faster Payments and Bacs schemes (with SEPA reach in the EU through its Dutch entity), Modulr provides the accounts, payment rails, card issuing, and Open Banking connectivity that fintechs, payroll providers, lenders, marketplaces, and accounting and travel platforms embed into their own products.
+Modulr is a United Kingdom-based embedded payments and Banking-as-a-Service platform that lets businesses and software platforms open programmable eMoney accounts and move money automatically via a single API. As a licensed e-money institution and direct participant in the UK Faster Payments and Bacs schemes (with SEPA reach in the EU through its Dutch entity), Modulr provides the underlying accounts, payment rails, card issuing, and Open Banking connectivity that fintechs, payroll providers, lenders, marketplaces, and travel and accounting platforms embed into their own products. Its REST API covers account creation, inbound and outbound payments (including bulk, batch, future-dated and SWIFT international), virtual and physical card issuing, Bacs Direct Debit collection, KYC/KYB customer onboarding, Confirmation of Payee and Verification of Payee, Payment Initiation Services and Variable Recurring Payments under Open Banking, plus a rich webhook notification layer. Modulr is API-native: it publishes a genuine public developer portal on ReadMe with reference docs and a downloadable OpenAPI 3.1 definition, and offers a self-serve sandbox.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/modulr/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/modulr/refs/heads/main/apis.yml)
+**Areas:** Payments · United Kingdom · Banking as a Service · Embedded Finance · Payment Processing · Account-to-Account · Open Banking · Faster Payments · Card Issuing · Direct Debit · Confirmation of Payee · Variable Recurring Payments
 
-## Tags
+## Modulr on APIs.io
 
-- Payments
-- United Kingdom
-- Banking-as-a-Service
-- Embedded Finance
-- Payment Processing
-- Account-to-Account
-- Open Banking
-- Faster Payments
-- Card Issuing
-- Direct Debit
-- Confirmation of Payee
-- Variable Recurring Payments
+Everything profiled for Modulr is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/modulr/](https://apis.io/providers/modulr/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (26)
 
-- **Created:** 2026-07-24
-- **Modified:** 2026-07-24
+- [Modulr Access Group API](https://apis.io/apis/modulr/modulr-access-group-api/) — Operations on Access Group
+- [Modulr Accounts API](https://apis.io/apis/modulr/modulr-accounts-api/) — Operations on Accounts
+- [Modulr Async API](https://apis.io/apis/modulr/modulr-async-api/) — Asynchronous card task operations
+- [Modulr Beneficiaries API](https://apis.io/apis/modulr/modulr-beneficiaries-api/) — Operations on Beneficiaries
+- [Modulr Card Simulator API](https://apis.io/apis/modulr/modulr-card-simulator-api/) — Cards Simulator API
+- [Modulr Cards API](https://apis.io/apis/modulr/modulr-cards-api/) — Cards API
+- [Modulr Cards Bulk Operations API](https://apis.io/apis/modulr/modulr-cards-bulk-operations-api/) — The Cards Bulk Operations API from Modulr — 3 operation(s) for cards bulk operations.
+- [Modulr Channel Manager Card API](https://apis.io/apis/modulr/modulr-channel-manager-card-api/) — The Channel Manager Card API from Modulr — 9 operation(s) for channel manager card.
+- [Modulr Channel Manager Webhook Notifications API](https://apis.io/apis/modulr/modulr-channel-manager-webhook-notifications-api/) — The Channel Manager Webhook Notifications API from Modulr — 3 operation(s) for channel manager webhook notifications.
+- [Modulr Confirmation of Payee API](https://apis.io/apis/modulr/modulr-confirmation-of-payee-api/) — Account Name Checks
+- [Modulr Customers API](https://apis.io/apis/modulr/modulr-customers-api/) — Operations on Customers
+- [Modulr Direct Debit Outbound Mandate Operations API](https://apis.io/apis/modulr/modulr-direct-debit-outbound-mandate-operations-api/) — The Direct Debit Outbound Mandate Operations API from Modulr — 3 operation(s) for direct debit outbound mandate operations.
+- [Modulr Direct Debits API](https://apis.io/apis/modulr/modulr-direct-debits-api/) — Direct Debit operations
+- [Modulr Document API](https://apis.io/apis/modulr/modulr-document-api/) — Operations on Documents
+- [Modulr File Upload API](https://apis.io/apis/modulr/modulr-file-upload-api/) — Upload payment files
+- [Modulr Inbound Payments API](https://apis.io/apis/modulr/modulr-inbound-payments-api/) — Inbound payments
+- [Modulr Integration Notification API](https://apis.io/apis/modulr/modulr-integration-notification-api/) — The Integration Notification API from Modulr — 3 operation(s) for integration notification.
+- [Modulr Notification API](https://apis.io/apis/modulr/modulr-notification-api/) — Operations on Notifications
+- [Modulr Payment Initiations API](https://apis.io/apis/modulr/modulr-payment-initiations-api/) — The Payment Initiations API from Modulr — 5 operation(s) for payment initiations.
+- [Modulr Payments API](https://apis.io/apis/modulr/modulr-payments-api/) — Operations on Payments
+- [Modulr Restricted API](https://apis.io/apis/modulr/modulr-restricted-api/) — Restricted access API calls
+- [Modulr Rules API](https://apis.io/apis/modulr/modulr-rules-api/) — Rules
+- [Modulr Share secure card details API](https://apis.io/apis/modulr/modulr-share-secure-card-details-api/) — Share secure card details operations
+- [Modulr Transactions API](https://apis.io/apis/modulr/modulr-transactions-api/) — Operations on Transactions
+- [Modulr Variable Recurring Payments API](https://apis.io/apis/modulr/modulr-variable-recurring-payments-api/) — The Variable Recurring Payments API from Modulr — 5 operation(s) for variable recurring payments.
+- [Modulr Verification of Payee API](https://apis.io/apis/modulr/modulr-verification-of-payee-api/) — The Verification of Payee API from Modulr — 1 operation(s) for verification of payee.
 
-## API Posture
+### Published properties
 
-Modulr is API-native. It publishes a public developer portal on ReadMe at [modulr.readme.io](https://modulr.readme.io/) with getting-started guides, an [API reference](https://modulr.readme.io/reference), a changelog, and a self-serve sandbox. A single downloadable **OpenAPI 3.1.0** definition ("Modulr API", v1.0 — 171 paths / 207 operations across 26 tags) was harvested verbatim from the ReadMe API registry that powers the reference pages and is stored at [`openapi/modulr-api.json`](openapi/modulr-api.json). Authentication is API-key based (Authorization header) with HMAC request signing; a short-lived bearer token is used for secure PCI card-detail retrieval. Transport is REST/HTTPS with an extensive webhook/notification layer. No public GraphQL, gRPC, Postman collection, or AsyncAPI document was found.
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-- **Sandbox base URL:** `https://api-sandbox.modulrfinance.com/api-sandbox-token` (declared in the spec)
-- **Production base URL:** `https://api.modulrfinance.com` (live; HTTP 403 without credentials)
+#### AsyncAPI (1)
 
-## APIs
+Event-driven and webhook contracts.
 
-### Modulr Accounts API
+- [Modulr Webhooks](https://apis.io/asyncapis/modulr/modulr-webhooks/)
 
-Create, retrieve, edit, block/unblock and close programmable eMoney accounts, manage access groups and account rules, and read balances.
+#### MCP servers (1)
 
-- **Human URL:** [https://modulr.readme.io/docs/account](https://modulr.readme.io/docs/account)
-- **Base URL:** `https://api.modulrfinance.com`
-- [OpenAPI](openapi/modulr-api.json)
+Model Context Protocol servers that expose the API to agents.
 
-### Modulr Payments API
+- [modulr](https://apis.io/servers/modulr/modulr/)
 
-Outbound, inbound, bulk, batch and future-dated payments over UK Faster Payments and Bacs, plus international SWIFT payments, with transaction retrieval and reconciliation.
+#### Agentic access (1)
 
-- **Human URL:** [https://modulr.readme.io/docs/payments-2](https://modulr.readme.io/docs/payments-2)
-- **Base URL:** `https://api.modulrfinance.com`
-- [OpenAPI](openapi/modulr-api.json)
+Which operations an agent can call, which act, and which need a human in the loop.
 
-### Modulr Cards API
+- [Modulr Agentic Access](https://apis.io/agentic-access/modulr/modulr-agentic-access/)
 
-Issue and manage virtual and physical cards, including tokenization, PIN management, card controls, transactions, secure card-detail retrieval and bulk card operations.
+#### Collections (1)
 
-- **Human URL:** [https://modulr.readme.io/reference](https://modulr.readme.io/reference)
-- **Base URL:** `https://api.modulrfinance.com`
-- [OpenAPI](openapi/modulr-api.json)
+Postman and Open Collection request collections.
 
-### Modulr Direct Debits API
+- [Modulr API](https://apis.io/collections/modulr/open-modulr-api/)
 
-UK Bacs Direct Debit mandates and collections, outbound mandate operations and indemnity claims for recurring collection use cases.
+#### Overlays (1)
 
-- **Human URL:** [https://modulr.readme.io/reference](https://modulr.readme.io/reference)
-- **Base URL:** `https://api.modulrfinance.com`
-- [OpenAPI](openapi/modulr-api.json)
+OpenAPI overlays, including conversational phrasing for each operation.
 
-### Modulr Customers API
+- [Modulr Api Overlay](https://apis.io/overlays/modulr/modulr-api-overlay/)
 
-Create and verify customers, run KYC/KYB onboarding, manage associates and tax identifiers, and upload supporting documents for compliance.
+#### Security (2)
 
-- **Human URL:** [https://modulr.readme.io/docs/customer](https://modulr.readme.io/docs/customer)
-- **Base URL:** `https://api.modulrfinance.com`
-- [OpenAPI](openapi/modulr-api.json)
+Authentication, trust centre, and vulnerability disclosure.
 
-### Modulr Payee Verification API
+- [Modulr Authentication](https://apis.io/security/modulr/modulr-authentication/)
+- [Modulr Domain Security](https://apis.io/security/modulr/modulr-domain-security/)
 
-Confirmation of Payee (CoP) and Verification of Payee (VoP) account name checking to reduce misdirected-payment and APP fraud risk before payments are sent.
+#### Plans and pricing (2)
 
-- **Human URL:** [https://modulr.readme.io/reference](https://modulr.readme.io/reference)
-- **Base URL:** `https://api.modulrfinance.com`
-- [OpenAPI](openapi/modulr-api.json)
+Published plans, tiers and prices.
 
-### Modulr Payment Initiation API
+- [Modulr Plans Pricing](https://apis.io/plans/modulr/modulr-plans-pricing/)
+- [Modulr Price Estimates](https://apis.io/plans/modulr/modulr-price-estimates/)
 
-Open Banking Payment Initiation Services (PIS) — immediate account-to-account payments and standing orders from a payer's bank account through connected ASPSPs.
+#### Rate limits (1)
 
-- **Human URL:** [https://modulr.readme.io/reference](https://modulr.readme.io/reference)
-- **Base URL:** `https://api.modulrfinance.com`
-- [OpenAPI](openapi/modulr-api.json)
+Published request limits.
 
-### Modulr Variable Recurring Payments API
+- [Modulr Rate Limits](https://apis.io/rate-limits/modulr/modulr-rate-limits/)
 
-Consumer and commercial Variable Recurring Payments (VRP) — manage consents and execute recurring account-to-account payments under Open Banking.
+## Where to find this API
 
-- **Human URL:** [https://modulr.readme.io/reference](https://modulr.readme.io/reference)
-- **Base URL:** `https://api.modulrfinance.com`
-- [OpenAPI](openapi/modulr-api.json)
-
-### Modulr Notifications API
-
-Partner- and customer-level webhook subscriptions for account, payment, customer, compliance and Direct Debit events, and retrieval of failed webhook deliveries.
-
-- **Human URL:** [https://modulr.readme.io/docs/notifications-1](https://modulr.readme.io/docs/notifications-1)
-- **Base URL:** `https://api.modulrfinance.com`
-- [OpenAPI](openapi/modulr-api.json)
-
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.modulrfinance.com/)
-- [Developer Portal](https://modulr.readme.io/)
 - [Documentation](https://modulr.readme.io/docs/intro)
-- [API Reference](https://modulr.readme.io/reference)
-- [Getting Started](https://modulr.readme.io/docs/getting-started)
-- [Authentication](https://modulr.readme.io/docs/authentication)
-- [GitHub Organization](https://github.com/Modulr-finance)
-- [LinkedIn](https://www.linkedin.com/company/modulr-finance)
-- [Status Page](https://status.modulrfinance.com/)
-- [Help Center](https://knowledge.modulrfinance.com/knowledge-hub)
-- [Changelog](https://modulr.readme.io/changelog)
+- [Getting started](https://modulr.readme.io/docs/getting-started)
+- [API reference](https://modulr.readme.io/reference)
 - [Pricing](https://www.modulrfinance.com/pricing)
-- [Blog](https://www.modulrfinance.com/blog)
-- [Privacy Policy](https://www.modulrfinance.com/privacy-policy)
+- [Changelog](https://modulr.readme.io/changelog)
+- [Blog](https://www.modulrfinance.com/newsroom)
+- [Privacy policy](https://www.modulrfinance.com/privacy-policy)
+- [GitHub](https://github.com/Modulr-finance)
+- [Status](https://status.modulrfinance.com/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 53.9** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 57.5 |
+| Contract governance | 4.5 |
+| Operational transparency | 55.3 |
+| Developer ergonomics | 48.2 |
+| Access clarity | 52.6 |
+
+**Agent readiness 49.8** — agent-native
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | verified |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | yes |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | mostly |
+
+**Regulatory alignment 29.5** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/modulr/](https://apis.io/providers/modulr/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Modulr: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/modulr/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
